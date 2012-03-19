@@ -6,7 +6,7 @@ module Batsir
       end
 
       def aggregator_chain(&block)
-        @chain = Batsir::Chain.instance
+        @chain = Batsir::Chain.new
         ::Blockenspiel.invoke(block, self)
         @chain
       end

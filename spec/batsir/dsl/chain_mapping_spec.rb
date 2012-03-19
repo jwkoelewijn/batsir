@@ -1,10 +1,6 @@
 require File.join( File.dirname(__FILE__), "..", "..", "spec_helper")
 
 describe Batsir::DSL::ChainMapping do
-  before :each do
-    Batsir::Chain.reset!
-  end
-
   it "should create a chain" do
     block = ::Proc.new do
       aggregator_chain do
@@ -13,7 +9,6 @@ describe Batsir::DSL::ChainMapping do
 
     chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
     chain.should_not be_nil
-    Batsir::Chain.instance.should == chain
   end
 
   it "should be possible to set a retrieval operation" do
