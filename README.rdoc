@@ -1,3 +1,21 @@
+aggregator_chain do
+  retrieval_operation Aggregation::Retrieval::DataMapper
+  persistence_operation Aggregation::Persistence::MongoDB
+
+  stage "timecards" do
+    queue :timecard_updated
+    object_type Flex::Timecard
+    operations do
+      add_operation Aggregation::SummarizeDurationOperation
+      add_operation Aggregation::VerifiabilityOperation
+    end
+    notification do
+      queue :organisation_tree_updated, :organisation_tree_id
+      queue :job_updated, :job_id
+    end
+  end
+end
+
 = batsir
 
 Description goes here.
