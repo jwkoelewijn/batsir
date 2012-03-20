@@ -1,6 +1,7 @@
 require 'blockenspiel'
 require 'batsir/chain'
 require 'batsir/operation'
+require 'batsir/notification_operation'
 require 'batsir/operation_queue'
 require 'batsir/stage'
 require 'batsir/dsl/dsl_mappings'

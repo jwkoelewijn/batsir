@@ -19,11 +19,16 @@ module Batsir
         @chain.persistence_operation = operation
       end
 
+      def notification_operation(operation)
+        @chain.notification_operation = operation
+      end
+
       def stage(name, &block)
         new_block = ::Proc.new do
           stage name, &block
         end
         stage = ::Blockenspiel.invoke(new_block, Batsir::DSL::StageMapping.new)
+        stage.chain = @chain
         @chain.add_stage(stage)
       end
     end
@@ -57,6 +62,18 @@ module Batsir
 
       def notifications(&block)
         ::Blockenspiel.invoke(block, Batsir::DSL::NotificationMapping.new(@stage))
+      end
+
+      def retrieval_operation(operation)
+        @stage.retrieval_operation = operation
+      end
+
+      def persistence_operation(operation)
+        @stage.persistence_operation = operation
+      end
+
+      def notification_operation(operation)
+        @stage.notification_operation = operation
       end
     end
 

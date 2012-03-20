@@ -4,14 +4,16 @@ module Batsir
 
     attr_accessor :persist_operation
     attr_accessor :retrieval_operation
+    attr_accessor :operations
+    attr_accessor :notification_operations
 
     def initialize
-      @backing_array = []
+      @operations = []
       @notification_operations = []
     end
 
     def add(operation)
-      @backing_array.unshift(operation)
+      @operations.unshift(operation)
     end
 
     def add_notification_operation(operation)
@@ -22,7 +24,7 @@ module Batsir
       if op = retrieval_operation
         yield op
       end
-      @backing_array.each {|op| yield op}
+      @operations.each {|op| yield op}
       if op = persist_operation
         yield op
       end
@@ -30,7 +32,7 @@ module Batsir
     end
 
     def empty?
-      !(persist_operation || retrieval_operation || @notification_operations.any? || @backing_array.any?)
+      !(persist_operation || retrieval_operation || @notification_operations.any? || @operations.any?)
     end
   end
 end

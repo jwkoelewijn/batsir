@@ -98,6 +98,48 @@ describe Batsir::DSL::StageMapping do
     stage.notification_queues[notification_queue].should == parent_attribute
   end
 
+  it "should be possible to add a stage specific retrieval operation" do
+    retrieval_operation = "Retrieval Operation"
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        retrieval_operation retrieval_operation
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.retrieval_operation.should == retrieval_operation
+  end
+
+  it "should be possible to add a stage specific persistence operation" do
+    persistence_operation = "Persistence Operation"
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        persistence_operation persistence_operation
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.persistence_operation.should == persistence_operation
+  end
+
+  it "should be possible to add a stage specific notification operation" do
+    notification_operation = "Persistence Operation"
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        notification_operation notification_operation
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notification_operation.should == notification_operation
+  end
+
   it "should be possible to add multiple notification queues to the stage" do
     notification_queue1 = :notification_queue1
     parent_attribute1   = :parent1
@@ -165,5 +207,5 @@ describe Batsir::DSL::StageMapping do
 
     stage.notification_queues.should have_key notification_queue2
     stage.notification_queues[notification_queue2].should == parent_attribute2
- end
+  end
 end

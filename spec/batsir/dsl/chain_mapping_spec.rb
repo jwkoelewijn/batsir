@@ -37,6 +37,19 @@ describe Batsir::DSL::ChainMapping do
     chain.persistence_operation.should == persistence_op
   end
 
+  it "should be possible to set a notification operation" do
+    notification_op = "Persistence operation"
+
+    block = ::Proc.new do
+      aggregator_chain do
+        notification_operation notification_op
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.notification_operation.should == notification_op
+  end
+
   it "should be possible to add a stage" do
     block = ::Proc.new do
       aggregator_chain do
@@ -50,6 +63,20 @@ describe Batsir::DSL::ChainMapping do
     chain.stages.should_not be_empty
     chain.stages.size.should == 1
     chain.stages.first.name.should == "simple_stage"
+  end
+
+  it "should set the chain of the stage to the current chain" do
+    block = ::Proc.new do
+      aggregator_chain do
+        stage "simple_stage" do
+
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.stages.size.should == 1
+    chain.stages.first.chain.should == chain
   end
 
   it "should be possible to add multiple stages" do
@@ -69,6 +96,98 @@ describe Batsir::DSL::ChainMapping do
     chain.stages.size.should == 2
     chain.stages.first.name.should == "first_stage"
     chain.stages.last.name.should == "second_stage"
+  end
+
+  it "should make sure stages use the chain retrieval operation when no stage specific one is set" do
+    retrieval_operation = "Retrieval Operation"
+    block = ::Proc.new do
+      aggregator_chain do
+        retrieval_operation retrieval_operation
+
+        stage "simple_stage" do
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.stages.size.should == 1
+    chain.stages.first.retrieval_operation.should == retrieval_operation
+  end
+
+  it "should make sure stages use the chain persistence operation when no stage specific one is set" do
+    persistence_operation = "Persistence Operation"
+    block = ::Proc.new do
+      aggregator_chain do
+        persistence_operation persistence_operation
+
+        stage "simple_stage" do
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.stages.size.should == 1
+    chain.stages.first.persistence_operation.should == persistence_operation
+  end
+
+  it "should use a stage specific retrieval operation when it is set" do
+    chain_retrieval_operation = "Chain Retrieval Operation"
+    stage_retrieval_operation = "Stage Retrieval Operation"
+
+    block = ::Proc.new do
+      aggregator_chain do
+        retrieval_operation chain_retrieval_operation
+
+        stage "simple_stage" do
+          retrieval_operation stage_retrieval_operation
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.retrieval_operation.should == chain_retrieval_operation
+    chain.stages.size.should == 1
+    chain.stages.first.retrieval_operation.should == stage_retrieval_operation
+  end
+
+  it "should use a stage specific persistence operation when it is set" do
+    chain_persistence_operation = "Chain Persistence Operation"
+    stage_persistence_operation = "Stage Persistence Operation"
+
+    block = ::Proc.new do
+      aggregator_chain do
+        persistence_operation chain_persistence_operation
+
+        stage "simple_stage" do
+          persistence_operation stage_persistence_operation
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.persistence_operation.should == chain_persistence_operation
+    chain.stages.size.should == 1
+    chain.stages.first.persistence_operation.should == stage_persistence_operation
+  end
+
+  it "should use a stage specific notification operation when it is set" do
+    chain_notification_operation = "Chain Persistence Operation"
+    stage_notification_operation = "Stage Persistence Operation"
+
+    block = ::Proc.new do
+      aggregator_chain do
+        notification_operation chain_notification_operation
+
+        stage "simple_stage" do
+          notification_operation stage_notification_operation
+        end
+      end
+    end
+
+    chain = ::Blockenspiel.invoke(block, Batsir::DSL::ChainMapping.new)
+    chain.notification_operation.should == chain_notification_operation
+    chain.stages.size.should == 1
+    chain.stages.first.notification_operation.should == stage_notification_operation
   end
 
   it "should be possible to create a complete aggregator chain" do

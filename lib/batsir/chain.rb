@@ -3,8 +3,12 @@ module Batsir
 
     attr_accessor :retrieval_operation
     attr_accessor :persistence_operation
+    attr_accessor :notification_operation
 
-    def initialize
+    def initialize(options = {})
+      options.each do |attr, value|
+        self.send("#{attr.to_s}=", value)
+      end
       @stages = []
     end
 
