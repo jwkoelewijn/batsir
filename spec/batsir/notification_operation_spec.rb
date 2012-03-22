@@ -2,7 +2,7 @@ require File.join( File.dirname(__FILE__), "..", "spec_helper")
 
 describe Batsir::NotificationOperation do
   it "should respond to #execute" do
-    Batsir::NotificationOperation.instance_methods.should include "execute"
+    Batsir::NotificationOperation.instance_methods.map{|im| im.to_s}.should include "execute"
   end
 
   it "should be possible to set the notification queue" do

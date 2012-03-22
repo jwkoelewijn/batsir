@@ -1,6 +1,6 @@
 module Batsir
   class Operation
-    def execute
+    def execute(*args)
     end
   end
 end

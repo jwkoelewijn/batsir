@@ -5,9 +5,11 @@ source "http://rubygems.org"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
-gem "bundler", "~> 1.0.0"
+gem "bundler", "> 1.0.0"
 gem "jeweler", "~> 1.6.4"
 gem "blockenspiel", "~> 0.4.3"
+gem "celluloid", "~> 0.9.0"
+gem "bunny"
 
 group :development do
 end

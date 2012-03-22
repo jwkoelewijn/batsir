@@ -12,3 +12,4 @@ require 'rspec/core'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'batsir'
+require 'batsir/support/mock_operations'

@@ -7,6 +7,6 @@ describe Batsir::Operation do
   end
 
   it "should have an #execute method" do
-    Batsir::Operation.instance_methods.should include "execute"
+    Batsir::Operation.instance_methods.map{|im| im.to_s}.should include "execute"
   end
 end
