@@ -8,7 +8,8 @@ source "http://rubygems.org"
 gem "bundler", "> 1.0.0"
 gem "jeweler", "~> 1.6.4"
 gem "blockenspiel", "~> 0.4.3"
-gem "celluloid", "~> 0.9.0"
+gem "celluloid"
+gem "sidekiq"
 gem "bunny"
 
 group :development do

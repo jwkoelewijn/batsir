@@ -159,138 +159,6 @@ describe Batsir::Stage do
     stage.notification_queues[notification_queue].should == parent_attribute
   end
 
-  context "With respect to building stages" do
-
-    it "should not be possible to build a stage without a chain" do
-      stage = create_stage(:chain => nil)
-      stage.build.should be_false
-      stage.should_not be_built
-    end
-
-    it "should not be possible to build a stage without a queue" do
-      stage = create_stage(:queue => nil)
-      stage.build.should be_false
-      stage.should_not be_built
-    end
-
-    it "should not be possible to build a stage without an object type" do
-      stage = create_stage(:object_type => nil)
-      stage.build.should be_false
-      stage.should_not be_built
-    end
-
-    it "should build correctly when a chain, a queue and an object_type are given" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.should be_built
-    end
-
-    it "should initially set the flag that the stage has been built to false" do
-      stage = Batsir::Stage.new
-      stage.should_not be_built
-    end
-
-    it "should set a flag that the stage has been built" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.should be_built
-    end
-
-    it "should initially not have an operation queue" do
-      stage = Batsir::Stage.new
-      stage.operation_queue.should be_nil
-    end
-
-    it "should create an operation queue during the stage build" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.operation_queue.should_not be_nil
-    end
-
-    it "should create an instantiated operation queue during queue instantiation" do
-      stage = create_stage
-      operation_queue = stage.instantiate_operation_queue
-      operation_queue.should be_instantiated
-    end
-
-    it "should set the retrieval operation in the operation queue during queue instantiation" do
-      stage = create_stage
-      operation_queue = stage.instantiate_operation_queue
-      operation_queue.should_not be_nil
-      operation_queue.retrieval_operation.should_not be_nil
-      operation_queue.retrieval_operation.should be_a Batsir::RetrievalOperation
-    end
-
-    it "should set the object type on the retrieval operation during queue instantiation" do
-      stage = create_stage
-      operation_queue = stage.instantiate_operation_queue
-      operation_queue.retrieval_operation.should_not be_nil
-      operation_queue.retrieval_operation.object_type.should == stage.object_type
-    end
-
-    it "should convert operation classes to instances during queue instantiation" do
-      stage = create_stage
-      stage.add_operation( SumOperation )
-      stage.add_operation( AverageOperation )
-      stage.operation_queue.each do |operation|
-        operation.should be_a Class
-      end
-
-      operation_queue = stage.instantiate_operation_queue
-      operation_queue.each do |operation|
-        operation.should_not be_a Class
-      end
-    end
-
-    it "should create notification operations for each notification queue during queue instantiation" do
-      notification_queue1 = :notification_queue1
-      parent_attribute1   = :parent1
-
-      stage = create_stage
-      stage.notification_operation = Batsir::NotificationOperation
-      stage.add_notification(notification_queue1, parent_attribute1)
-      operation_queue = stage.instantiate_operation_queue
-      operations = operation_queue.notification_operations
-      operations.size.should == 1
-      operations.first.queue.should == notification_queue1
-      operations.first.parent_attribute.should == parent_attribute1
-    end
-
-    it "should have a list of stage actor supervisors" do
-      stage = create_stage
-      stage.stage_actor_pool.should_not be_nil
-    end
-
-    it "should initially have an empty list of stage actors" do
-      stage = create_stage
-      stage.stage_actor_pool.should be_empty
-    end
-
-    it "should create at least one stage actor when building the stage" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.stage_actor_pool.get do |actor|
-        actor.should be_a Batsir::StageActor
-      end
-    end
-
-    it "should set an operation queue on the stage actors created during the build phase of the stage" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.stage_actor_pool.get do |actor|
-        actor.operation_queue.should_not be_nil
-      end
-    end
-
-    it "should create instantiated operation queues on the stage actors during the build phase of the stage" do
-      stage = create_stage
-      stage.build.should be_true
-      stage.stage_actor_pool.get do |actor|
-        actor.operation_queue.should be_instantiated
-      end
-    end
-  end
-
   context "with respect to starting the stage" do
     module Bunny
       def self.instance
@@ -325,14 +193,8 @@ describe Batsir::Stage do
       end
     end
 
-    it "should not start when it is not built" do
-      stage = Batsir::Stage.new
-      stage.start.should be_false
-    end
-
     it "should create the stage configured queue when started" do
       stage = create_stage
-      stage.build.should be_true
 
       stage.start.should_not be_false
       instance = Bunny.instance
@@ -343,7 +205,6 @@ describe Batsir::Stage do
 
     it "should dispatch a message to a stage actor when a message is received on the subscribed queue" do
       stage = create_stage
-      stage.build.should be_true
 
       stage.start.should_not be_false
       instance = Bunny.instance
@@ -351,10 +212,6 @@ describe Batsir::Stage do
       bunny_queue.should_not be_nil
       block = bunny_queue.block
       block.should_not be_nil
-      stage.stage_actor_pool.get do |actor|
-        actor.should_receive(:execute!)
-      end
-      block.yield "some message"
     end
   end
 end

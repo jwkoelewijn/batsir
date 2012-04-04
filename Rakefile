@@ -49,3 +49,42 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+task :run_chain do
+  begin
+    Bundler.setup(:default, :development)
+  rescue Bundler::BundlerError => e
+    $stderr.puts e.message
+    $stderr.puts "Run `bundle install` to install missing gems"
+    exit e.status_code
+  end
+  $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+  require 'batsir'
+  require 'batsir/support/mock_operations'
+
+  Batsir.create_and_start do
+    retrieval_operation Batsir::RetrievalOperation
+    persistence_operation PersistenceOperation
+    notification_operation Batsir::NotificationOperation
+
+    stage "stage 1" do
+      queue :timecard_updated
+      object_type Object
+      operations do
+        add_operation SumOperation
+        add_operation AverageOperation
+      end
+      notifications do
+        queue :receive_queue_2, :object_id
+      end
+    end
+
+    stage "stage 2" do
+      queue :receive_queue_2
+      object_type String
+      operations do
+        add_operation SumOperation
+      end
+    end
+  end
+end

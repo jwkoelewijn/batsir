@@ -1,6 +1,7 @@
 module Batsir::MockBehavior
   attr_accessor :execute_count
-  def initialize
+  def initialize(options = {})
+    super
     @execute_count = 0
   end
 
@@ -23,9 +24,5 @@ class AverageOperation < Batsir::MockOperation
 end
 
 class Batsir::RetrievalOperation
-  include Batsir::MockBehavior
-end
-
-class Batsir::NotificationOperation
   include Batsir::MockBehavior
 end

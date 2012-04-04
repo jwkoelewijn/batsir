@@ -3,15 +3,20 @@ GEM
   specs:
     blockenspiel (0.4.3)
     bunny (0.7.9)
-    celluloid (0.9.0)
+    celluloid (0.10.0)
+    connection_pool (0.9.1)
     diff-lcs (1.1.3)
     git (1.2.5)
     jeweler (1.6.4)
       bundler (~> 1.0)
       git (>= 1.2.5)
       rake
+    multi_json (1.2.0)
     rake (0.9.2.2)
     rcov (0.9.11)
+    redis (2.2.2)
+    redis-namespace (1.1.0)
+      redis (< 3.0.0)
     rspec (2.8.0)
       rspec-core (~> 2.8.0)
       rspec-expectations (~> 2.8.0)
@@ -20,6 +25,12 @@ GEM
     rspec-expectations (2.8.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.8.0)
+    sidekiq (0.11.1)
+      celluloid (~> 0.10.0)
+      connection_pool (~> 0.9.0)
+      multi_json
+      redis
+      redis-namespace
 
 PLATFORMS
   ruby
@@ -28,7 +39,8 @@ DEPENDENCIES
   blockenspiel (~> 0.4.3)
   bundler (> 1.0.0)
   bunny
-  celluloid (~> 0.9.0)
+  celluloid
   jeweler (~> 1.6.4)
   rcov
   rspec
+  sidekiq

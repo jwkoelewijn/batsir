@@ -13,3 +13,10 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'batsir'
 require 'batsir/support/mock_operations'
+
+Celluloid.logger.level = Logger::ERROR
+RSpec.configure do |config|
+  config.after(:each) do
+    Celluloid.shutdown
+  end
+end
