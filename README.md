@@ -6,6 +6,7 @@ consist of several operations that will be executed one after the other. Each st
 is defined by its name and the queue on which it will listen. Once a message is received
 on the queue, it is dispatched to a worker in a seperate thread that will pass the message
 to each operation in the operation queue.
+
 Operation queues can have 4 different operations, 1 common operation type, and 3 special 
 purpose operations: retrieval operations (which are always executed before all other operations),
 persistence operations (which are always executed after the common operations, but before the
