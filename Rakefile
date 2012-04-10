@@ -17,8 +17,18 @@ Jeweler::Tasks.new do |gem|
   gem.name = "batsir"
   gem.homepage = "http://github.com/jwkoelewijn/batsir"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Batsir is an execution platform for stage based operation queue execution}
+  gem.description = %Q{Batsir uses so called stages to define operation queues. These operation queus
+ consist of several operations that will be executed one after the other. Each stage
+ is defined by its name and the queue on which it will listen. Once a message is received
+ on the queue, it is dispatched to a worker in a seperate thread that will pass the message
+ to each operation in the operation queue.
+ Operation queues can have 4 different operations, 1 common operation type, and 3 special 
+ purpose operations: retrieval operations (which are always executed before all other operations),
+ persistence operations (which are always executed after the common operations, but before the
+ notification operations) and notification operations (which will always be executed last)
+ This makes it possible to create chains of stages to perform tasks that depend on each
+ other, but otherwise have a low coupling}
   gem.email = "jwkoelewijn@gmail.com"
   gem.authors = ["J.W. Koelewijn"]
   # dependencies defined in Gemfile
@@ -30,12 +40,6 @@ require 'rspec/core/rake_task'
 desc "Run specs"
 RSpec::Core::RakeTask.new do |t|
   t.pattern = 'spec/**/*_spec.rb'
-end
-
-RSpec::Core::RakeTask.new(:coverage) do |t|
-  t.pattern = 'spec/**/*_spec.rb'
-  t.rcov = true
-  t.rcov_opts = ['--exclude', 'spec']
 end
 
 task :default => :spec

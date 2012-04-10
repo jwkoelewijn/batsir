@@ -16,6 +16,5 @@ group :development do
 end
 
 group :test do
-  gem "rcov", ">= 0"
   gem "rspec"
 end
