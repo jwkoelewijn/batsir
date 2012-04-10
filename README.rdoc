@@ -1,17 +1,42 @@
-aggregator_chain do
-  retrieval_operation Aggregation::Retrieval::DataMapper
-  persistence_operation Aggregation::Persistence::MongoDB
+Batsir is an execution platform for stage based operation queue execution
 
-  stage "timecards" do
-    queue :timecard_updated
-    object_type Flex::Timecard
+Batsir uses so called stages to define operation queues. These operation queus
+ consist of several operations that will be executed one after the other. Each stage
+ is defined by its name and the queue on which it will listen. Once a message is received
+ on the queue, it is dispatched to a worker in a seperate thread that will pass the message
+ to each operation in the operation queue.
+ Operation queues can have 4 different operations, 1 common operation type, and 3 special 
+ purpose operations: retrieval operations (which are always executed before all other operations),
+ persistence operations (which are always executed after the common operations, but before the
+ notification operations) and notification operations (which will always be executed last)
+ This makes it possible to create chains of stages to perform tasks that depend on each
+ other, but otherwise have a low coupling
+
+= Example
+
+```ruby
+Batsir.create_and_start do
+  retrieval_operation Batsir::RetrievalOperation
+  persistence_operation PersistenceOperation
+  notification_operation Batsir::NotificationOperation
+
+  stage "stage 1" do
+    queue :foo_updated
+    object_type Object
     operations do
-      add_operation Aggregation::SummarizeDurationOperation
-      add_operation Aggregation::VerifiabilityOperation
+      add_operation SumOperation
+      add_operation AverageOperation
     end
-    notification do
-      queue :organisation_tree_updated, :organisation_tree_id
-      queue :job_updated, :job_id
+    notifications do
+      queue :receive_queue_2, :object_id
+    end
+  end
+
+  stage "stage 2" do
+    queue :receive_queue_2
+    object_type String
+    operations do
+      add_operation SumOperation
     end
   end
 end
