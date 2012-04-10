@@ -16,8 +16,9 @@ module Batsir
 
     def execute(*args)
       return false unless @operation_queue
+      message = *args
       @operation_queue.each do |operation|
-        operation.execute(*args)
+        message = operation.execute(message)
       end
       true
     end
