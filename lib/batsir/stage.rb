@@ -56,7 +56,9 @@ module Batsir
         q.subscribe do |msg|
           puts "Received message in #{name}: #{msg[:payload]}"
           klazz = Registry.get(name)
+          puts "Performing async on #{klazz.to_s}"
           klazz.perform_async(msg[:payload])
+          puts "Done dispatching"
         end
       end
       true
