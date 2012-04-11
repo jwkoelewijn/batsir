@@ -51,14 +51,19 @@ module Batsir
             end
 
             def initialize
-              @operation_queue = self.class.operation_queue
+              begin
+                initialize_operation_queue
+              rescue => e
+                puts e.message
+                puts e.backtrace.join("\n")
+              end
             end
 
             def self.operation_queue
               @operation_queue
             end
 
-            def self.initialize_operation_queue
+            def initialize_operation_queue
               @operation_queue = OperationQueue.new
       EOF
 

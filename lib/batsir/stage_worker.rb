@@ -7,7 +7,6 @@ module Batsir
 
     def self.included(base)
       Registry.register(base.stage_name, base)
-      base.initialize_operation_queue
     end
 
     def perform(message)
