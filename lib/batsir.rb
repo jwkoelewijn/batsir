@@ -28,7 +28,10 @@ module Batsir
     
     sidekiq_cli = Sidekiq::CLI.instance
     Sidekiq.options[:queues] << 'default'
-    eval(@chain.compile)
+    generated_code = @chain.compile
+
+    puts "Generated code:\n#{generated_code}"
+    eval(generated_code)
 
     @chain.start
     sidekiq_cli.run
