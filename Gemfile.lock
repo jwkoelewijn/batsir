@@ -40,6 +40,6 @@ DEPENDENCIES
   bundler (> 1.0.0)
   bunny
   celluloid
-  jeweler (~> 1.6.4)
+  jeweler
   rspec
   sidekiq
