@@ -11,6 +11,13 @@ module Batsir
 
     def perform(message)
       puts "Received message in worker"
+      begin
+        initialize_operation_queue
+      rescue => e
+        puts e.message
+        puts e.backtrace.join("\n")
+        raise e
+      end
       execute(message)
     end
 

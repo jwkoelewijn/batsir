@@ -51,13 +51,7 @@ module Batsir
             end
 
             def initialize
-              begin
-                initialize_operation_queue
-              rescue => e
-                puts e.message
-                puts e.backtrace.join("\n")
-              end
-            end
+                          end
 
             def self.operation_queue
               @operation_queue
