@@ -92,3 +92,41 @@ task :run_chain do
     end
   end
 end
+
+task :run_other_chain do
+  begin
+    Bundler.setup(:default, :development)
+  rescue Bundler::BundlerError => e
+    $stderr.puts e.message
+    $stderr.puts "Run `bundle install` to install missing gems"
+    exit e.status_code
+  end
+  $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+  require 'batsir'
+  require 'batsir/support/mock_operations'
+
+  Batsir.create_and_start do
+    before_operation Batsir::RetrievalOperation
+    after_operation PersistenceOperation
+    outbound_operation Batsir::NotificationOperation
+
+    stage "stage 1" do
+      queue :timecard_updated
+      operations do
+        add_operation SumOperation
+        add_operation AverageOperation
+      end
+      outbound do
+        queue :receive_queue_2, :object_id
+      end
+    end
+
+    stage "stage 2" do
+      queue :receive_queue_2
+      before_operation Batsir::TransformMessageOperation
+      operations do
+        add_operation SumOperation
+      end
+    end
+  end
+end
