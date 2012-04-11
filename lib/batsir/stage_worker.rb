@@ -19,6 +19,7 @@ module Batsir
       puts "No operation queue" unless @operation_queue
       return false unless @operation_queue
       message = args
+      puts args.inspect
       @operation_queue.each do |operation|
         puts "Performing #{operation.class.to_s}"
         message = operation.execute(message)
