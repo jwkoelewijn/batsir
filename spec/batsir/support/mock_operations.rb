@@ -5,7 +5,7 @@ module Batsir::MockBehavior
     @execute_count = 0
   end
 
-  def execute(*args)
+  def execute(message)
     @execute_count += 1
   end
 end

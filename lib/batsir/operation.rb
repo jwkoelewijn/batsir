@@ -6,7 +6,7 @@ module Batsir
       end
     end
 
-    def execute(*args)
+    def execute(message)
     end
   end
 end

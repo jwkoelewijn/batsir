@@ -6,7 +6,7 @@ module Batsir
     def execute(msg)
       Bunny.run do | bunny|
         direct_exchange = bunny.exchange("")
-        direct_exchange.publish("test", :key => queue)
+        direct_exchange.publish(msg, :key => queue)
       end
     end
   end
