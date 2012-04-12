@@ -3,6 +3,8 @@ require 'celluloid'
 require 'bunny'
 require 'sidekiq'
 require 'sidekiq/cli'
+require 'sidekiq/middleware/client/unique_jobs'
+require 'sidekiq/middleware/server/unique_jobs'
 require 'batsir/registry'
 require 'batsir/chain'
 require 'batsir/operation'
@@ -34,6 +36,14 @@ module Batsir
     eval(generated_code)
 
     @chain.start
+
+    Sidekiq.client_middleware do |chain|
+      chain.add Sidekiq::Middleware::Client::UniqueJobs
+    end
+    Sidekiq.server_middleware do |chain|
+      chain.add Sidekiq::Middleware::Server::UniqueJobs
+    end
+
     sidekiq_cli.run
   end
 
