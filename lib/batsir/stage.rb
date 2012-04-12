@@ -58,7 +58,7 @@ module Batsir
       queue.purge
 
       subscription = queue.subscribe(:ack => true)
-      subscription.each(:blocking => false) do |headers, msg|
+      subscription.each(:blocking => true) do |headers, msg|
         klazz = Registry.get(name)
         klazz.perform_async(msg)
         headers.ack
