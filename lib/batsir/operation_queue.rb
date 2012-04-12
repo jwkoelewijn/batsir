@@ -65,7 +65,6 @@ module Batsir
       if retrieval_op = stage.retrieval_operation
         code << <<-EOF
               retrieval_operation = #{retrieval_op.to_s}.new
-              retrieval_operation.object_type = #{stage.object_type.to_s}
               @operation_queue.retrieval_operation = retrieval_operation
         EOF
       end

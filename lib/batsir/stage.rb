@@ -50,14 +50,28 @@ module Batsir
     end
 
     def start
-      Bunny.run do | bunny |
-        q = bunny.queue(self.queue)
-        exc = bunny.exchange('')
-        q.subscribe do |msg|
-          klazz = Registry.get(name)
-          klazz.perform_async(msg[:payload])
-        end
+      connection = HotBunnies.connect(:host => 'localhost')
+      channel = connection.create_channel
+      channel.prefetch = 10
+
+      queue = channel.exchange('', :type => :direct)
+      queue.bind(exchange, :routing_key => self.queue.to_s)
+      queue.purge
+
+      subscription = queue.subscribe(:ack => true)
+      subscription.each(:blocking => true) do |headers, msg|
+        klazz = Registry.get(name)
+        klazz.perform_async(msg)
+        headers.ack
       end
+#      Bunny.run do | bunny |
+#        q = bunny.queue(self.queue)
+#        exc = bunny.exchange('')
+#        q.subscribe do |msg|
+#          klazz = Registry.get(name)
+#          klazz.perform_async(msg[:payload])
+#        end
+#      end
       true
     end
   end
