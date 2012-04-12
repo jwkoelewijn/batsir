@@ -30,7 +30,6 @@ module Batsir
     Sidekiq.options[:queues] << 'default'
     generated_code = @chain.compile
 
-    puts "Generated code:\n#{generated_code}"
     eval(generated_code)
 
     @chain.start

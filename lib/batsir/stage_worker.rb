@@ -11,7 +11,6 @@ module Batsir
     end
 
     def perform(message)
-      puts "Received message in worker"
       execute(message)
     end
 
@@ -19,11 +18,9 @@ module Batsir
       puts "No operation queue" unless @operation_queue
       return false unless @operation_queue
       @operation_queue.each do |operation|
-        puts "Performing #{operation.class.to_s}"
         message = operation.execute(message)
         return false if message.nil?
       end
-      puts "Done"
       true
     end
   end
