@@ -50,9 +50,6 @@ module Batsir
               "#{stage.name}"
             end
 
-            def initialize
-                          end
-
             def self.operation_queue
               @operation_queue
             end
