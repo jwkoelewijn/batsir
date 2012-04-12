@@ -54,25 +54,14 @@ module Batsir
       channel = connection.create_channel
       channel.prefetch = 10
 
-      exchange = channel.exchange('', :type => :direct)
-      queue = channel.queue(queue)
-      queue.bind(exchange, :routing_key => self.queue.to_s)
+      queue = channel.queue(self.queue)
       queue.purge
 
-      subscription = queue.subscribe(:ack => true)
-      subscription.each(:blocking => true) do |headers, msg|
+      subscription.each(:ack => true, :blocking => false) do |headers, msg|
         klazz = Registry.get(name)
         klazz.perform_async(msg)
         headers.ack
       end
-#      Bunny.run do | bunny |
-#        q = bunny.queue(self.queue)
-#        exc = bunny.exchange('')
-#        q.subscribe do |msg|
-#          klazz = Registry.get(name)
-#          klazz.perform_async(msg[:payload])
-#        end
-#      end
       true
     end
   end
