@@ -54,7 +54,8 @@ module Batsir
       channel = connection.create_channel
       channel.prefetch = 10
 
-      queue = channel.exchange('', :type => :direct)
+      exchange = channel.exchange('', :type => :direct)
+      queue = channel.queue(queue)
       queue.bind(exchange, :routing_key => self.queue.to_s)
       queue.purge
 
