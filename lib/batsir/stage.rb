@@ -55,7 +55,7 @@ module Batsir
       channel.prefetch = 10
 
       exchange = channel.exchange('', :type => :direct)
-      queue = channel.queue(self.queue)
+      queue = channel.queue(self.queue.to_s)
       queue.purge
 
       subscription = queue.subscribe(:ack => true)
