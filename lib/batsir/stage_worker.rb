@@ -7,17 +7,11 @@ module Batsir
 
     def self.included(base)
       Registry.register(base.stage_name, base)
+      base.initialize_operation_queue
     end
 
     def perform(message)
       puts "Received message in worker"
-      begin
-        initialize_operation_queue
-      rescue => e
-        puts e.message
-        puts e.backtrace.join("\n")
-        raise e
-      end
       execute(message)
     end
 

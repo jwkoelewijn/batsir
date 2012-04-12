@@ -50,11 +50,15 @@ module Batsir
               "#{stage.name}"
             end
 
+            def initialize
+              @operation_queue = self.class.operation_queue
+            end
+
             def self.operation_queue
               @operation_queue
             end
 
-            def initialize_operation_queue
+            def self.initialize_operation_queue
               @operation_queue = OperationQueue.new
       EOF
 
