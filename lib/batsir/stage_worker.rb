@@ -21,6 +21,7 @@ module Batsir
       @operation_queue.each do |operation|
         puts "Performing #{operation.class.to_s}"
         message = operation.execute(message)
+        return false if message.nil?
       end
       puts "Done"
       true
