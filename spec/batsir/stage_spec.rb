@@ -37,32 +37,71 @@ describe Batsir::Stage do
     stage.chain.should == chain
   end
 
-  it "should create the object queue when the first operation is added to the stage" do
-    operation = "Operation"
+  it "should not be possible to set the filters" do
     stage = Batsir::Stage.new
-    stage.add_filter(operation)
-    stage.filter_queue.should_not be_nil
+    lambda { stage.filters = {} }.should raise_error(NoMethodError)
   end
 
-  it "should add the operations to the object queue" do
-    operation = "Operation"
+  it "should add a filter to its filters" do
+    filter = "Filter"
     stage = Batsir::Stage.new
-    stage.add_filter(operation)
-    stage.filter_queue.should_not be_nil
-    stage.filter_queue.should include operation
+    stage.add_filter(filter)
+    stage.filters.should_not be_nil
+    stage.filters.keys.should include filter
   end
 
-  it "should add multiple operations to the same queue" do
-    operation1 = "Operation 1"
-    operation2 = "Operation 2"
+  it "should add multiple filters to the same queue" do
+    filter1 = "Filter 1"
+    filter2 = "Filter 2"
     stage = Batsir::Stage.new
-    stage.add_filter(operation1)
-    filter_queue = stage.filter_queue
+    stage.add_filter(filter1)
+    filters = stage.filters
 
-    stage.add_filter(operation2)
-    stage.filter_queue.should == filter_queue
-    stage.filter_queue.should include operation1
-    stage.filter_queue.should include operation2
+    stage.add_filter(filter2)
+    stage.filters.should == filters
+    stage.filters.keys.should include filter1
+    stage.filters.keys.should include filter2
+  end
+
+  it "should be possible to add filters with on options hash" do
+    filter = :filter
+    options = {:foo => :bar}
+
+    stage = Batsir::Stage.new
+    stage.add_filter(filter, options)
+
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    stage.filters.keys.should include filter
+    stage.filters[filter].should == options
+  end
+
+  it "should be possible to add multiple filters with option hashes" do
+    filter1 = :filter1
+    filter2 = :filter2
+    options1 = {:foo1 => :bar1}
+    options2 = {:foo2 => :bar2}
+
+    stage = Batsir::Stage.new
+    stage.add_filter(filter1, options1)
+    stage.add_filter(filter2, options2)
+
+    stage.filters.keys.should include filter1
+    stage.filters.keys.should include filter2
+    stage.filters[filter1].should == options1
+    stage.filters[filter2].should == options2
+  end
+
+  it "should add empty options hashes to filters when no option hash is given" do
+    filter = :filter
+
+    stage = Batsir::Stage.new
+    stage.add_filter(filter)
+
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    stage.filters.keys.should include filter
+    stage.filters[filter].should == {}
   end
 
   it "should initially have an empty list of acceptors" do
@@ -181,6 +220,10 @@ describe Batsir::Stage do
     it "should initialize a class local filter queue" do
       @created_class.filter_queue.should_not be_nil
       @created_class.filter_queue.should_not be_empty
+    end
+
+    it "should have intitialized the filters" do
+      @created_class.filter_queue.map{|filter| filter.class.to_s}.should include "Batsir::Operation"
     end
 
     it "should use the class local filter queue once an instance is initialized" do

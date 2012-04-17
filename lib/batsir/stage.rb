@@ -4,7 +4,7 @@ module Batsir
 
     attr_accessor :name
     attr_accessor :chain
-    attr_reader   :filter_queue
+    attr_reader   :filters
     attr_reader   :notifiers
     attr_reader   :acceptors
 
@@ -12,9 +12,9 @@ module Batsir
       options.each do |attr, value|
         self.send("#{attr.to_s}=", value)
       end
-      @notification_queues = {}
-      @notifiers = {}
       @acceptors = {}
+      @filters   = {}
+      @notifiers = {}
       @built = false
     end
 
@@ -30,14 +30,12 @@ module Batsir
       @acceptors[acceptor] = options
     end
 
-    def add_filter(filter)
-      @filter_queue ||= FilterQueue.new
-      @filter_queue.add(filter)
+    def add_filter(filter, options = {})
+      @filters[filter] = options
     end
 
     def compile
-      @filter_queue ||= FilterQueue.new
-      @filter_queue.generate_code_for(self)
+      Batsir::StageWorker.compile_from(self)
     end
 
     def start

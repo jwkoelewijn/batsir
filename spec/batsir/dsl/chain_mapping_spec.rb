@@ -101,10 +101,10 @@ describe Batsir::DSL::ChainMapping do
     stage2.name.should == "#{stage_name}2"
 
     chain.stages.each do |stage|
-      stage.filter_queue.should_not be_nil
-      stage.filter_queue.should_not be_empty
-      stage.filter_queue.should include operation1
-      stage.filter_queue.should include operation2
+      stage.filters.should_not be_nil
+      stage.filters.should_not be_empty
+      stage.filters.should include operation1
+      stage.filters.should include operation2
       stage.notifiers.should_not be_nil
       stage.notifiers.should_not be_empty
       stage.notifiers.should have_key notification_class1

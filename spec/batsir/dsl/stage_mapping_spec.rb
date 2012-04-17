@@ -23,9 +23,9 @@ describe Batsir::DSL::StageMapping do
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.filter_queue.should_not be_nil
-    stage.filter_queue.should_not be_empty
-    stage.filter_queue.should include filter
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    stage.filters.should include filter
   end
 
   it "should be possible to add multiple filters to the stage" do
@@ -41,10 +41,10 @@ describe Batsir::DSL::StageMapping do
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.filter_queue.should_not be_nil
-    stage.filter_queue.should_not be_empty
-    stage.filter_queue.should include filter1
-    stage.filter_queue.should include filter2
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    stage.filters.should include filter1
+    stage.filters.should include filter2
   end
 
   it "should be possible to add an inbound section to a stage" do
@@ -236,10 +236,10 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors[acceptor_class1].should == options
     stage.acceptors.keys.should include acceptor_class2
     stage.acceptors[acceptor_class2].should == {}
-    stage.filter_queue.should_not be_nil
-    stage.filter_queue.should_not be_empty
-    stage.filter_queue.should include filter1
-    stage.filter_queue.should include filter2
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    stage.filters.should include filter1
+    stage.filters.should include filter2
     stage.notifiers.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.should have_key notification_class1
