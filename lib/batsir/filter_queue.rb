@@ -2,17 +2,16 @@ module Batsir
   class FilterQueue
     include Enumerable
 
-    attr_accessor :operations
+    attr_accessor :filters
     attr_accessor :notifiers
 
     def initialize
-      @operations = []
+      @filters = []
       @notifiers = []
-      @notification_operations = []
     end
 
     def add(operation)
-      @operations.unshift(operation)
+      @filters.unshift(operation)
     end
 
     def add_notifier(notifier)
@@ -20,12 +19,12 @@ module Batsir
     end
 
     def each
-      @operations.each {|op| yield op}
+      @filters.each {|op| yield op}
       @notifiers.each {|n| yield n}
     end
 
     def empty?
-      !(@notifiers.any? || @operations.any?)
+      !(@notifiers.any? || @filters.any?)
     end
   end
 end

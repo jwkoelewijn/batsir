@@ -64,7 +64,7 @@ task :run_chain do
   end
   $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
   require 'batsir'
-  require 'batsir/support/mock_operations'
+  require 'batsir/support/mock_filters'
 
   Batsir.create_and_start do
     retrieval_operation Batsir::RetrievalOperation
@@ -103,7 +103,7 @@ task :run_other_chain do
   end
   $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
   require 'batsir'
-  require 'batsir/support/mock_operations'
+  require 'batsir/support/mock_filters'
 
   Batsir.create_and_start do
     stage "stage 1" do

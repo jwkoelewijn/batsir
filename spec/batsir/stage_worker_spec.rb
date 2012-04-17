@@ -54,12 +54,28 @@ describe Batsir::StageWorker do
           @initialization_count ||= 0
           @initialization_count += 1
         end
+       
+        include Batsir::StageWorker
+      end
 
-        def initialization_count
-          @initialization_count
+      class TestNotifier
+        def notify(message)
+          @notify_count ||= 0
+          @notify_count += 1
         end
 
-        include Batsir::StageWorker
+        def notify_count
+          @notify_count ||= 0
+        end
+
+        def transform(message)
+          @transform_count ||= 0
+          @transform_count += 1
+        end
+
+        def transform_count
+          @transform_count ||= 0
+        end
       end
     end
 
@@ -71,35 +87,51 @@ describe Batsir::StageWorker do
       }
       stage = Batsir::Stage.new(stage_options)
 
-      stage.add_filter SumOperation
-      stage.add_filter AverageOperation
+      stage.add_filter SumFilter
+      stage.add_filter AverageFilter
       stage.add_notifier( :notification_queue_1, {:queue => :somequeue} )
       stage.add_notifier( :notification_queue_2 )
     end
 
     it "should not execute when no operation queue is set" do
-      stage_actor = TestWorker.new
-      stage_actor.execute({}).should be_false
+      stage_worker = TestWorker.new
+      stage_worker.execute({}).should be_false
     end
 
     it "should execute all operations in the operation queue when an #execute message is received" do
       filter_queue = Batsir::FilterQueue.new
-      filter_queue.add SumOperation.new
-      filter_queue.add AverageOperation.new
+      filter_queue.add SumFilter.new
+      filter_queue.add AverageFilter.new
 
-      stage_actor = TestWorker.new
-      stage_actor.filter_queue = filter_queue
+      stage_worker = TestWorker.new
+      stage_worker.filter_queue = filter_queue
 
-      queue = stage_actor.filter_queue
+      queue = stage_worker.filter_queue
       queue.each do |filter|
         filter.execute_count.should == 0
       end
 
-      stage_actor.execute({}).should be_true
+      stage_worker.execute({}).should be_true
 
       queue.each do |filter|
         filter.execute_count.should == 1
       end
+    end
+
+    it "should call #notify on all notifiers in the filter queue when an #execute message is received" do
+      filter_queue = Batsir::FilterQueue.new
+      filter_queue.add_notifier TestNotifier.new
+
+      stage_worker = TestWorker.new
+      stage_worker.filter_queue = filter_queue
+
+      notifier = filter_queue.notifiers.first
+      notifier.should_not be_nil
+      notifier.notify_count.should == 0
+
+      stage_worker.execute({}).should be_true
+
+      notifier.notify_count.should == 1
     end
   end
 end

@@ -12,7 +12,7 @@ require 'rspec/core'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'batsir'
-require 'batsir/support/mock_operations'
+require 'batsir/support/mock_filters'
 
 Celluloid.logger.level = Logger::ERROR
 RSpec.configure do |config|

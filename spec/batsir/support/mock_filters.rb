@@ -10,19 +10,19 @@ module Batsir::MockBehavior
   end
 end
 
-class Batsir::MockOperation < Batsir::Operation
+class Batsir::MockFilter < Batsir::Filter
   include Batsir::MockBehavior
 end
 
-class PersistenceOperation < Batsir::MockOperation
+class PersistenceFilter < Batsir::MockFilter
 end
 
-class SumOperation < Batsir::MockOperation
+class SumFilter < Batsir::MockFilter
 end
 
-class AverageOperation < Batsir::MockOperation
+class AverageFilter < Batsir::MockFilter
 end
 
-class Batsir::RetrievalOperation
+class Batsir::RetrievalFilter
   include Batsir::MockBehavior
 end

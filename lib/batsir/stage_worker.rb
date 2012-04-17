@@ -16,11 +16,13 @@ module Batsir
     end
 
     def execute(message)
-      puts "No filter queue" unless @filter_queue
       return false unless @filter_queue
-      @filter_queue.each do |filter|
+      @filter_queue.filters.each do |filter|
         message = filter.execute(message)
         return false if message.nil?
+      end
+      @filter_queue.notifiers.each do |notifier|
+        notifier.notify(message)
       end
       true
     end

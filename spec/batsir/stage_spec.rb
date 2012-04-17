@@ -9,10 +9,10 @@ describe Batsir::Stage do
   end
 
   before :all do
-    class StubOperation < Batsir::Operation
+    class StubFilter < Batsir::Filter
     end
 
-    class AnotherOperation < Batsir::Operation
+    class AnotherFilter < Batsir::Filter
     end
 
     @object_type = "SomeResource"
@@ -195,8 +195,8 @@ describe Batsir::Stage do
       parent_attribute = :parent_id
       notification_queue = :notification_queue
 
-      stage.add_notifier(Batsir::NotificationOperation)
-      stage.add_filter(Batsir::Operation)
+      stage.add_notifier(Batsir::Notifiers::Notifier)
+      stage.add_filter(Batsir::Filter)
 
       @created_class = eval( stage.compile )
     end
@@ -223,7 +223,7 @@ describe Batsir::Stage do
     end
 
     it "should have intitialized the filters" do
-      @created_class.filter_queue.map{|filter| filter.class.to_s}.should include "Batsir::Operation"
+      @created_class.filter_queue.map{|filter| filter.class.to_s}.should include "Batsir::Filter"
     end
 
     it "should use the class local filter queue once an instance is initialized" do
