@@ -1,48 +1,62 @@
 # Batsir
-Batsir is an execution platform for stage based operation queue execution
+Batsir is an execution platform for stage based filter queue execution.
+It is based on the Pipes and Filters patterns, and makes it possible to create
+multiples Pipes and Filters (called Stages) that can be invoked asynchronously using so called
+inbound Acceptors. Acceptors are started automatically and will send a payload
+into the filter chain, after which the (possibly) transformed message will be
+processed by the so called outbound Notifiers.
+Notifiers can be used to asynchronously send a message to another stage, as long
+as corresponding inbound Acceptors have been configured.
 
-Batsir uses so called stages to define operation queues. These operation queus
-consist of several operations that will be executed one after the other. Each stage
-is defined by its name and the queue on which it will listen. Once a message is received
-on the queue, it is dispatched to a worker in a seperate thread that will pass the message
-to each operation in the operation queue.
-
-Operation queues can have 4 different operations, 1 common operation type, and 3 special 
-purpose operations: retrieval operations (which are always executed before all other operations),
-persistence operations (which are always executed after the common operations, but before the
-notification operations) and notification operations (which will always be executed last)
 This makes it possible to create chains of stages to perform tasks that depend on each
-other, but otherwise have a low coupling
+other, but otherwise have a low coupling.
+
+The usage of the Pipes and Filter pattern make it possible to thoroughly test each
+filter in isolation, thus promoting fast test cycles.
 
 # Example
 
 ```ruby
 Batsir.create_and_start do
-  retrieval_operation Batsir::RetrievalOperation
-  persistence_operation PersistenceOperation
-  notification_operation Batsir::NotificationOperation
-
   stage "stage 1" do
-    queue :foo_updated
-    object_type Object
-    operations do
-      add_operation SumOperation
-      add_operation AverageOperation
+    inbound do
+      acceptor AMQPAcceptor, :queue => 'some_queue', :host => 'localhost'
     end
-    notifications do
-      queue :receive_queue_2, :object_id
+    filter SumFilter
+    filter AverageFilter
+    end
+    outbound do
+      notifier AMQPNotifier, :queue => 'queue_2'
     end
   end
 
   stage "stage 2" do
-    queue :receive_queue_2
-    object_type String
-    operations do
-      add_operation SumOperation
+    inbound do
+      acceptor AMQPAcceptor, :queue => 'queue_2'
     end
+    filter PrintFilter
   end
 end
 ```
+
+This example creates 2 stages, 'stage 1' and 'stage 2'. The first stage creates and AMQPAcceptor, 
+that will connect to a AMQP Broker on localhost and will listen for messages on the 'some_queue' queue.
+When a message is received, the message will be offered to the SumFilter first. The result of the
+SumFilter is then sent to the #execute method of the AverageFilter. The result of this filter will
+than be sent as an AMQP message on the 'queue_2' queue.
+
+The inbound AMQPAcceptor of the second stage will then receive the message and its filters will be
+invoked (the PrintFilter in this example).
+
+# Sidekiq & Celluloid
+Batsir acts as both a Sidekiq server and client at the same time. When Batsir#create_and_start is invoked,
+Batsir will create Sidekiq workers on the fly, with instantiated filters on the workers. These workers will
+be deployed in the Sidekiq server, so that they will be available for processing. The workers also register
+themselves in a registry, where they can be requested using the stage name.
+
+The inbound acceptors will listen as a Celluloid Actor on the client side of Sidekiq. When a message is 
+received, it will look up the corresponding StageWorker in the registry and it will invoke the
+StageWorker asynchronously using Sidekiq.
 
 ## Contributing to batsir
  
