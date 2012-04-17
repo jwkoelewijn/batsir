@@ -13,7 +13,7 @@ describe Batsir::StageWorker do
           @stage_name_called || false
         end
 
-        def self.initialize_operation_queue
+        def self.initialize_filter_queue
           @initialization_count ||= 0
           @initialization_count += 1
         end
@@ -39,8 +39,8 @@ describe Batsir::StageWorker do
     end
   end
 
-  it "should be possible to set an operation queue" do
-    Batsir::StageWorker.instance_methods.map{|m| m.to_s}.should include "operation_queue="
+  it "should be possible to set an filter queue" do
+    Batsir::StageWorker.instance_methods.map{|m| m.to_s}.should include "filter_queue="
   end
 
   context "With respect to executing" do
@@ -50,7 +50,7 @@ describe Batsir::StageWorker do
           "TestWorker"
         end
 
-        def self.intitialize_operation_queue
+        def self.intitialize_filter_queue
           @initialization_count ||= 0
           @initialization_count += 1
         end
@@ -64,52 +64,41 @@ describe Batsir::StageWorker do
     end
 
     before :each do
-      chain_options = {
-        :retrieval_operation => Batsir::RetrievalOperation,
-        :persistence_operation => PersistenceOperation
-      }
-
-      chain = Batsir::Chain.new(chain_options)
+      chain = Batsir::Chain.new
 
       stage_options = {
-        :queue => :listening_queue,
-        :notification_operation => Batsir::NotificationOperation,
         :chain => chain,
-        :object_type => Object
       }
       stage = Batsir::Stage.new(stage_options)
 
-      stage.add_operation SumOperation
-      stage.add_operation AverageOperation
-      stage.add_notification( :notification_queue_1, :parent_id_1 )
-      stage.add_notification( :notification_queue_2, :parent_id_2 )
-      operation_queue = stage.operation_queue
+      stage.add_filter SumOperation
+      stage.add_filter AverageOperation
+      stage.add_notifier( :notification_queue_1, {:queue => :somequeue} )
+      stage.add_notifier( :notification_queue_2 )
     end
 
     it "should not execute when no operation queue is set" do
       stage_actor = TestWorker.new
-      stage_actor.execute.should be_false
+      stage_actor.execute({}).should be_false
     end
 
     it "should execute all operations in the operation queue when an #execute message is received" do
-      operation_queue = Batsir::OperationQueue.new
-      operation_queue.add SumOperation.new
-      operation_queue.add AverageOperation.new
-      operation_queue.retrieval_operation = Batsir::RetrievalOperation.new
-      operation_queue.persistence_operation = PersistenceOperation.new
+      filter_queue = Batsir::FilterQueue.new
+      filter_queue.add SumOperation.new
+      filter_queue.add AverageOperation.new
 
       stage_actor = TestWorker.new
-      stage_actor.operation_queue = operation_queue
+      stage_actor.filter_queue = filter_queue
 
-      queue = stage_actor.operation_queue
-      queue.each do |operation|
-        operation.execute_count.should == 0
+      queue = stage_actor.filter_queue
+      queue.each do |filter|
+        filter.execute_count.should == 0
       end
 
-      stage_actor.execute.should be_true
+      stage_actor.execute({}).should be_true
 
-      queue.each do |operation|
-        operation.execute_count.should == 1
+      queue.each do |filter|
+        filter.execute_count.should == 1
       end
     end
   end

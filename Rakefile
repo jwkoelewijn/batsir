@@ -106,26 +106,14 @@ task :run_other_chain do
   require 'batsir/support/mock_operations'
 
   Batsir.create_and_start do
-    before_operation Batsir::RetrievalOperation
-    after_operation PersistenceOperation
-    outbound_operation Batsir::NotificationOperation
-
     stage "stage 1" do
-      queue :timecard_updated
-      operations do
-        add_operation SumOperation
-        add_operation AverageOperation
+      inbound do
+        acceptor AMQPAcceptor, :queue => 'timecards_updated', :host => 'localhost'
       end
+      filter MessageCreator, :field => :id
+      filter SumFilter
       outbound do
-        queue :receive_queue_2, :object_id
-      end
-    end
-
-    stage "stage 2" do
-      queue :receive_queue_2
-      before_operation Batsir::TransformMessageOperation
-      operations do
-        add_operation SumOperation
+        notifier AMQPNotifier, :queue => 'organisation_tree_updated', :fields => {:id => :organisation_tree_id, :week => :week}
       end
     end
   end

@@ -3,11 +3,7 @@ require File.join( File.dirname(__FILE__), "..", "spec_helper" )
 describe Batsir::Stage do
   def create_stage(options = {})
     defaults = {
-      :chain        => Batsir::Chain.new(:persistence_operation => PersistenceOperation,
-                                         :retrieval_operation => Batsir::RetrievalOperation),
-      :queue        => :listening_queue,
-      :notification_operation => Batsir::NotificationOperation,
-      :object_type  => Object
+      :chain        => Batsir::Chain.new
     }
     Batsir::Stage.new(defaults.merge(options))
   end
@@ -41,177 +37,217 @@ describe Batsir::Stage do
     stage.chain.should == chain
   end
 
-  it "should be possible to set a queue for the stage" do
-    queue = :queue
-    stage = Batsir::Stage.new(:queue => queue)
-    stage.queue.should == queue
-  end
-
-  it "should be possible to set the object type of the stage" do
-    object_type = Object
-    stage = Batsir::Stage.new(:object_type => object_type)
-    stage.object_type.should == object_type
-  end
-
-  it "should not have a retrieval operation when no chain is configured and no stage specific retrieval operation is configured" do
-    stage = Batsir::Stage.new
-    stage.retrieval_operation.should be_nil
-  end
-
-  it "should not have a persistence operation when no chain is configured and no stage specific persistence operation is configured" do
-    stage = Batsir::Stage.new
-    stage.persistence_operation.should be_nil
-  end
-
-  it "should not have a notification operation when no chain is configured and no stage specific notification operation is configured" do
-    stage = Batsir::Stage.new
-    stage.notification_operation.should be_nil
-  end
-
-  it "should be possible to set a stage specific retrieval operation" do
-    retrieval_operation = "Retrieval Operation"
-    stage = Batsir::Stage.new(:retrieval_operation => retrieval_operation)
-    stage.retrieval_operation.should == retrieval_operation
-  end
-
-  it "should be possible to set a stage specific persistence operation" do
-    persistence_operation = "Persistence Operation"
-    stage = Batsir::Stage.new(:persistence_operation => persistence_operation)
-    stage.persistence_operation.should == persistence_operation
-  end
-
-  it "should be possible to set a stage specific notification operation" do
-    notification_operation = "Notification Operation"
-    stage = Batsir::Stage.new(:notification_operation => notification_operation)
-    stage.notification_operation.should == notification_operation
-  end
-
-  it "should use the retrieval operation of the chain when no stage specific persistence operation is configured" do
-    retrieval_operation = "Retrieval Operation"
-    chain = Batsir::Chain.new(:retrieval_operation => retrieval_operation)
-    stage = Batsir::Stage.new(:chain => chain)
-    stage.retrieval_operation.should == retrieval_operation
-  end
-
-  it "should use the persistence operation of the chain when no stage specific persistence operation is configured" do
-    persistence_operation = "Retrieval Operation"
-    chain = Batsir::Chain.new(:persistence_operation => persistence_operation)
-    stage = Batsir::Stage.new(:chain => chain)
-    stage.persistence_operation.should == persistence_operation
-  end
-
-  it "should use the notification operation of the chain when no stage specific notification operation is configured" do
-    notification_operation = "Notification Operation"
-    chain = Batsir::Chain.new(:notification_operation => notification_operation)
-    stage = Batsir::Stage.new(:chain => chain)
-    stage.notification_operation.should == notification_operation
-  end
-
   it "should create the object queue when the first operation is added to the stage" do
     operation = "Operation"
     stage = Batsir::Stage.new
-    stage.add_operation(operation)
-    stage.operation_queue.should_not be_nil
+    stage.add_filter(operation)
+    stage.filter_queue.should_not be_nil
   end
 
   it "should add the operations to the object queue" do
     operation = "Operation"
     stage = Batsir::Stage.new
-    stage.add_operation(operation)
-    stage.operation_queue.should_not be_nil
-    stage.operation_queue.should include operation
+    stage.add_filter(operation)
+    stage.filter_queue.should_not be_nil
+    stage.filter_queue.should include operation
   end
 
   it "should add multiple operations to the same queue" do
     operation1 = "Operation 1"
     operation2 = "Operation 2"
     stage = Batsir::Stage.new
-    stage.add_operation(operation1)
-    op_queue = stage.operation_queue
+    stage.add_filter(operation1)
+    filter_queue = stage.filter_queue
 
-    stage.add_operation(operation2)
-    stage.operation_queue.should == op_queue
-    stage.operation_queue.should include operation1
-    stage.operation_queue.should include operation2
+    stage.add_filter(operation2)
+    stage.filter_queue.should == filter_queue
+    stage.filter_queue.should include operation1
+    stage.filter_queue.should include operation2
   end
 
-  it "should initially have an empty notification queues" do
+  it "should initially have an empty list of acceptors" do
     stage = Batsir::Stage.new
-    stage.notification_queues.should_not be_nil
-    stage.notification_queues.should be_empty
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
   end
 
-  it "should not be possible to set the notification queues" do
+  it "should not be possible to set the acceptors" do
     stage = Batsir::Stage.new
-    lambda { stage.notification_queues = {} }.should raise_error(NoMethodError)
+    lambda { stage.acceptors = {} }.should raise_error(NoMethodError)
   end
 
-  it "should be possible to add a notification queue" do
+  it "should be possible to add new acceptors" do
+    stage = Batsir::Stage.new
+    stage.add_acceptor(:acceptor)
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include :acceptor
+  end
+
+  it "should be possible to add an acceptor with an options hash" do
+    stage = Batsir::Stage.new
+    options = {:foo => :bar}
+    stage.add_acceptor(:acceptor, options)
+
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include :acceptor
+    stage.acceptors[:acceptor].should == options
+  end
+
+  it "should add an empty options hash for added acceptors without options" do
+    stage = Batsir::Stage.new
+    stage.add_acceptor(:acceptor)
+
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include :acceptor
+    stage.acceptors[:acceptor].should == {}
+  end
+
+  it "should initially have an empty notifiers queue" do
+    stage = Batsir::Stage.new
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+  end
+
+  it "should not be possible to set the notifiers" do
+    stage = Batsir::Stage.new
+    lambda { stage.notifiers = {} }.should raise_error(NoMethodError)
+  end
+
+  it "should be possible to add new notifiers" do
     stage = Batsir::Stage.new
 
-    parent_attribute = :parent_id
-    notification_queue = :notification_queue
-
-    stage.add_notification(notification_queue, parent_attribute)
-    stage.notification_queues.should_not be_nil
-    stage.notification_queues.should_not be_empty
-    stage.notification_queues.should have_key notification_queue
-    stage.notification_queues[notification_queue].should == parent_attribute
+    stage.add_notifier(:notifier)
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.keys.should include :notifier
   end
 
-  context "with respect to starting the stage" do
-    module Bunny
-      def self.instance
-        @instance
-      end
+  it "should be possible to set a notifier with an options hash" do
+    stage = Batsir::Stage.new
 
-      def self.run
-        @instance = BunnyInstance.new
-        yield @instance
-      end
+    options = {:foo => :bar}
 
-      class BunnyInstance
-        attr_accessor :queues
-        def initialize
-          @queues = {}
-        end
+    stage.add_notifier(:notifier, options)
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.keys.should include :notifier
+    stage.notifiers[:notifier].should == options
+  end
 
-        def exchange(exchange)
-        end
+  it "should add an empty options hash for added notifiers without options" do
+    stage = Batsir::Stage.new
 
-        def queue(queue)
-          @queues[queue] = BunnyQueue.new
-        end
-      end
+    stage.add_notifier(:notifier)
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.keys.should include :notifier
+    stage.notifiers[:notifier].should == {}
+  end
 
-      class BunnyQueue
-        attr_accessor :block
+  context "with respect to compiling the stage" do
+    before :all do
+      @stage_name = "Stage 1"
 
-        def subscribe(&block)
-          @block = block
-        end
-      end
+      stage = Batsir::Stage.new(:name => @stage_name)
+
+      parent_attribute = :parent_id
+      notification_queue = :notification_queue
+
+      stage.add_notifier(Batsir::NotificationOperation)
+      stage.add_filter(Batsir::Operation)
+
+      @created_class = eval( stage.compile )
     end
 
-    it "should create the stage configured queue when started" do
-      stage = create_stage
-
-      stage.start.should_not be_false
-      instance = Bunny.instance
-      instance.should_not be_nil
-      instance.queues.size.should == 1
-      instance.queues.keys.should include stage.queue
+    it "should create a class named after the stage name" do
+      @created_class.to_s.should == "Stage1Worker"
     end
 
-    it "should dispatch a message to a stage actor when a message is received on the subscribed queue" do
-      stage = create_stage
+    it "should create a Batsir::StageWorker class" do
+      @created_class.ancestors.should include Batsir::StageWorker
+    end
 
-      stage.start.should_not be_false
-      instance = Bunny.instance
-      bunny_queue = instance.queues[stage.queue]
-      bunny_queue.should_not be_nil
-      block = bunny_queue.block
-      block.should_not be_nil
+    it "should create a class that includes Sidekiq::Worker" do
+      @created_class.ancestors.should include Sidekiq::Worker
+    end
+
+    it "should create a worker class named after the stage name" do
+      @created_class.stage_name.should == @stage_name
+    end
+
+    it "should initialize a class local filter queue" do
+      @created_class.filter_queue.should_not be_nil
+      @created_class.filter_queue.should_not be_empty
+    end
+
+    it "should use the class local filter queue once an instance is initialized" do
+      instance = @created_class.new
+      instance.filter_queue.should == @created_class.filter_queue
+    end
+
+    it "should initialize all filters in the filter queue" do
+      @created_class.filter_queue.each do |filter|
+        filter.should_not be_a Class
+      end
     end
   end
+
+#  context "with respect to starting the stage" do
+#    module Bunny
+#      def self.instance
+#        @instance
+#      end
+#
+#      def self.run
+#        @instance = BunnyInstance.new
+#        yield @instance
+#      end
+#
+#      class BunnyInstance
+#        attr_accessor :queues
+#        def initialize
+#          @queues = {}
+#        end
+#
+#        def exchange(exchange)
+#        end
+#
+#        def queue(queue)
+#          @queues[queue] = BunnyQueue.new
+#        end
+#      end
+#
+#      class BunnyQueue
+#        attr_accessor :block
+#
+#        def subscribe(&block)
+#          @block = block
+#        end
+#      end
+#    end
+#
+#    it "should create the stage configured queue when started" do
+#      stage = create_stage
+#
+#      stage.start.should_not be_false
+#      instance = Bunny.instance
+#      instance.should_not be_nil
+#      instance.queues.size.should == 1
+#      instance.queues.keys.should include stage.queue
+#    end
+#
+#    it "should dispatch a message to a stage actor when a message is received on the subscribed queue" do
+#      stage = create_stage
+#
+#      stage.start.should_not be_false
+#      instance = Bunny.instance
+#      bunny_queue = instance.queues[stage.queue]
+#      bunny_queue.should_not be_nil
+#      block = bunny_queue.block
+#      block.should_not be_nil
+#    end
+#  end
 end

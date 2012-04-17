@@ -12,181 +12,217 @@ describe Batsir::DSL::StageMapping do
     stage.name.should == "simple_stage"
   end
 
-  it "should be possible to set the queue of the stage" do
-    queue = :queue
+  it "should be possible to add an filter to the stage" do
+    filter = "Operation"
 
     block = ::Proc.new do
       stage "simple_stage" do
-        queue queue
+        filter filter
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.queue.should == queue
+    stage.filter_queue.should_not be_nil
+    stage.filter_queue.should_not be_empty
+    stage.filter_queue.should include filter
   end
 
-  it "should be possible to set the object type of the stage" do
-    object_type = Object
+  it "should be possible to add multiple filters to the stage" do
+    filter1 = "Operation 1"
+    filter2 = "Operation 2"
 
     block = ::Proc.new do
       stage "simple_stage" do
-        object_type object_type
+        filter filter1
+        filter filter2
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.object_type.should == object_type
+    stage.filter_queue.should_not be_nil
+    stage.filter_queue.should_not be_empty
+    stage.filter_queue.should include filter1
+    stage.filter_queue.should include filter2
   end
 
-  it "should be possible to add an operation to the stage" do
-    operation = "Operation"
-
+  it "should be possible to add an inbound section to a stage" do
     block = ::Proc.new do
       stage "simple_stage" do
-        operations do
-          add_operation operation
+        inbound do
+
         end
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.operation_queue.should_not be_nil
-    stage.operation_queue.should_not be_empty
-    stage.operation_queue.should include operation
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
   end
 
-  it "should be possible to add multiple operations to the stage" do
-    operation1 = "Operation 1"
-    operation2 = "Operation 2"
+  it "should be possible to add an acceptor to a stage" do
+    acceptor_class = :acceptor_class
 
     block = ::Proc.new do
       stage "simple_stage" do
-        operations do
-          add_operation operation1
-          add_operation operation2
+        inbound do
+          acceptor acceptor_class
         end
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.operation_queue.should_not be_nil
-    stage.operation_queue.should_not be_empty
-    stage.operation_queue.should include operation1
-    stage.operation_queue.should include operation2
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include acceptor_class
+    stage.acceptors[acceptor_class].should == {}
   end
 
-  it "should be possible to add a notification queue to the stage" do
-    notification_queue = :notification_queue
-    parent_attribute = :parent
+  it "should be possible to add an inbound section with an acceptor with options to the stage" do
+    acceptor_class = :acceptor_class
+    options = {:foo => :bar}
 
     block = ::Proc.new do
       stage "simple_stage" do
-        notifications do
-          queue notification_queue, parent_attribute
+        inbound do
+          acceptor acceptor_class, options
         end
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.notification_queues.should_not be_empty
-    stage.notification_queues.should have_key notification_queue
-    stage.notification_queues[notification_queue].should == parent_attribute
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include acceptor_class
+    stage.acceptors[acceptor_class].should == options
   end
 
-  it "should be possible to add a stage specific retrieval operation" do
-    retrieval_operation = "Retrieval Operation"
+  it "should be possible to add multiple acceptors to a stage" do
+    acceptor_class1 = :acceptor_class1
+    options = {:foo => :bar}
+    acceptor_class2 = :acceptor_class2
 
     block = ::Proc.new do
       stage "simple_stage" do
-        retrieval_operation retrieval_operation
-      end
-    end
-
-    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.retrieval_operation.should == retrieval_operation
-  end
-
-  it "should be possible to add a stage specific persistence operation" do
-    persistence_operation = "Persistence Operation"
-
-    block = ::Proc.new do
-      stage "simple_stage" do
-        persistence_operation persistence_operation
-      end
-    end
-
-    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.persistence_operation.should == persistence_operation
-  end
-
-  it "should be possible to add a stage specific notification operation" do
-    notification_operation = "Persistence Operation"
-
-    block = ::Proc.new do
-      stage "simple_stage" do
-        notification_operation notification_operation
-      end
-    end
-
-    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notification_operation.should == notification_operation
-  end
-
-  it "should be possible to add multiple notification queues to the stage" do
-    notification_queue1 = :notification_queue1
-    parent_attribute1   = :parent1
-    notification_queue2 = :notification_queue2
-    parent_attribute2   = :parent2
-
-    block = ::Proc.new do
-      stage "simple_stage" do
-        notifications do
-          queue notification_queue1, parent_attribute1
-          queue notification_queue2, parent_attribute2
+        inbound do
+          acceptor acceptor_class1, options
+          acceptor acceptor_class2
         end
       end
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
-    stage.notification_queues.should_not be_empty
-    stage.notification_queues.should have_key notification_queue1
-    stage.notification_queues[notification_queue1].should == parent_attribute1
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include acceptor_class1
+    stage.acceptors[acceptor_class1].should == options
+    stage.acceptors.keys.should include acceptor_class2
+    stage.acceptors[acceptor_class2].should == {}
+  end
 
-    stage.notification_queues.should have_key notification_queue2
-    stage.notification_queues[notification_queue2].should == parent_attribute2
+  it "should be possible to add an outbound section without any notifiers" do
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+  end
+
+  it "should be possible to add an outbound section to the stage" do
+    notification_class = :notification_class
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          notifier notification_class
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.should have_key notification_class
+    stage.notifiers[notification_class].should == {}
+  end
+
+  it "should be possible to add an outbound section with a notifier with options to the stage" do
+    notification_class = :notification_class
+    options = {:queue => :somequeue}
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          notifier notification_class, options
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.should have_key notification_class
+    stage.notifiers[notification_class].should == options
+  end
+
+  it "should be possible to add multiple notifiers to the stage" do
+    notification_class1 = :notification_class1
+    options             = {:queue => :somequeue}
+    notification_class2 = :notification_class2
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          notifier notification_class1, options
+          notifier notification_class2
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.should have_key notification_class1
+    stage.notifiers[notification_class1].should == options
+
+    stage.notifiers.should have_key notification_class2
+    stage.notifiers[notification_class2].should == {}
   end
 
   it "should be possible to create a complete stage" do
+    acceptor_class1     = :acceptor_class1
+    options             = {:foo => :bar}
+    acceptor_class2     = :acceptor_class2
     stage_name          = "Complete Stage"
-    receiving_queue     = :receiving_queue
-    object_type         = Object
-    operation1          = "Some Operation"
-    operation2          = "Another Operation"
-    notification_queue1 = :notification_queue1
-    parent_attribute1   = :parent1
-    notification_queue2 = :notification_queue2
-    parent_attribute2   = :parent2
+    filter1             = "Some Filter"
+    filter2             = "Another Filter"
+    notification_class1 = :notification_class1
+    options             = {:queue => :somequeue}
+    notification_class2 = :notification_class2
 
     block = ::Proc.new do
       stage stage_name do
-        queue receiving_queue
-        object_type object_type
-        operations do
-          add_operation operation1
-          add_operation operation2
+        inbound do
+          acceptor acceptor_class1, options
+          acceptor acceptor_class2
         end
-        notifications do
-          queue notification_queue1, parent_attribute1
-          queue notification_queue2, parent_attribute2
+        filter filter1
+        filter filter2
+        outbound do
+          notifier notification_class1, options
+          notifier notification_class2
         end
       end
     end
@@ -194,18 +230,22 @@ describe Batsir::DSL::StageMapping do
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
     stage.should_not be_nil
     stage.name.should == stage_name
-    stage.queue.should == receiving_queue
-    stage.object_type.should == object_type
-    stage.operation_queue.should_not be_nil
-    stage.operation_queue.should_not be_empty
-    stage.operation_queue.should include operation1
-    stage.operation_queue.should include operation2
-    stage.notification_queues.should_not be_nil
-    stage.notification_queues.should_not be_empty
-    stage.notification_queues.should have_key notification_queue1
-    stage.notification_queues[notification_queue1].should == parent_attribute1
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include acceptor_class1
+    stage.acceptors[acceptor_class1].should == options
+    stage.acceptors.keys.should include acceptor_class2
+    stage.acceptors[acceptor_class2].should == {}
+    stage.filter_queue.should_not be_nil
+    stage.filter_queue.should_not be_empty
+    stage.filter_queue.should include filter1
+    stage.filter_queue.should include filter2
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should_not be_empty
+    stage.notifiers.should have_key notification_class1
+    stage.notifiers[notification_class1].should == options
 
-    stage.notification_queues.should have_key notification_queue2
-    stage.notification_queues[notification_queue2].should == parent_attribute2
+    stage.notifiers.should have_key notification_class2
+    stage.notifiers[notification_class2].should == {}
   end
 end

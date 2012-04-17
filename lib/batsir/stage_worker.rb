@@ -3,11 +3,11 @@ require 'sidekiq'
 module Batsir
   module StageWorker
 
-    attr_accessor :operation_queue
+    attr_accessor :filter_queue
 
     def self.included(base)
       Registry.register(base.stage_name, base)
-      base.initialize_operation_queue
+      base.initialize_filter_queue
     end
 
     def perform(message)
@@ -15,10 +15,10 @@ module Batsir
     end
 
     def execute(message)
-      puts "No operation queue" unless @operation_queue
-      return false unless @operation_queue
-      @operation_queue.each do |operation|
-        message = operation.execute(message)
+      puts "No filter queue" unless @filter_queue
+      return false unless @filter_queue
+      @filter_queue.each do |filter|
+        message = filter.execute(message)
         return false if message.nil?
       end
       true

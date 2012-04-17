@@ -11,18 +11,6 @@ module Batsir
         @chain
       end
 
-      def retrieval_operation(operation)
-        @chain.retrieval_operation = operation
-      end
-
-      def persistence_operation(operation)
-        @chain.persistence_operation = operation
-      end
-
-      def notification_operation(operation)
-        @chain.notification_operation = operation
-      end
-
       def stage(name, &block)
         new_block = ::Proc.new do
           stage name, &block
@@ -44,46 +32,36 @@ module Batsir
         @stage
       end
 
-      def queue(queue)
-        @stage.queue = queue
+      def filter(operation)
+        @stage.add_filter(operation)
       end
 
-      def object_type(object_type)
-        @stage.object_type = object_type
+      def inbound(&block)
+        ::Blockenspiel.invoke(block, Batsir::DSL::InboundMapping.new(@stage))
       end
 
-      def operations(&block)
-        ::Blockenspiel.invoke(block, self)
-      end
-
-      def add_operation(operation)
-        @stage.add_operation(operation)
-      end
-
-      def notifications(&block)
-        ::Blockenspiel.invoke(block, Batsir::DSL::NotificationMapping.new(@stage))
-      end
-
-      def retrieval_operation(operation)
-        @stage.retrieval_operation = operation
-      end
-
-      def persistence_operation(operation)
-        @stage.persistence_operation = operation
-      end
-
-      def notification_operation(operation)
-        @stage.notification_operation = operation
+      def outbound(&block)
+        ::Blockenspiel.invoke(block, Batsir::DSL::OutboundMapping.new(@stage))
       end
     end
 
-    class NotificationMapping < ::Blockenspiel::Base
+    class InboundMapping < ::Blockenspiel::Base
       def initialize(stage)
         @stage = stage
       end
 
-      def queue(notification_queue, parent_attribute)
-        @stage.add_notification(notification_queue, parent_attribute)
+      def acceptor(acceptor_class, options = {})
+        @stage.add_acceptor(acceptor_class, options)
+      end
+    end
+
+    class OutboundMapping < ::Blockenspiel::Base
+      def initialize(stage)
+        @stage = stage
+      end
+
+      def notifier(notifier_class, options = {})
+        @stage.add_notifier(notifier_class, options)
       end
     end
   end
