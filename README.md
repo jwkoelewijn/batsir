@@ -1,3 +1,5 @@
+![Batsir Logo](/jwkoelewijn/batsir/raw/master/batsir.png)
+
 # Batsir
 Batsir is an execution platform for stage based filter queue execution.
 It is based on the Pipes and Filters patterns, and makes it possible to create
