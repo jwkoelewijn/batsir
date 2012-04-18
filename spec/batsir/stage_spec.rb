@@ -3,7 +3,8 @@ require File.join( File.dirname(__FILE__), "..", "spec_helper" )
 describe Batsir::Stage do
   def create_stage(options = {})
     defaults = {
-      :chain        => Batsir::Chain.new
+      :name   => "Test Stage",
+      :chain  => Batsir::Chain.new
     }
     Batsir::Stage.new(defaults.merge(options))
   end
@@ -296,6 +297,14 @@ describe Batsir::Stage do
         def foo=(bar)
         end
 
+        def stage_name=(name)
+          @@stage_name = name
+        end
+
+        def self.stage_name
+          @@stage_name
+        end
+
         def start
           @@start_count ||= 0
           @@start_count += 1
@@ -304,8 +313,27 @@ describe Batsir::Stage do
         def self.start_count
           @@start_count ||= 0
         end
+
+        def self.reset
+          @@start_count = 0
+          @@stage_name = nil
+        end
       end
     end
+
+    before :each do
+      MockAcceptor.reset
+    end
+
+    it "should set the stage name on acceptors when they are started" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+      stage.add_acceptor MockAcceptor, :foo => :bar
+
+      stage.start
+      MockAcceptor.stage_name.should == stage.name
+    end
+
 
     it "should start all acceptors" do
       stage = create_stage

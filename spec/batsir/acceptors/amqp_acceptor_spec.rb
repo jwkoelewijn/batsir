@@ -38,8 +38,8 @@ describe Batsir::Acceptors::AMQPAcceptor do
     end
 
     it "should be possible to set the vhost to use on the broker" do
-      acceptor = acceptor_class.new(:vhost => '/')
-      acceptor.vhost.should == '/'
+      acceptor = acceptor_class.new(:vhost => '/vhost')
+      acceptor.vhost.should == '/vhost'
     end
 
     it "should be possible to set the exchange to use on the broker" do
@@ -54,7 +54,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor.port.should     == 5672
       acceptor.username.should == 'guest'
       acceptor.password.should == 'guest'
-      acceptor.vhost.should    == ''
+      acceptor.vhost.should    == '/'
       acceptor.exchange.should == 'amq.direct'
     end
   end

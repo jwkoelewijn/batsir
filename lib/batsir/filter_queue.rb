@@ -11,7 +11,7 @@ module Batsir
     end
 
     def add(operation)
-      @filters.unshift(operation)
+      @filters << operation
     end
 
     def add_notifier(notifier)

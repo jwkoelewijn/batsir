@@ -26,3 +26,18 @@ end
 class Batsir::RetrievalFilter
   include Batsir::MockBehavior
 end
+
+class Batsir::MessagePrinter < Batsir::Filter
+  def execute(message)
+    puts "In #{self.class.to_s}#execute(#{message.inspect})"
+    puts message
+    message
+  end
+end
+
+class Batsir::MessageCreator < Batsir::Filter
+  def execute(message)
+    puts "In #{self.class.to_s}#execute(#{message.inspect})"
+    {:id => message}
+  end
+end

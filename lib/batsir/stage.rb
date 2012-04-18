@@ -44,6 +44,7 @@ module Batsir
     def start
       acceptors.each do |acceptor_class, options|
         options.each do |acceptor_options|
+          acceptor_options.merge!(:stage_name => self.name)
           acceptor = acceptor_class.new(acceptor_options)
           acceptor.start!
         end

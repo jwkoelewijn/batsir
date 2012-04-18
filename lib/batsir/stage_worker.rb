@@ -2,8 +2,6 @@ require 'sidekiq'
 
 module Batsir
   module StageWorker
-    include Sidekiq::Worker
-
     attr_accessor :filter_queue
 
     def self.included(base)
@@ -65,6 +63,7 @@ module Batsir
       code << <<-EOF
           end
 
+          include Sidekiq::Worker
           include Batsir::StageWorker
         end
       EOF

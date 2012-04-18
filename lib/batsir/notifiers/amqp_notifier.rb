@@ -8,6 +8,7 @@ module Batsir
       def execute(message)
         Bunny.run( bunny_options )do |bunny|
           exc = bunny.exchange( exchange )
+          puts "publishing #{message.inspect}"
           exc.publish( message, :key => queue )
         end
       end

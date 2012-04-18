@@ -35,7 +35,7 @@ module Batsir
     end
 
     def vhost
-      @vhost || ''
+      @vhost || '/'
     end
 
     def exchange

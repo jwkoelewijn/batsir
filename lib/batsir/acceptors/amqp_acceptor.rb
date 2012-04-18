@@ -5,12 +5,13 @@ module Batsir
     class AMQPAcceptor < Acceptor
       include Batsir::AMQP
       def start
-        Bunny.run(bunny_options) do |bunny|
+        puts "Using options: #{bunny_options.inspect}"
+        Bunny.run( bunny_options ) do |bunny|
           q   = bunny.queue( queue )
           exc = bunny.exchange( exchange )
           q.bind( exc, :key => queue)
           q.subscribe do |msg|
-            start_filter_chain(msg)
+            start_filter_chain(msg[:payload])
           end
         end
       end

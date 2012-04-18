@@ -108,12 +108,12 @@ task :run_other_chain do
   Batsir.create_and_start do
     stage "stage 1" do
       inbound do
-        acceptor AMQPAcceptor, :queue => 'timecards_updated', :host => 'localhost'
+        acceptor Batsir::Acceptors::AMQPAcceptor, :queue => 'timecard_updated', :host => 'localhost'
       end
-      filter MessageCreator, :field => :id
-      filter SumFilter
+      filter Batsir::MessageCreator
+      filter Batsir::MessagePrinter
       outbound do
-        notifier AMQPNotifier, :queue => 'organisation_tree_updated', :fields => {:id => :organisation_tree_id, :week => :week}
+        notifier Batsir::Notifiers::AMQPNotifier, :queue => 'organisation_tree_updated', :fields => {:organisation_tree_id => :id, :week => :week}
       end
     end
   end

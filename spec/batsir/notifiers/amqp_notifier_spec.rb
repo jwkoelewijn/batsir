@@ -36,8 +36,8 @@ describe Batsir::Notifiers::AMQPNotifier do
     end
 
     it "should be possible to set the vhost to use on the broker" do
-      notifier = notifier_class.new(:vhost => '/')
-      notifier.vhost.should == '/'
+      notifier = notifier_class.new(:vhost => '/blah')
+      notifier.vhost.should == '/blah'
     end
 
     it "should be possible to set the exchange to use on the broker" do
@@ -52,7 +52,7 @@ describe Batsir::Notifiers::AMQPNotifier do
       notifier.port.should     == 5672
       notifier.username.should == 'guest'
       notifier.password.should == 'guest'
-      notifier.vhost.should    == ''
+      notifier.vhost.should    == '/'
       notifier.exchange.should == 'amq.direct'
     end
   end

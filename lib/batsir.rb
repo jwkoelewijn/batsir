@@ -1,6 +1,7 @@
 require 'blockenspiel'
 require 'celluloid'
 #require 'hot_bunnies'
+require 'bunny'
 require 'sidekiq'
 require 'sidekiq/cli'
 require 'batsir/registry'

@@ -27,7 +27,7 @@ module Batsir
 
     def start
       stages.each do | stage |
-        stage.start!
+        stage.start
       end
     end
   end
