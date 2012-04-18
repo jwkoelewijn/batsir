@@ -20,8 +20,7 @@ module Batsir
 
       def transform(message)
         if @field_mapping.any? && message.respond_to?(:keys)
-          fields_to_remove = message.keys - @field_mapping.values
-          puts fields_to_remove.inspect
+          fields_to_remove = message.keys - @field_mapping.keys - @field_mapping.values
 
           @field_mapping.each do |new, old|
             message[new] = message.delete(old)

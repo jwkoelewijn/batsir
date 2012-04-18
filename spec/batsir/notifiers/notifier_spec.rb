@@ -48,6 +48,18 @@ describe Batsir::Notifiers::Notifier do
     transformed_message.should have_key :john
   end
 
+  it "should correctly handle more complex field mapping" do
+    field_mapping = {:id => :old_id}
+    notifier = notifier_class.new( :fields => field_mapping )
+
+    message = {:id => 2, :old_id => 1, :john => :doe}
+    transformed_message = notifier.transform(message)
+
+    transformed_message.should have_key :id
+    transformed_message.should_not have_key :old_id
+    transformed_message.should_not have_key :john
+  end
+
   it "should call #transform when #notify is called" do
     notifier = notifier_class.new
     notifier.should_receive(:transform).with({})
