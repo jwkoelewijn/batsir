@@ -11,7 +11,9 @@ require 'batsir/stage'
 require 'batsir/stage_worker'
 require 'batsir/dsl/dsl_mappings'
 require 'batsir/acceptors/acceptor'
+require 'batsir/acceptors/amqp_acceptor'
 require 'batsir/notifiers/notifier'
+require 'batsir/notifiers/amqp_notifier'
 require 'batsir/logo'
 
 module Batsir

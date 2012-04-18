@@ -24,7 +24,6 @@ describe Batsir::Chain do
     chain.add_stage(stage)
     compiled_code = chain.compile
     compiled_code.should_not be_nil
-    puts compiled_code
 
     klazz = eval(compiled_code)
     klazz.name.to_s.should == "StageWorker"

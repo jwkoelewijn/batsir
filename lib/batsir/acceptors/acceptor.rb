@@ -10,6 +10,7 @@ module Batsir
           self.send("#{option}=", value)
         end
       end
+
       # This method is called automatically when the stage is
       # started, it is here that you set up the accepting
       # logic. Make sure that somewhere within this logic

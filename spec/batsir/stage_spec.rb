@@ -60,7 +60,7 @@ describe Batsir::Stage do
     stage = Batsir::Stage.new
     stage.add_filter(:filter)
     stage.add_filter(:filter, :foo => :bar)
-    
+
     stage.filters.keys.should include :filter
     stage.filters[:filter].size.should == 2
   end
@@ -319,60 +319,4 @@ describe Batsir::Stage do
       MockAcceptor.start_count.should == 2
     end
   end
-
-#  context "with respect to starting the stage" do
-#    module Bunny
-#      def self.instance
-#        @instance
-#      end
-#
-#      def self.run
-#        @instance = BunnyInstance.new
-#        yield @instance
-#      end
-#
-#      class BunnyInstance
-#        attr_accessor :queues
-#        def initialize
-#          @queues = {}
-#        end
-#
-#        def exchange(exchange)
-#        end
-#
-#        def queue(queue)
-#          @queues[queue] = BunnyQueue.new
-#        end
-#      end
-#
-#      class BunnyQueue
-#        attr_accessor :block
-#
-#        def subscribe(&block)
-#          @block = block
-#        end
-#      end
-#    end
-#
-#    it "should create the stage configured queue when started" do
-#      stage = create_stage
-#
-#      stage.start.should_not be_false
-#      instance = Bunny.instance
-#      instance.should_not be_nil
-#      instance.queues.size.should == 1
-#      instance.queues.keys.should include stage.queue
-#    end
-#
-#    it "should dispatch a message to a stage actor when a message is received on the subscribed queue" do
-#      stage = create_stage
-#
-#      stage.start.should_not be_false
-#      instance = Bunny.instance
-#      bunny_queue = instance.queues[stage.queue]
-#      bunny_queue.should_not be_nil
-#      block = bunny_queue.block
-#      block.should_not be_nil
-#    end
-#  end
 end
