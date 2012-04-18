@@ -108,9 +108,9 @@ describe Batsir::DSL::ChainMapping do
       stage.notifiers.should_not be_nil
       stage.notifiers.should_not be_empty
       stage.notifiers.should have_key notification_class1
-      stage.notifiers[notification_class1].should == options
+      stage.notifiers[notification_class1].first.should == options
       stage.notifiers.should have_key notification_class2
-      stage.notifiers[notification_class2].should == {}
+      stage.notifiers[notification_class2].first.should == {}
     end
   end
 

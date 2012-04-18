@@ -78,7 +78,7 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include acceptor_class
-    stage.acceptors[acceptor_class].should == {}
+    stage.acceptors[acceptor_class].first.should == {}
   end
 
   it "should be possible to add an inbound section with an acceptor with options to the stage" do
@@ -98,7 +98,7 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include acceptor_class
-    stage.acceptors[acceptor_class].should == options
+    stage.acceptors[acceptor_class].first.should == options
   end
 
   it "should be possible to add multiple acceptors to a stage" do
@@ -120,9 +120,9 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include acceptor_class1
-    stage.acceptors[acceptor_class1].should == options
+    stage.acceptors[acceptor_class1].first.should == options
     stage.acceptors.keys.should include acceptor_class2
-    stage.acceptors[acceptor_class2].should == {}
+    stage.acceptors[acceptor_class2].first.should == {}
   end
 
   it "should be possible to add an outbound section without any notifiers" do
@@ -155,7 +155,7 @@ describe Batsir::DSL::StageMapping do
     stage.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.should have_key notification_class
-    stage.notifiers[notification_class].should == {}
+    stage.notifiers[notification_class].first.should == {}
   end
 
   it "should be possible to add an outbound section with a notifier with options to the stage" do
@@ -174,7 +174,7 @@ describe Batsir::DSL::StageMapping do
     stage.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.should have_key notification_class
-    stage.notifiers[notification_class].should == options
+    stage.notifiers[notification_class].first.should == options
   end
 
   it "should be possible to add multiple notifiers to the stage" do
@@ -195,10 +195,10 @@ describe Batsir::DSL::StageMapping do
     stage.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.should have_key notification_class1
-    stage.notifiers[notification_class1].should == options
+    stage.notifiers[notification_class1].first.should == options
 
     stage.notifiers.should have_key notification_class2
-    stage.notifiers[notification_class2].should == {}
+    stage.notifiers[notification_class2].first.should == {}
   end
 
   it "should be possible to create a complete stage" do
@@ -233,9 +233,9 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include acceptor_class1
-    stage.acceptors[acceptor_class1].should == options
+    stage.acceptors[acceptor_class1].first.should == options
     stage.acceptors.keys.should include acceptor_class2
-    stage.acceptors[acceptor_class2].should == {}
+    stage.acceptors[acceptor_class2].first.should == {}
     stage.filters.should_not be_nil
     stage.filters.should_not be_empty
     stage.filters.should include filter1
@@ -243,9 +243,9 @@ describe Batsir::DSL::StageMapping do
     stage.notifiers.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.should have_key notification_class1
-    stage.notifiers[notification_class1].should == options
+    stage.notifiers[notification_class1].first.should == options
 
     stage.notifiers.should have_key notification_class2
-    stage.notifiers[notification_class2].should == {}
+    stage.notifiers[notification_class2].first.should == {}
   end
 end

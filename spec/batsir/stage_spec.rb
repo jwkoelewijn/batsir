@@ -50,6 +50,21 @@ describe Batsir::Stage do
     stage.filters.keys.should include filter
   end
 
+  it "should store an ordered set of different options for each filter" do
+    stage = Batsir::Stage.new
+    stage.add_filter(:filter)
+    stage.filters[:filter].should be_a SortedSet
+  end
+
+  it "should be possible to have multiple filters of the same class but with different options" do
+    stage = Batsir::Stage.new
+    stage.add_filter(:filter)
+    stage.add_filter(:filter, :foo => :bar)
+    
+    stage.filters.keys.should include :filter
+    stage.filters[:filter].size.should == 2
+  end
+
   it "should add multiple filters to the same queue" do
     filter1 = "Filter 1"
     filter2 = "Filter 2"
@@ -73,7 +88,7 @@ describe Batsir::Stage do
     stage.filters.should_not be_nil
     stage.filters.should_not be_empty
     stage.filters.keys.should include filter
-    stage.filters[filter].should == options
+    stage.filters[filter].first.should == options
   end
 
   it "should be possible to add multiple filters with option hashes" do
@@ -88,8 +103,8 @@ describe Batsir::Stage do
 
     stage.filters.keys.should include filter1
     stage.filters.keys.should include filter2
-    stage.filters[filter1].should == options1
-    stage.filters[filter2].should == options2
+    stage.filters[filter1].first.should == options1
+    stage.filters[filter2].first.should == options2
   end
 
   it "should add empty options hashes to filters when no option hash is given" do
@@ -101,7 +116,7 @@ describe Batsir::Stage do
     stage.filters.should_not be_nil
     stage.filters.should_not be_empty
     stage.filters.keys.should include filter
-    stage.filters[filter].should == {}
+    stage.filters[filter].first.should == {}
   end
 
   it "should initially have an empty list of acceptors" do
@@ -123,6 +138,23 @@ describe Batsir::Stage do
     stage.acceptors.keys.should include :acceptor
   end
 
+  it "should store a set of different options for each acceptor" do
+    stage = Batsir::Stage.new
+    stage.add_acceptor(:acceptor)
+    stage.acceptors[:acceptor].should be_a Set
+  end
+
+  it "should be possible to have multiple acceptors of the same class but with different options" do
+    stage = Batsir::Stage.new
+    stage.add_acceptor(:acceptor_class)
+    stage.add_acceptor(:acceptor_class, :foo => :bar)
+
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should_not be_empty
+    stage.acceptors.keys.should include :acceptor_class
+    stage.acceptors[:acceptor_class].size.should == 2
+  end
+
   it "should be possible to add an acceptor with an options hash" do
     stage = Batsir::Stage.new
     options = {:foo => :bar}
@@ -131,7 +163,7 @@ describe Batsir::Stage do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include :acceptor
-    stage.acceptors[:acceptor].should == options
+    stage.acceptors[:acceptor].first.should == options
   end
 
   it "should add an empty options hash for added acceptors without options" do
@@ -141,7 +173,7 @@ describe Batsir::Stage do
     stage.acceptors.should_not be_nil
     stage.acceptors.should_not be_empty
     stage.acceptors.keys.should include :acceptor
-    stage.acceptors[:acceptor].should == {}
+    stage.acceptors[:acceptor].first.should == {}
   end
 
   it "should initially have an empty notifiers queue" do
@@ -164,6 +196,22 @@ describe Batsir::Stage do
     stage.notifiers.keys.should include :notifier
   end
 
+  it "should store a set of different options for each notifier" do
+    stage = Batsir::Stage.new
+    stage.add_notifier(:notifier)
+    stage.notifiers[:notifier].should be_a Set
+  end
+
+  it "should be possible to have multiple notifiers of the same class but with different options" do
+    stage = Batsir::Stage.new
+    stage.add_notifier(:notifier_class)
+    stage.add_notifier(:notifier_class, :foo => :bar)
+
+    stage.notifiers.should_not be_nil
+    stage.notifiers.keys.should include :notifier_class
+    stage.notifiers[:notifier_class].size.should == 2
+  end
+
   it "should be possible to set a notifier with an options hash" do
     stage = Batsir::Stage.new
 
@@ -173,7 +221,7 @@ describe Batsir::Stage do
     stage.notifiers.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.keys.should include :notifier
-    stage.notifiers[:notifier].should == options
+    stage.notifiers[:notifier].first.should == options
   end
 
   it "should add an empty options hash for added notifiers without options" do
@@ -183,7 +231,7 @@ describe Batsir::Stage do
     stage.notifiers.should_not be_nil
     stage.notifiers.should_not be_empty
     stage.notifiers.keys.should include :notifier
-    stage.notifiers[:notifier].should == {}
+    stage.notifiers[:notifier].first.should == {}
   end
 
   context "with respect to compiling the stage" do
@@ -235,6 +283,40 @@ describe Batsir::Stage do
       @created_class.filter_queue.each do |filter|
         filter.should_not be_a Class
       end
+    end
+  end
+
+  context "with respect to starting the stage" do
+    before :all do
+      class MockAcceptor < Batsir::Acceptors::Acceptor
+        def start!
+          start
+        end
+
+        def foo=(bar)
+        end
+
+        def start
+          @@start_count ||= 0
+          @@start_count += 1
+        end
+
+        def self.start_count
+          @@start_count ||= 0
+        end
+      end
+    end
+
+    it "should start all acceptors" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+      stage.add_acceptor MockAcceptor, :foo => :bar
+
+      MockAcceptor.start_count.should == 0
+
+      stage.start
+
+      MockAcceptor.start_count.should == 2
     end
   end
 

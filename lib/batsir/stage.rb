@@ -23,15 +23,18 @@ module Batsir
     end
 
     def add_notifier(notifier, options = {})
-      @notifiers[notifier] = options
+      @notifiers[notifier] ||= Set.new
+      @notifiers[notifier] << options
     end
 
     def add_acceptor(acceptor, options = {})
-      @acceptors[acceptor] = options
+      @acceptors[acceptor] ||= Set.new
+      @acceptors[acceptor] << options
     end
 
     def add_filter(filter, options = {})
-      @filters[filter] = options
+      @filters[filter] ||= SortedSet.new
+      @filters[filter] << options
     end
 
     def compile
@@ -39,6 +42,12 @@ module Batsir
     end
 
     def start
+      acceptors.each do |acceptor_class, options|
+        options.each do |acceptor_options|
+          acceptor = acceptor_class.new(acceptor_options)
+          acceptor.start!
+        end
+      end
       #connection = HotBunnies.connect(:host => 'localhost')
       #channel = connection.create_channel
       #channel.prefetch = 10

@@ -46,16 +46,20 @@ module Batsir
             @filter_queue = Batsir::FilterQueue.new
       EOF
 
-      stage.filters.each do |filter, options|
-        code << <<-EOF
+      stage.filters.each do |filter, filter_options|
+        filter_options.each do |options|
+          code << <<-EOF
             @filter_queue.add #{filter.to_s}.new(#{options.to_s})
-        EOF
+          EOF
+        end
       end
 
-      stage.notifiers.each do |notifier, options|
-        code << <<-EOF
+      stage.notifiers.each do |notifier, options_set|
+        options_set.each do |options|
+          code << <<-EOF
             @filter_queue.add_notifier #{notifier.to_s}.new(#{options.to_s})
-        EOF
+          EOF
+        end
       end
 
       code << <<-EOF

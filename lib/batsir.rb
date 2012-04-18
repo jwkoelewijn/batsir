@@ -10,6 +10,7 @@ require 'batsir/filter_queue'
 require 'batsir/stage'
 require 'batsir/stage_worker'
 require 'batsir/dsl/dsl_mappings'
+require 'batsir/acceptors/acceptor'
 require 'batsir/notifiers/notifier'
 require 'batsir/logo'
 
