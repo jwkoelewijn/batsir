@@ -19,8 +19,17 @@ module Batsir
       end
 
       def transform(message)
-        @field_mapping.each do |new, old|
-          message[new] = message.delete(old)
+        if @field_mapping.any? && message.respond_to?(:keys)
+          fields_to_remove = message.keys - @field_mapping.values
+          puts fields_to_remove.inspect
+
+          @field_mapping.each do |new, old|
+            message[new] = message.delete(old)
+          end
+
+          fields_to_remove.each do |field|
+            message.delete(field)
+          end
         end
         message
       end

@@ -28,6 +28,26 @@ describe Batsir::Notifiers::Notifier do
     transformed_message[:foo].should == "bar"
   end
 
+  it "should remove options not in the fields option when a fields option is given" do
+    field_mapping = {:foo => :bar}
+    notifier = notifier_class.new( :fields => field_mapping )
+
+    message = {:bar => "bar", :john => :doe}
+    transformed_message = notifier.transform(message)
+    transformed_message.should have_key :foo
+    transformed_message.should_not have_key :bar
+    transformed_message.should_not have_key :john
+  end
+
+  it "should not remove fields when no mapping is given" do
+    notifier = notifier_class.new
+
+    message = {:bar => "bar", :john => :doe}
+    transformed_message = notifier.transform(message)
+    transformed_message.should have_key :bar
+    transformed_message.should have_key :john
+  end
+
   it "should call #transform when #notify is called" do
     notifier = notifier_class.new
     notifier.should_receive(:transform).with({})
