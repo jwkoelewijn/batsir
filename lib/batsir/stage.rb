@@ -2,9 +2,11 @@ module Batsir
   class Stage
     include Celluloid
 
+    FilterDeclaration = Struct.new(:filter, :options)
+
     attr_accessor :name
     attr_accessor :chain
-    attr_reader   :filters
+    attr_reader   :filter_declarations
     attr_reader   :notifiers
     attr_reader   :acceptors
 
@@ -12,10 +14,10 @@ module Batsir
       options.each do |attr, value|
         self.send("#{attr.to_s}=", value)
       end
-      @acceptors = {}
-      @filters   = {}
-      @notifiers = {}
-      @built = false
+      @acceptors           = {}
+      @filter_declarations = []
+      @notifiers           = {}
+      @built               = false
     end
 
     def built?
@@ -33,8 +35,11 @@ module Batsir
     end
 
     def add_filter(filter, options = {})
-      @filters[filter] ||= SortedSet.new
-      @filters[filter] << options
+      @filter_declarations << FilterDeclaration.new(filter, options)
+    end
+
+    def filters
+      @filter_declarations.map{ |filter_declaration| filter_declaration.filter }
     end
 
     def compile
@@ -49,20 +54,6 @@ module Batsir
           acceptor.start!
         end
       end
-      #connection = HotBunnies.connect(:host => 'localhost')
-      #channel = connection.create_channel
-      #channel.prefetch = 10
-
-      #exchange = channel.exchange('', :type => :direct)
-      #queue = channel.queue(self.queue.to_s)
-      #queue.purge
-
-      #subscription = queue.subscribe(:ack => true)
-      #subscription.each(:blocking => true) do |headers, msg|
-      #  klazz = Registry.get(name)
-      #  klazz.perform_async(msg)
-      #  headers.ack
-      #end
       true
     end
   end
