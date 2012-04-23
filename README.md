@@ -26,7 +26,6 @@ Batsir.create_and_start do
     end
     filter SumFilter
     filter AverageFilter
-    end
     outbound do
       notifier AMQPNotifier, :queue => 'queue_2'
     end
