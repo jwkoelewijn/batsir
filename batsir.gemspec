@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["J.W. Koelewijn"]
-  s.date = "2012-04-18"
+  s.date = "2012-05-03"
   s.description = "Batsir uses so called stages to define operation queues. These operation queus\n consist of several operations that will be executed one after the other. Each stage\n is defined by its name and the queue on which it will listen. Once a message is received\n on the queue, it is dispatched to a worker in a seperate thread that will pass the message\n to each operation in the operation queue.\n Operation queues can have 4 different operations, 1 common operation type, and 3 special \n purpose operations: retrieval operations (which are always executed before all other operations),\n persistence operations (which are always executed after the common operations, but before the\n notification operations) and notification operations (which will always be executed last)\n This makes it possible to create chains of stages to perform tasks that depend on each\n other, but otherwise have a low coupling"
   s.email = "jwkoelewijn@gmail.com"
   s.extra_rdoc_files = [
@@ -41,19 +41,27 @@ Gem::Specification.new do |s|
     "lib/batsir/registry.rb",
     "lib/batsir/stage.rb",
     "lib/batsir/stage_worker.rb",
+    "lib/batsir/transformers/field_transformer.rb",
+    "lib/batsir/transformers/json_input_transformer.rb",
+    "lib/batsir/transformers/json_output_transformer.rb",
+    "lib/batsir/transformers/transformer.rb",
     "spec/batsir/acceptors/acceptor_spec.rb",
     "spec/batsir/acceptors/amqp_acceptor_spec.rb",
     "spec/batsir/chain_spec.rb",
     "spec/batsir/dsl/chain_mapping_spec.rb",
     "spec/batsir/dsl/stage_mapping_spec.rb",
     "spec/batsir/filter_queue_spec.rb",
+    "spec/batsir/filter_spec.rb",
     "spec/batsir/notifiers/amqp_notifier_spec.rb",
     "spec/batsir/notifiers/notifier_spec.rb",
-    "spec/batsir/operation_spec.rb",
     "spec/batsir/stage_spec.rb",
     "spec/batsir/stage_worker_spec.rb",
     "spec/batsir/support/bunny_mocks.rb",
     "spec/batsir/support/mock_filters.rb",
+    "spec/batsir/transformers/field_transformer_spec.rb",
+    "spec/batsir/transformers/json_input_transformer_spec.rb",
+    "spec/batsir/transformers/json_output_transformer_spec.rb",
+    "spec/batsir/transformers/transformer_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/jwkoelewijn/batsir"
@@ -72,6 +80,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<celluloid>, [">= 0"])
       s.add_runtime_dependency(%q<sidekiq>, [">= 0"])
       s.add_runtime_dependency(%q<bunny>, [">= 0"])
+      s.add_runtime_dependency(%q<json>, [">= 0"])
     else
       s.add_dependency(%q<bundler>, ["> 1.0.0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -79,6 +88,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<celluloid>, [">= 0"])
       s.add_dependency(%q<sidekiq>, [">= 0"])
       s.add_dependency(%q<bunny>, [">= 0"])
+      s.add_dependency(%q<json>, [">= 0"])
     end
   else
     s.add_dependency(%q<bundler>, ["> 1.0.0"])
@@ -87,6 +97,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<celluloid>, [">= 0"])
     s.add_dependency(%q<sidekiq>, [">= 0"])
     s.add_dependency(%q<bunny>, [">= 0"])
+    s.add_dependency(%q<json>, [">= 0"])
   end
 end
 
