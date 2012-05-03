@@ -62,6 +62,98 @@ describe Batsir::DSL::StageMapping do
     stage.acceptors.should be_empty
   end
 
+  it "should be possible to add a transformers section to the inbound section of a stage" do
+    block = ::Proc.new do
+      stage "simple_stage" do
+        inbound do
+          transformers do
+
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
+    stage.acceptor_transformers.should be_empty
+  end
+
+  it "should be possible to add a transformer to the transformers section of the inbound section of a stage" do
+    transformer = :transformer
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        inbound do
+          transformers do
+            transformer transformer
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
+    stage.acceptor_transformers.should_not be_empty
+    stage.acceptor_transformers.size.should == 1
+    stage.acceptor_transformers.first.transformer.should == transformer
+  end
+
+  it "should be possible to add a transformer with options to the transformers section of the inbound section of a stage" do
+    transformer = :transformer
+    options     = {:foo => :bar}
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        inbound do
+          transformers do
+            transformer transformer, options
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
+    stage.acceptor_transformers.should_not be_empty
+    stage.acceptor_transformers.size.should == 1
+    stage.acceptor_transformers.first.transformer.should == transformer
+    stage.acceptor_transformers.first.options.should == options
+  end
+
+  it "should be possible to add multiple transformers to the transformers section of the inbound section of a stage" do
+    transformer1 = :transformer1
+    options     = {:foo => :bar}
+    transformer2 = :transformer2
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        inbound do
+          transformers do
+            transformer transformer1, options
+            transformer transformer2
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.acceptors.should_not be_nil
+    stage.acceptors.should be_empty
+    stage.acceptor_transformers.should_not be_empty
+    stage.acceptor_transformers.size.should == 2
+    stage.acceptor_transformers.first.transformer.should == transformer1
+    stage.acceptor_transformers.first.options.should == options
+    stage.acceptor_transformers.last.transformer.should == transformer2
+    stage.acceptor_transformers.last.options.should == {}
+  end
+
   it "should be possible to add an acceptor to a stage" do
     acceptor_class = :acceptor_class
 
@@ -138,6 +230,98 @@ describe Batsir::DSL::StageMapping do
     stage.should_not be_nil
     stage.notifiers.should_not be_nil
     stage.notifiers.should be_empty
+  end
+
+  it "should be possible to add a transformers section to the outbound section of a stage" do
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          transformers do
+
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+    stage.notifier_transformers.should be_empty
+  end
+
+  it "should be possible to add a transformer to the transformers section of the outbound section of a stage" do
+    transformer = :transformer
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          transformers do
+            transformer transformer
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+    stage.notifier_transformers.should_not be_empty
+    stage.notifier_transformers.size.should == 1
+    stage.notifier_transformers.first.transformer.should == transformer
+  end
+
+  it "should be possible to add a transformer with options to the transformers section of the outbound section of a stage" do
+    transformer = :transformer
+    options     = {:foo => :bar}
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          transformers do
+            transformer transformer, options
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+    stage.notifier_transformers.should_not be_empty
+    stage.notifier_transformers.size.should == 1
+    stage.notifier_transformers.first.transformer.should == transformer
+    stage.notifier_transformers.first.options.should == options
+  end
+
+  it "should be possible to add multiple transformers to the transformers section of the outbound section of a stage" do
+    transformer1 = :transformer1
+    options     = {:foo => :bar}
+    transformer2 = :transformer2
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        outbound do
+          transformers do
+            transformer transformer1, options
+            transformer transformer2
+          end
+        end
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.notifiers.should_not be_nil
+    stage.notifiers.should be_empty
+    stage.notifier_transformers.should_not be_empty
+    stage.notifier_transformers.size.should == 2
+    stage.notifier_transformers.first.transformer.should == transformer1
+    stage.notifier_transformers.first.options.should == options
+    stage.notifier_transformers.last.transformer.should == transformer2
+    stage.notifier_transformers.last.options.should == {}
   end
 
   it "should be possible to add an outbound section to the stage" do

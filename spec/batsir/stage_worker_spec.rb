@@ -67,15 +67,6 @@ describe Batsir::StageWorker do
         def notify_count
           @notify_count ||= 0
         end
-
-        def transform(message)
-          @transform_count ||= 0
-          @transform_count += 1
-        end
-
-        def transform_count
-          @transform_count ||= 0
-        end
       end
     end
 

@@ -214,6 +214,95 @@ describe Batsir::Stage do
       stage.acceptors.keys.should include :acceptor
       stage.acceptors[:acceptor].first.should == {}
     end
+
+    context "with respect to acceptor transformers" do
+      it "should have an empty acceptor transformers queue by default" do
+        stage = Batsir::Stage.new
+
+        stage.acceptor_transformers.should_not be_nil
+        stage.acceptor_transformers.should be_empty
+      end
+
+      it "should be possible to add a transformer to the acceptors" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+
+        stage.add_acceptor_transformer(transformer)
+        stage.acceptor_transformers.should_not be_empty
+
+        stage.acceptor_transformers.first.transformer.should == transformer
+      end
+
+      it "should add an empty options hash by default" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+        stage.add_acceptor_transformer(transformer)
+        stage.acceptor_transformers.should_not be_empty
+
+        stage.acceptor_transformers.first.options.should == {}
+      end
+
+      it "should be possible to add options to a transformer" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+        options = {:foo => :bar}
+
+        stage.add_acceptor_transformer(transformer, options)
+        stage.acceptor_transformers.should_not be_empty
+
+        stage.acceptor_transformers.first.transformer.should == transformer
+        stage.acceptor_transformers.first.options.should == options
+      end
+
+      it "should be possible to add multiple transformers" do
+        stage = Batsir::Stage.new
+
+        transformer1 = :transformer1
+        transformer2 = :transformer2
+
+        stage.add_acceptor_transformer(transformer1)
+        stage.add_acceptor_transformer(transformer2)
+        stage.acceptor_transformers.should_not be_empty
+        stage.acceptor_transformers.size.should == 2
+
+        transformers = stage.acceptor_transformers.map{|td| td.transformer}
+        transformers.should include transformer1
+        transformers.should include transformer2
+      end
+
+      it "should keep the transformers in the order of declaration" do
+        stage = Batsir::Stage.new
+
+        transformer1 = :transformer1
+        transformer2 = :transformer2
+
+        stage.add_acceptor_transformer(transformer1)
+        stage.add_acceptor_transformer(transformer2)
+        stage.acceptor_transformers.should_not be_empty
+        stage.acceptor_transformers.size.should == 2
+
+        stage.acceptor_transformers.first.transformer.should == transformer1
+        stage.acceptor_transformers.last.transformer.should == transformer2
+      end
+
+      it "should be possible to add a transformer more than once" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+
+        stage.add_acceptor_transformer(transformer)
+        stage.add_acceptor_transformer(transformer)
+        stage.acceptor_transformers.should_not be_empty
+        stage.acceptor_transformers.size.should == 2
+
+        stage.acceptor_transformers.first.transformer.should == transformer
+        stage.acceptor_transformers.last.transformer.should == transformer
+      end
+    end
+
   end
 
   context "With respect to notifiers" do
@@ -274,6 +363,94 @@ describe Batsir::Stage do
       stage.notifiers.keys.should include :notifier
       stage.notifiers[:notifier].first.should == {}
     end
+
+    context "with respect to notifier transformers" do
+      it "should have an empty notifier transformers queue by default" do
+        stage = Batsir::Stage.new
+
+        stage.notifier_transformers.should_not be_nil
+        stage.notifier_transformers.should be_empty
+      end
+
+      it "should be possible to add a transformer to the notifiers" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+
+        stage.add_notifier_transformer(transformer)
+        stage.notifier_transformers.should_not be_empty
+
+        stage.notifier_transformers.first.transformer.should == transformer
+      end
+
+      it "should add an empty options hash by default" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+        stage.add_notifier_transformer(transformer)
+        stage.notifier_transformers.should_not be_empty
+
+        stage.notifier_transformers.first.options.should == {}
+      end
+
+      it "should be possible to add options to a transformer" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+        options = {:foo => :bar}
+
+        stage.add_notifier_transformer(transformer, options)
+        stage.notifier_transformers.should_not be_empty
+
+        stage.notifier_transformers.first.transformer.should == transformer
+        stage.notifier_transformers.first.options.should == options
+      end
+
+      it "should be possible to add multiple transformers" do
+        stage = Batsir::Stage.new
+
+        transformer1 = :transformer1
+        transformer2 = :transformer2
+
+        stage.add_notifier_transformer(transformer1)
+        stage.add_notifier_transformer(transformer2)
+        stage.notifier_transformers.should_not be_empty
+        stage.notifier_transformers.size.should == 2
+
+        transformers = stage.notifier_transformers.map{|td| td.transformer}
+        transformers.should include transformer1
+        transformers.should include transformer2
+      end
+
+      it "should keep the transformers in the order of declaration" do
+        stage = Batsir::Stage.new
+
+        transformer1 = :transformer1
+        transformer2 = :transformer2
+
+        stage.add_notifier_transformer(transformer1)
+        stage.add_notifier_transformer(transformer2)
+        stage.notifier_transformers.should_not be_empty
+        stage.notifier_transformers.size.should == 2
+
+        stage.notifier_transformers.first.transformer.should == transformer1
+        stage.notifier_transformers.last.transformer.should == transformer2
+      end
+
+      it "should be possible to add a transformer more than once" do
+        stage = Batsir::Stage.new
+
+        transformer = :transformer
+
+        stage.add_notifier_transformer(transformer)
+        stage.add_notifier_transformer(transformer)
+        stage.notifier_transformers.should_not be_empty
+        stage.notifier_transformers.size.should == 2
+
+        stage.notifier_transformers.first.transformer.should == transformer
+        stage.notifier_transformers.last.transformer.should == transformer
+      end
+    end
   end
 
   context "with respect to compiling the stage" do
@@ -285,6 +462,7 @@ describe Batsir::Stage do
       parent_attribute = :parent_id
       notification_queue = :notification_queue
 
+      stage.add_notifier_transformer(Batsir::Transformers::Transformer)
       stage.add_notifier(Batsir::Notifiers::Notifier)
       stage.add_filter(Batsir::Filter)
       stage.add_filter(Batsir::Filter)
@@ -306,6 +484,21 @@ describe Batsir::Stage do
 
     it "should create a worker class named after the stage name" do
       @created_class.stage_name.should == @stage_name
+    end
+
+    it "should add the notifier during compilation" do
+      instance = @created_class.new
+      instance.filter_queue.notifiers.should_not be_nil
+      instance.filter_queue.notifiers.should_not be_empty
+      instance.filter_queue.notifiers.size.should == 1
+      instance.filter_queue.notifiers.first.should be_a Batsir::Notifiers::Notifier
+    end
+
+    it "should add a transformer to the notifier during compilation" do
+      instance = @created_class.new
+
+      instance.filter_queue.notifiers.first.transformer_queue.should_not be_empty
+      instance.filter_queue.notifiers.first.transformer_queue.first.should be_a Batsir::Transformers::Transformer
     end
 
     it "should initialize a class local filter queue" do
@@ -356,6 +549,15 @@ describe Batsir::Stage do
           @@start_count += 1
         end
 
+        def add_transformer(transformer)
+          @@added_transformers ||= []
+          @@added_transformers << transformer
+        end
+
+        def self.added_transformers
+          @@added_transformers ||= []
+        end
+
         def self.start_count
           @@start_count ||= 0
         end
@@ -363,6 +565,7 @@ describe Batsir::Stage do
         def self.reset
           @@start_count = 0
           @@stage_name = nil
+          @@added_transformers = []
         end
       end
     end
@@ -391,6 +594,17 @@ describe Batsir::Stage do
       stage.start
 
       MockAcceptor.start_count.should == 2
+    end
+
+    it "should add defined transformers to the acceptors" do
+      stage = create_stage
+      stage.add_acceptor_transformer Batsir::Transformers::Transformer
+      stage.add_acceptor MockAcceptor
+
+      stage.start
+
+      MockAcceptor.added_transformers.size.should == 1
+      MockAcceptor.added_transformers.first.should be_a Batsir::Transformers::Transformer
     end
   end
 end

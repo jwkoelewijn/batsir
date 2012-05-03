@@ -5,64 +5,63 @@ describe Batsir::Notifiers::Notifier do
     Batsir::Notifiers::Notifier
   end
 
-  it "should accept an options hash in its initializer" do
-    notifier_instance = notifier_class.new( {} )
-    notifier_instance.should_not be_nil
-    notifier_instance.should be_a notifier_class
-  end
-
-  it "should be possible to set a field mapping using the 'fields' option" do
-    field_mapping = {:foo => :bar}
-    notifier = notifier_class.new( :fields => field_mapping )
-    notifier.field_mapping.should == field_mapping
-  end
-
-  it "should use the fields mapping given in an options hash to transform the message using #transform" do
-    field_mapping = {:foo => :bar}
-    notifier = notifier_class.new( :fields => field_mapping )
-
-    message = {:bar => "bar"}
-    transformed_message = notifier.transform(message)
-    transformed_message.should have_key :foo
-    transformed_message.should_not have_key :bar
-    transformed_message[:foo].should == "bar"
-  end
-
-  it "should remove options not in the fields option when a fields option is given" do
-    field_mapping = {:foo => :bar}
-    notifier = notifier_class.new( :fields => field_mapping )
-
-    message = {:bar => "bar", :john => :doe}
-    transformed_message = notifier.transform(message)
-    transformed_message.should have_key :foo
-    transformed_message.should_not have_key :bar
-    transformed_message.should_not have_key :john
-  end
-
-  it "should not remove fields when no mapping is given" do
+  it "should have a transformer_queue" do
     notifier = notifier_class.new
-
-    message = {:bar => "bar", :john => :doe}
-    transformed_message = notifier.transform(message)
-    transformed_message.should have_key :bar
-    transformed_message.should have_key :john
+    notifier.transformer_queue.should_not be_nil
   end
 
-  it "should correctly handle more complex field mapping" do
-    field_mapping = {:id => :old_id}
-    notifier = notifier_class.new( :fields => field_mapping )
+  it "should initially have an empty transformer_queue" do
+    notifier = notifier_class.new
+    notifier.transformer_queue.should_not be_nil
+    notifier.transformer_queue.should be_empty
+  end
 
-    message = {:id => 2, :old_id => 1, :john => :doe}
-    transformed_message = notifier.transform(message)
+  it "should be possible to add a transformer to the transformer_queue" do
+    transformer = :transformer
 
-    transformed_message.should have_key :id
-    transformed_message.should_not have_key :old_id
-    transformed_message.should_not have_key :john
+    notifier = notifier_class.new
+    notifier.add_transformer transformer
+
+    notifier.transformer_queue.should_not be_empty
+    notifier.transformer_queue.size.should == 1
+    notifier.transformer_queue.first.should == :transformer
+  end
+
+  it "should be possible to add a transformer multiple times" do
+    transformer = :transformer
+
+    notifier = notifier_class.new
+    notifier.add_transformer transformer
+    notifier.add_transformer transformer
+
+    notifier.transformer_queue.should_not be_empty
+    notifier.transformer_queue.size.should == 2
+  end
+
+  it "should create a FieldTransformer when the 'fields' option is given during initialization" do
+    fields = {:foo => :bar}
+    notifier = notifier_class.new(:fields => fields)
+    notifier.transformer_queue.should_not be_empty
+    notifier.transformer_queue.first.class.should == Batsir::Transformers::FieldTransformer
+    notifier.transformer_queue.first.fields.should == fields
   end
 
   it "should call #transform when #notify is called" do
     notifier = notifier_class.new
     notifier.should_receive(:transform).with({})
+    notifier.notify({})
+  end
+
+  it "should call #transform on all transformers when #transform is called" do
+    class MockTransformer < Batsir::Transformers::Transformer
+    end
+
+    notifier = notifier_class.new
+    transformer = MockTransformer.new
+    notifier.add_transformer transformer
+    notifier.transformer_queue.size.should == 1
+
+    transformer.should_receive(:transform).with({})
     notifier.notify({})
   end
 

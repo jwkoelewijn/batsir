@@ -2,12 +2,22 @@ module Batsir
   module Notifiers
     class Notifier
       attr_accessor :field_mapping
+      attr_accessor :transformer_queue
 
       def initialize(options = {})
-        @field_mapping = options.delete(:fields) || {}
+        fields = options.delete(:fields)
+
         options.each do |option, value|
           self.send("#{option}=", value)
         end
+        @transformer_queue = []
+        if fields
+          add_transformer(Batsir::Transformers::FieldTransformer.new(:fields => fields))
+        end
+      end
+
+      def add_transformer(transformer)
+        @transformer_queue << transformer
       end
 
       def notify(message)
@@ -19,16 +29,8 @@ module Batsir
       end
 
       def transform(message)
-        if @field_mapping.any? && message.respond_to?(:keys)
-          fields_to_remove = message.keys - @field_mapping.keys - @field_mapping.values
-
-          @field_mapping.each do |new, old|
-            message[new] = message.delete(old)
-          end
-
-          fields_to_remove.each do |field|
-            message.delete(field)
-          end
+        transformer_queue.each do |transformer|
+          message = transformer.transform(message)
         end
         message
       end

@@ -5,7 +5,6 @@ module Batsir
     class AMQPAcceptor < Acceptor
       include Batsir::AMQP
       def start
-        puts "Using options: #{bunny_options.inspect}"
         Bunny.run( bunny_options ) do |bunny|
           q   = bunny.queue( queue )
           exc = bunny.exchange( exchange )

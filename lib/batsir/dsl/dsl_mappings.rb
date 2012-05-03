@@ -50,8 +50,22 @@ module Batsir
         @stage = stage
       end
 
+      def transformers(&block)
+        ::Blockenspiel.invoke(block, Batsir::DSL::InboundTransformerMapping.new(@stage))
+      end
+
       def acceptor(acceptor_class, options = {})
         @stage.add_acceptor(acceptor_class, options)
+      end
+    end
+
+    class InboundTransformerMapping < ::Blockenspiel::Base
+      def initialize(stage)
+        @stage = stage
+      end
+
+      def transformer(transformer, options = {})
+        @stage.add_acceptor_transformer(transformer, options)
       end
     end
 
@@ -60,8 +74,22 @@ module Batsir
         @stage = stage
       end
 
+      def transformers(&block)
+        ::Blockenspiel.invoke(block, Batsir::DSL::OutboundTransformerMapping.new(@stage))
+      end
+
       def notifier(notifier_class, options = {})
         @stage.add_notifier(notifier_class, options)
+      end
+    end
+
+    class OutboundTransformerMapping < ::Blockenspiel::Base
+      def initialize(stage)
+        @stage = stage
+      end
+
+      def transformer(transformer, options = {})
+        @stage.add_notifier_transformer(transformer, options)
       end
     end
   end

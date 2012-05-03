@@ -15,6 +15,8 @@ require 'batsir/acceptors/acceptor'
 require 'batsir/acceptors/amqp_acceptor'
 require 'batsir/notifiers/notifier'
 require 'batsir/notifiers/amqp_notifier'
+require 'batsir/transformers/transformer'
+require 'batsir/transformers/field_transformer'
 require 'batsir/logo'
 
 module Batsir

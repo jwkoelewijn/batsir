@@ -4,11 +4,17 @@ module Batsir
       include Celluloid
 
       attr_accessor :stage_name
+      attr_accessor :transformer_queue
 
       def initialize(options = {})
         options.each do |option, value|
           self.send("#{option}=", value)
         end
+        @transformer_queue = []
+      end
+
+      def add_transformer(transformer)
+        @transformer_queue << transformer
       end
 
       # This method is called automatically when the stage is
@@ -28,6 +34,9 @@ module Batsir
       # processing of the filter chain
       def start_filter_chain(message)
         klazz = Batsir::Registry.get(stage_name)
+        transformer_queue.each do |transformer|
+          message = transformer.transform(message)
+        end
         klazz.perform_async(message) if klazz
       end
     end
