@@ -55,11 +55,18 @@ module Batsir
           code << <<-EOF
             notifier = #{notifier.to_s}.new(#{options.to_s})
           EOF
+
+          if stage.notifier_transformers.any?
             stage.notifier_transformers.each do |transformer_declaration|
               code << <<-EOF
             notifier.add_transformer #{transformer_declaration.transformer}.new(#{transformer_declaration.options.to_s})
               EOF
             end
+          else
+            code << <<-EOF
+            notifier.add_transformer Batsir::Transformers::JSONOutputTransformer.new
+            EOF
+          end
           code << <<-EOF
             @filter_queue.add_notifier notifier
           EOF

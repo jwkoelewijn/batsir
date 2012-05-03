@@ -1,6 +1,6 @@
 require 'blockenspiel'
 require 'celluloid'
-#require 'hot_bunnies'
+require 'json'
 require 'bunny'
 require 'sidekiq'
 require 'sidekiq/cli'
@@ -17,6 +17,8 @@ require 'batsir/notifiers/notifier'
 require 'batsir/notifiers/amqp_notifier'
 require 'batsir/transformers/transformer'
 require 'batsir/transformers/field_transformer'
+require 'batsir/transformers/json_input_transformer'
+require 'batsir/transformers/json_output_transformer'
 require 'batsir/logo'
 
 module Batsir

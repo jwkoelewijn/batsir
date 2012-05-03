@@ -64,9 +64,13 @@ module Batsir
         options.each do |acceptor_options|
           acceptor_options.merge!(:stage_name => self.name)
           acceptor = acceptor_class.new(acceptor_options)
-          acceptor_transformers.each do |transformer_declaration|
-            transformer = transformer_declaration.transformer.new(transformer_declaration.options)
-            acceptor.add_transformer(transformer)
+          if acceptor_transformers.any?
+            acceptor_transformers.each do |transformer_declaration|
+              transformer = transformer_declaration.transformer.new(transformer_declaration.options)
+              acceptor.add_transformer(transformer)
+            end
+          else
+            acceptor.add_transformer(Batsir::Transformers::JSONInputTransformer.new)
           end
           acceptor.start!
         end

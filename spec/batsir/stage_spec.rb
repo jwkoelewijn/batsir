@@ -459,9 +459,6 @@ describe Batsir::Stage do
 
       stage = Batsir::Stage.new(:name => @stage_name)
 
-      parent_attribute = :parent_id
-      notification_queue = :notification_queue
-
       stage.add_notifier_transformer(Batsir::Transformers::Transformer)
       stage.add_notifier(Batsir::Notifiers::Notifier)
       stage.add_filter(Batsir::Filter)
@@ -499,6 +496,20 @@ describe Batsir::Stage do
 
       instance.filter_queue.notifiers.first.transformer_queue.should_not be_empty
       instance.filter_queue.notifiers.first.transformer_queue.first.should be_a Batsir::Transformers::Transformer
+    end
+
+    it "should add a JSONOutputTransformer by default when no transformers are defined" do
+      stage = Batsir::Stage.new(:name => "SomeName")
+
+      stage.add_notifier(Batsir::Notifiers::Notifier)
+
+      created_class = eval( stage.compile )
+      instance = created_class.new
+
+      instance.filter_queue.notifiers.should_not be_nil
+      instance.filter_queue.notifiers.should_not be_empty
+      instance.filter_queue.notifiers.first.transformer_queue.should_not be_empty
+      instance.filter_queue.notifiers.first.transformer_queue.first.should be_a Batsir::Transformers::JSONOutputTransformer
     end
 
     it "should initialize a class local filter queue" do
@@ -594,6 +605,16 @@ describe Batsir::Stage do
       stage.start
 
       MockAcceptor.start_count.should == 2
+    end
+
+    it "should add a Batsir::Transformers::JSONInputTransformer to acceptors when no transformers are defined" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+
+      stage.start
+
+      MockAcceptor.added_transformers.size.should == 1
+      MockAcceptor.added_transformers.first.should be_a Batsir::Transformers::JSONInputTransformer
     end
 
     it "should add defined transformers to the acceptors" do
