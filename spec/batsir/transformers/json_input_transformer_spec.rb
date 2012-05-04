@@ -11,10 +11,12 @@ describe Batsir::Transformers::JSONInputTransformer do
     result.should be_a Hash
   end
 
-  it "should transform the input using symbolized names" do
+  it "should transform the input using string names" do
     some_json = '{"foo" : "bar"}'
     result = subject.transform(some_json)
 
-    result[:foo].should == "bar"
+    result[:foo].should be_nil
+    result["foo"].should_not be_nil
+    result["foo"].should == "bar"
   end
 end
