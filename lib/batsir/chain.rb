@@ -30,5 +30,11 @@ module Batsir
         stage.start
       end
     end
+
+    def finalize
+      stages.each do |stage|
+        stage.terminate if stage.alive?
+      end
+    end
   end
 end

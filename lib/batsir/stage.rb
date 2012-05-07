@@ -10,6 +10,7 @@ module Batsir
     attr_reader   :filter_declarations
     attr_reader   :notifiers
     attr_reader   :acceptors
+    attr_reader   :running_acceptors
     attr_reader   :notifier_transformers
     attr_reader   :acceptor_transformers
 
@@ -18,6 +19,7 @@ module Batsir
         self.send("#{attr.to_s}=", value)
       end
       @acceptor_transformers  = []
+      @running_acceptors      = []
       @acceptors              = {}
       @filter_declarations    = []
       @notifiers              = {}
@@ -59,6 +61,12 @@ module Batsir
       Batsir::StageWorker.compile_from(self)
     end
 
+    def finalize
+      running_acceptors.each do |acceptor|
+        acceptor.terminate! if acceptor.alive?
+      end
+    end
+
     def start
       acceptors.each do |acceptor_class, options|
         options.each do |acceptor_options|
@@ -72,6 +80,7 @@ module Batsir
           else
             acceptor.add_transformer(Batsir::Transformers::JSONInputTransformer.new)
           end
+          @running_acceptors << acceptor
           acceptor.start!
         end
       end

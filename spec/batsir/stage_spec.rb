@@ -594,6 +594,21 @@ describe Batsir::Stage do
       MockAcceptor.stage_name.should == stage.name
     end
 
+    it "should initially have an empty list of running acceptors" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+
+      stage.running_acceptors.should_not be_nil
+      stage.running_acceptors.should be_empty
+    end
+
+    it "should keep track of running acceptors" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+
+      stage.start
+      stage.running_acceptors.size.should == 1
+    end
 
     it "should start all acceptors" do
       stage = create_stage

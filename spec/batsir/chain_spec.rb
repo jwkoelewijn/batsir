@@ -13,7 +13,7 @@ describe Batsir::Chain do
 
   it "should be possible to add a stage" do
     chain = Batsir::Chain.new
-    stage = "stage"
+    stage = Batsir::Stage.new(:name => "Stage")
     chain.add_stage(stage)
     chain.stages.should include stage
   end
