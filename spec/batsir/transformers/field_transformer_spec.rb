@@ -11,7 +11,6 @@ describe Batsir::Transformers::FieldTransformer do
     transformer_instance.should be_a transformer_class
   end
 
-
   it "should be possible to set a field mapping using the 'fields' option" do
     field_mapping = {:foo => :bar}
     transformer = transformer_class.new( :fields => field_mapping )
@@ -27,6 +26,16 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message.should have_key :foo
     transformed_message.should_not have_key :bar
     transformed_message[:foo].should == "bar"
+  end
+
+  it "should be possible to use symbols and string based keys and values all the same" do
+    field_mapping = {:foo => "bar", "john" => :doe}
+    transformer = transformer_class.new( :fields => field_mapping )
+
+    message = {:bar => "foo", "doe" => :john}
+    transformed_message = transformer.transform(message)
+    transformed_message[:foo].should == "foo"
+    transformed_message[:john].should == :john
   end
 
   it "should remove options not in the fields option when a fields option is given" do

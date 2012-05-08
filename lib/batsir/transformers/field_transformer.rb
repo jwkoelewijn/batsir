@@ -7,17 +7,29 @@ module Batsir
         @fields ||= {}
       end
 
+      def fields=(hash)
+        @fields = {}
+        hash.each do |k, v|
+          @fields[k.to_sym] = v.to_sym
+        end
+      end
+
       def transform(message)
         fields = self.fields
         if fields.any? && message.respond_to?(:keys)
-          fields_to_remove = message.keys - fields.keys - fields.values
+          symbolized_message_keys = {}
+          message.keys.each do |key|
+            symbolized_message_keys[key.to_sym] = key
+          end
+
+          fields_to_remove = symbolized_message_keys.keys - fields.keys - fields.values
 
           fields.each do |new, old|
-            message[new] = message.delete(old)
+            message[new] = message.delete(symbolized_message_keys[old])
           end
 
           fields_to_remove.each do |field|
-            message.delete(field)
+            message.delete(symbolized_message_keys[field])
           end
         end
         message
