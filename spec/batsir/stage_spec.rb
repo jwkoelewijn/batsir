@@ -553,7 +553,6 @@ describe Batsir::Stage do
         end
 
         def start
-          puts "starting"
           @@start_count ||= 0
           @@start_count += 1
         end
