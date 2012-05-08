@@ -57,11 +57,11 @@ module Batsir
   end
 
   def self.initialize_sidekiq
-    [:configure_server, :configure_client].each do |component|
-      Sidekiq.send(component, lambda {|config|
-        puts "configuring #{component}"
-        config.redis = {:url => Batsir.config.redis_url}
-      })
+    Sidekiq.configure_server do |config|
+      config.redis = {:url => Batsir.config.redis_url}
+    end
+    Sidekiq.configure_client do |config|
+      config.redis = {:url => Batsir.config.redis_url}
     end
   end
 
