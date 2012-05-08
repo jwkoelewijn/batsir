@@ -1,22 +1,6 @@
 module Batsir
   def self.logo
-    16.times do | i |
-      str = ""
-      ((i * 16) % 80).times do
-        str << " "
-      end
-      puts "#{str}#{nan}"
-    end
-    self.logo_ascii
-  end
-
-  def self.nan
-    0.0 / 0.0
-  end
-
-  def self.logo_ascii
   <<EOF
-
 
 
 
