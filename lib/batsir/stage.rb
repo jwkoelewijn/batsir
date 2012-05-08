@@ -1,7 +1,5 @@
 module Batsir
   class Stage
-    include Celluloid
-
     FilterDeclaration       = Struct.new(:filter, :options)
     TransformerDeclaration  = Struct.new(:transformer, :options)
 
@@ -59,12 +57,6 @@ module Batsir
 
     def compile
       Batsir::StageWorker.compile_from(self)
-    end
-
-    def finalize
-      running_acceptors.each do |acceptor|
-        acceptor.terminate! if acceptor.alive?
-      end
     end
 
     def start
