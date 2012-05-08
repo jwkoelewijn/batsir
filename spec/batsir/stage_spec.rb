@@ -540,9 +540,6 @@ describe Batsir::Stage do
   context "with respect to starting the stage" do
     before :all do
       class MockAcceptor < Batsir::Acceptors::Acceptor
-        def start!
-          start
-        end
 
         def foo=(bar)
         end
@@ -556,6 +553,7 @@ describe Batsir::Stage do
         end
 
         def start
+          puts "starting"
           @@start_count ||= 0
           @@start_count += 1
         end
@@ -577,6 +575,13 @@ describe Batsir::Stage do
           @@start_count = 0
           @@stage_name = nil
           @@added_transformers = []
+        end
+
+      end
+
+      class Celluloid::ActorProxy
+        def start!
+          Celluloid::Actor.call @mailbox, :start
         end
       end
     end
@@ -618,6 +623,7 @@ describe Batsir::Stage do
       MockAcceptor.start_count.should == 0
 
       stage.start
+      sleep(0.01)
 
       MockAcceptor.start_count.should == 2
     end

@@ -22,6 +22,16 @@ require 'batsir/transformers/json_output_transformer'
 require 'batsir/logo'
 
 module Batsir
+  def self.config
+    @config ||= Batsir::Config.new(config_defaults)
+  end
+
+  def self.config_defaults
+    {
+      :redis_url => "redis://localhost:6379/0"
+    }
+  end
+
   def self.create(&block)
     puts logo
     new_block = ::Proc.new do
@@ -32,15 +42,27 @@ module Batsir
 
   def self.start
     return unless @chain
-    
+
     sidekiq_cli = Sidekiq::CLI.instance
     Sidekiq.options[:queues] << 'default'
+
+    initialize_sidekiq
+
     generated_code = @chain.compile
 
     eval(generated_code)
 
     @chain.start
     sidekiq_cli.run
+  end
+
+  def self.initialize_sidekiq
+    [:configure_server, :configure_client].each do |component|
+      Sidekiq.send(component, lambda {|config|
+        puts "configuring #{component}"
+        config.redis = {:url => Batsir.config.redis_url}
+      })
+    end
   end
 
   def self.create_and_start(&block)
