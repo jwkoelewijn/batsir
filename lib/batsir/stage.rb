@@ -1,5 +1,7 @@
 module Batsir
   class Stage
+    include Celluloid
+
     FilterDeclaration       = Struct.new(:filter, :options)
     TransformerDeclaration  = Struct.new(:transformer, :options)
 
@@ -61,7 +63,7 @@ module Batsir
       Batsir::StageWorker.compile_from(self)
     end
 
-    def terminate
+    def finalize
       @cancellators.each do |cancellator|
         cancellator.write "STOP"
       end

@@ -19,6 +19,10 @@ describe Batsir::Stage do
     @object_type = "SomeResource"
   end
 
+  it "should be a Celluloid Actor" do
+    Batsir::Stage.ancestors.should include Celluloid
+  end
+
   it "should be possible to name the stage" do
     stage = Batsir::Stage.new
     name = "StageName"
