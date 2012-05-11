@@ -10,7 +10,7 @@ gem "jeweler"
 gem "blockenspiel", "~> 0.4.3"
 gem "celluloid"
 gem "sidekiq"
-gem "bunny"
+gem "bunny", "0.8.0.pre1"
 gem "json"
 #gem "hot_bunnies", :git => "https://github.com/ruby-amqp/hot_bunnies.git"
 
