@@ -1,8 +1,13 @@
+GIT
+  remote: https://github.com/ruby-amqp/bunny.git
+  revision: e3d3a091e6ea2b070316ab6e5d0fe7bc0b742ac4
+  specs:
+    bunny (0.8.0.pre1)
+
 GEM
   remote: http://rubygems.org/
   specs:
     blockenspiel (0.4.3)
-    bunny (0.7.9)
     celluloid (0.10.0)
     connection_pool (0.9.1)
     diff-lcs (1.1.3)
@@ -43,7 +48,7 @@ PLATFORMS
 DEPENDENCIES
   blockenspiel (~> 0.4.3)
   bundler (> 1.0.0)
-  bunny
+  bunny!
   celluloid
   jeweler
   json
