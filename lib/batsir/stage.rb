@@ -61,6 +61,12 @@ module Batsir
       Batsir::StageWorker.compile_from(self)
     end
 
+    def terminate
+      @cancellators.each do |cancellator|
+        cancellator.write "STOP"
+      end
+    end
+
     def start
       acceptors.each do |acceptor_class, options|
         options.each do |acceptor_options|
