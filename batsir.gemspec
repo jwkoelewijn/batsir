@@ -80,7 +80,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<blockenspiel>, ["~> 0.4.3"])
       s.add_runtime_dependency(%q<celluloid>, [">= 0"])
       s.add_runtime_dependency(%q<sidekiq>, [">= 0"])
-      s.add_runtime_dependency(%q<bunny>, ["= 0.8.0.pre1"])
+      s.add_runtime_dependency(%q<bunny>, [">= 0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
     else
       s.add_dependency(%q<bundler>, ["> 1.0.0"])
@@ -88,7 +88,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<blockenspiel>, ["~> 0.4.3"])
       s.add_dependency(%q<celluloid>, [">= 0"])
       s.add_dependency(%q<sidekiq>, [">= 0"])
-      s.add_dependency(%q<bunny>, ["= 0.8.0.pre1"])
+      s.add_dependency(%q<bunny>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
     end
   else
@@ -97,7 +97,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<blockenspiel>, ["~> 0.4.3"])
     s.add_dependency(%q<celluloid>, [">= 0"])
     s.add_dependency(%q<sidekiq>, [">= 0"])
-    s.add_dependency(%q<bunny>, ["= 0.8.0.pre1"])
+    s.add_dependency(%q<bunny>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
   end
 end
