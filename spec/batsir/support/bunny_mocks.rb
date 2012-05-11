@@ -44,6 +44,7 @@ module Bunny
   end
 
   class BunnyQueue
+    attr_accessor :arguments
     attr_accessor :block
     attr_accessor :bound_exchange
     attr_accessor :bound_key
@@ -53,7 +54,8 @@ module Bunny
       @bound_key = options[:key]
     end
 
-    def subscribe(&block)
+    def subscribe(*args, &block)
+      @arguments = *args
       @block = block
     end
   end

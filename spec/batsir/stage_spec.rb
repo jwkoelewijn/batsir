@@ -215,6 +215,12 @@ describe Batsir::Stage do
       stage.acceptors[:acceptor].first.should == {}
     end
 
+    it "should initially have an empty list of cancellators" do
+      stage = Batsir::Stage.new
+      stage.cancellators.should_not be_nil
+      stage.cancellators.should be_empty
+    end
+
     context "with respect to acceptor transformers" do
       it "should have an empty acceptor transformers queue by default" do
         stage = Batsir::Stage.new
@@ -612,6 +618,23 @@ describe Batsir::Stage do
 
       stage.start
       stage.running_acceptors.size.should == 1
+    end
+
+    it "should add a cancellator to each acceptor" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+
+      stage.start
+      stage.running_acceptors.first.cancellator.should_not be_nil
+    end
+
+    it "should add cancellators to the stage list of cancellators" do
+      stage = create_stage
+      stage.add_acceptor MockAcceptor
+      stage.add_acceptor MockAcceptor, :foo => :bar
+
+      stage.start
+      stage.cancellators.size.should == 2
     end
 
     it "should start all acceptors" do

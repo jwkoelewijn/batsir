@@ -70,6 +70,19 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.transformer_queue.size.should == 2
   end
 
+  it "should be possible to set a cancellator" do
+    cancellator = :cancel
+    acceptor = acceptor_class.new
+    acceptor.cancellator = cancellator
+    acceptor.cancellator.should == cancellator
+  end
+
+  it "should be possible to set a cancellator in the constructor using a hash" do
+    cancellator = :cancel
+    acceptor = acceptor_class.new(:cancellator => cancellator)
+    acceptor.cancellator.should == cancellator
+  end
+
   it "should call the #perform_async on the worker class when #start_filter_chain is called" do
     class MockWorker
       def self.stage_name

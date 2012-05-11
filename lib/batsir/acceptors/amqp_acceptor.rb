@@ -9,7 +9,7 @@ module Batsir
           q   = bunny.queue( queue )
           exc = bunny.exchange( exchange )
           q.bind( exc, :key => queue)
-          q.subscribe do |msg|
+          q.subscribe(:cancellator => cancellator) do |msg|
             start_filter_chain(msg[:payload])
           end
         end

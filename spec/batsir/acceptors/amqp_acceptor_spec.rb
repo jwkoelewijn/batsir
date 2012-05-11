@@ -123,6 +123,14 @@ describe Batsir::Acceptors::AMQPAcceptor do
       instance.queues.keys.should include :some_queue
     end
 
+    it "should initialize the subscription with the acceptor's cancellator" do
+      cancellator = :cancellator
+      acceptor = new_acceptor(:queue => :some_queue, :cancellator => cancellator)
+      acceptor.start
+      instance = Bunny.instance
+      puts instance.queues[:some_queue].arguments.first[:cancellator].should == cancellator
+    end
+
     it "should call the #start_filter_chain method when a message is received" do
       class Batsir::Acceptors::Acceptor
         def start_filter_chain(message)

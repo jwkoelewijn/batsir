@@ -5,6 +5,7 @@ module Batsir
 
     attr_accessor :name
     attr_accessor :chain
+    attr_accessor :cancellators
     attr_reader   :filter_declarations
     attr_reader   :notifiers
     attr_reader   :acceptors
@@ -16,6 +17,7 @@ module Batsir
       options.each do |attr, value|
         self.send("#{attr.to_s}=", value)
       end
+      @cancellators           = []
       @acceptor_transformers  = []
       @running_acceptors      = []
       @acceptors              = {}
@@ -62,7 +64,9 @@ module Batsir
     def start
       acceptors.each do |acceptor_class, options|
         options.each do |acceptor_options|
-          acceptor_options.merge!(:stage_name => self.name)
+          cancellator_reader, cancellator_writer = ::IO.pipe
+          acceptor_options.merge!(:stage_name => self.name, :cancellator => cancellator_reader)
+          @cancellators << cancellator_writer
           acceptor = acceptor_class.new(acceptor_options)
           if acceptor_transformers.any?
             acceptor_transformers.each do |transformer_declaration|

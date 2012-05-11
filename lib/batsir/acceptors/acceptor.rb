@@ -5,6 +5,7 @@ module Batsir
 
       attr_accessor :stage_name
       attr_accessor :transformer_queue
+      attr_accessor :cancellator
 
       def initialize(options = {})
         options.each do |option, value|
