@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'bundler'
 begin
-  Bundler.setup(:default, :development)
+  Bundler.setup
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
   $stderr.puts "Run `bundle install` to install missing gems"
@@ -52,69 +52,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "batsir #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-task :run_chain do
-  begin
-    Bundler.setup(:default, :development)
-  rescue Bundler::BundlerError => e
-    $stderr.puts e.message
-    $stderr.puts "Run `bundle install` to install missing gems"
-    exit e.status_code
-  end
-  $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-  require 'batsir'
-  require 'batsir/support/mock_filters'
-
-  Batsir.create_and_start do
-    retrieval_operation Batsir::RetrievalOperation
-    persistence_operation PersistenceOperation
-    notification_operation Batsir::NotificationOperation
-
-    stage "stage 1" do
-      queue :timecard_updated
-      object_type Object
-      operations do
-        add_operation SumOperation
-        add_operation AverageOperation
-      end
-      notifications do
-        queue :receive_queue_2, :object_id
-      end
-    end
-
-    stage "stage 2" do
-      queue :receive_queue_2
-      object_type String
-      operations do
-        add_operation SumOperation
-      end
-    end
-  end
-end
-
-task :run_other_chain do
-  begin
-    Bundler.setup(:default, :development)
-  rescue Bundler::BundlerError => e
-    $stderr.puts e.message
-    $stderr.puts "Run `bundle install` to install missing gems"
-    exit e.status_code
-  end
-  $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-  require 'batsir'
-  require 'batsir/support/mock_filters'
-
-  Batsir.create_and_start do
-    stage "stage 1" do
-      inbound do
-        acceptor Batsir::Acceptors::AMQPAcceptor, :queue => 'timecard_updated', :host => 'localhost'
-      end
-      filter Batsir::MessageCreator
-      filter Batsir::MessagePrinter
-      outbound do
-        notifier Batsir::Notifiers::AMQPNotifier, :queue => 'organisation_tree_updated', :fields => {:organisation_tree_id => :id, :week => :week}
-      end
-    end
-  end
 end
