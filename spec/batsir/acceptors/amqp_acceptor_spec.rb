@@ -132,29 +132,38 @@ describe Batsir::Acceptors::AMQPAcceptor do
     end
 
     it "should call the #start_filter_chain method when a message is received" do
-      class Batsir::Acceptors::Acceptor
-        def start_filter_chain(message)
-          @@method_called ||= 0
-          @@method_called += 1
-        end
-
-        def self.method_called
-          @@method_called ||= 0
-        end
-      end
       acceptor = new_acceptor(:queue => :some_queue)
+
+      # Because acceptor is a Celluloid Actor, it is not possible to define a method
+      # on the instance directly, because you actually hold a reference to a
+      # ActorProxy.
+      # Fortunately, ActorProxy defines the #_send_ method, which we can use to
+      # define a singleton_method on the actual proxied instance.
+      # We cannot just redefine the class method here, because it will break other
+      # tests.
+
+      start_filter_chain_mock_method = lambda do |message|
+        @method_called ||= 0
+        @method_called += 1
+      end
+
+      method_called_mock_method = lambda do
+        @method_called ||= 0
+      end
+
+      acceptor._send_(:define_singleton_method, :start_filter_chain, start_filter_chain_mock_method)
+      acceptor._send_(:define_singleton_method, :method_called, method_called_mock_method)
+
       acceptor.start
+
       instance = Bunny.instance
       queue = instance.queues[:some_queue]
       queue.should_not be_nil
 
-      Batsir::Acceptors::Acceptor.method_called.should == 0
-
-      message = {}
       block = queue.block
-      block.call(message)
+      block.call({})
 
-      Batsir::Acceptors::Acceptor.method_called.should == 1
+      acceptor.method_called.should == 1
     end
   end
 end
