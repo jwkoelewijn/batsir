@@ -85,7 +85,7 @@ module Batsir
             acceptor.add_transformer(Batsir::Transformers::JSONInputTransformer.new)
           end
           @running_acceptors << acceptor
-          acceptor.start!
+          acceptor.async.start
         end
       end
       true
