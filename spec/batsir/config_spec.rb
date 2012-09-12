@@ -101,9 +101,9 @@ describe Batsir::Config, "with respect to resetting the configuration" do
 
   it "resets properly" do
     Batsir::Config.test1 = "test1"
-    Batsir::Config.to_hash.keys.size.should > 2
+    Batsir::Config.to_hash.keys.size.should > 3
     Batsir::Config.reset
-    Batsir::Config.to_hash.keys.size.should == 2
+    Batsir::Config.to_hash.keys.size.should == 3
     Batsir::Config.sidekiq_queue.should == 'batsir'
   end
 

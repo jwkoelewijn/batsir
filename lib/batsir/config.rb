@@ -8,6 +8,9 @@ module Batsir
 
       def defaults
         @defaults ||= {
+          :log => {
+            :name => 'batsir'
+          },
           :redis_url => 'redis://localhost:6379/0',
           :sidekiq_queue => 'batsir'
         }
