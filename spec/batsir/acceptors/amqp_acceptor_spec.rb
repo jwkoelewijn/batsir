@@ -1,53 +1,51 @@
 require File.join( File.dirname(__FILE__), "..", "..",  "spec_helper" )
 
 describe Batsir::Acceptors::AMQPAcceptor do
-
   let(:acceptor_class){
     Batsir::Acceptors::AMQPAcceptor
   }
 
-  context "With respect to setting options" do
-
-    it "should be a Batsir::Acceptors::Acceptor" do
+  context "with respect to setting options" do
+    it "is a Batsir::Acceptors::Acceptor" do
       acceptor_class.ancestors.should include Batsir::Acceptors::Acceptor
     end
 
-    it "should be possible to set the queue on which to listen" do
+    it "can set the queue on which to listen" do
       acceptor = acceptor_class.new(:queue => :queue)
       acceptor.queue.should == :queue
     end
 
-    it "should be possible to set the host of the amqp broker" do
+    it "can set the host of the amqp broker" do
       acceptor = acceptor_class.new(:host => 'localhost')
       acceptor.host.should == 'localhost'
     end
 
-    it "should be possible to set the port of the amqp broker" do
+    it "can set the port of the amqp broker" do
       acceptor = acceptor_class.new(:port => 1234)
       acceptor.port.should == 1234
     end
 
-    it "should be possible to set the username with which to connect to the broker" do
+    it "can set the username with which to connect to the broker" do
       acceptor = acceptor_class.new(:username => 'some_user')
       acceptor.username.should == 'some_user'
     end
 
-    it "should be possible to set the password with which to connect to the broker" do
+    it "can set the password with which to connect to the broker" do
       acceptor = acceptor_class.new(:password => 'password')
       acceptor.password.should == 'password'
     end
 
-    it "should be possible to set the vhost to use on the broker" do
+    it "can set the vhost to use on the broker" do
       acceptor = acceptor_class.new(:vhost => '/vhost')
       acceptor.vhost.should == '/vhost'
     end
 
-    it "should be possible to set the exchange to use on the broker" do
+    it "can set the exchange to use on the broker" do
       acceptor = acceptor_class.new(:exchange => 'amq.direct')
       acceptor.exchange.should == 'amq.direct'
     end
 
-    it "should default to amqp://guest:guest@localhost:5672/ with direct exchange on vhost ''" do
+    it "defaults to amqp://guest:guest@localhost:5672/ with direct exchange on vhost ''" do
       acceptor = acceptor_class.new(:queue => :somequeue)
       acceptor.queue.should    == :somequeue
       acceptor.host.should     == 'localhost'
@@ -64,49 +62,49 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor_class.new(options)
     end
 
-    it "should connect to the configured host" do
+    it "connects to the configured host" do
       acceptor = new_acceptor(:host => 'somehost')
       acceptor.start
       instance = Bunny.instance
       instance.options[:host].should == 'somehost'
     end
 
-    it "should connect to the configured port" do
+    it "connects to the configured port" do
       acceptor = new_acceptor(:port => 1234)
       acceptor.start
       instance = Bunny.instance
       instance.options[:port].should == 1234
     end
 
-    it "should connect with the configured username" do
+    it "connects with the configured username" do
       acceptor = new_acceptor(:username => 'user')
       acceptor.start
       instance = Bunny.instance
       instance.options[:user].should == 'user'
     end
 
-    it "should connect with the configured password" do
+    it "connects with the configured password" do
       acceptor = new_acceptor(:password => 'pass')
       acceptor.start
       instance = Bunny.instance
       instance.options[:pass].should == 'pass'
     end
 
-    it "should connect to the configured vhost" do
+    it "connects to the configured vhost" do
       acceptor = new_acceptor(:vhost => '/vhost')
       acceptor.start
       instance = Bunny.instance
       instance.options[:vhost].should == '/vhost'
     end
 
-    it "should declare the configured exchange" do
+    it "declares the configured exchange" do
       acceptor = new_acceptor(:exchange => 'some_exchange')
       acceptor.start
       instance = Bunny.instance
       instance.exchange.name.should == 'some_exchange'
     end
 
-    it "should bind the configured exchange to the queue" do
+    it "binds the configured exchange to the queue" do
       acceptor = new_acceptor(:exchange => 'some_exchange', :queue => :queue)
       acceptor.start
       instance = Bunny.instance
@@ -115,7 +113,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       queue.bound_key.should == :queue
     end
 
-    it "should start listening on the configured queue" do
+    it "starts listening on the configured queue" do
       acceptor = new_acceptor(:queue => :some_queue)
       acceptor.start
       instance = Bunny.instance
@@ -123,7 +121,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       instance.queues.keys.should include :some_queue
     end
 
-    it "should initialize the subscription with the acceptor's cancellator" do
+    it "initialises the subscription with the acceptor's cancellator" do
       cancellator = :cancellator
       acceptor = new_acceptor(:queue => :some_queue, :cancellator => cancellator)
       acceptor.start
@@ -131,7 +129,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       puts instance.queues[:some_queue].arguments.first[:cancellator].should == cancellator
     end
 
-    it "should call the #start_filter_chain method when a message is received" do
+    it "calls the #start_filter_chain method when a message is received" do
       acceptor = new_acceptor(:queue => :some_queue)
 
       # Because acceptor is a Celluloid Actor, it is not possible to define a method

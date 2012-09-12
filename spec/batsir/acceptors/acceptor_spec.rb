@@ -5,31 +5,31 @@ describe Batsir::Acceptors::Acceptor do
     Batsir::Acceptors::Acceptor
   }
 
-  it "should be a Celluloid actor" do
+  it "is a Celluloid actor" do
     acceptor_class.ancestors.should include Celluloid
   end
 
-  it "should be possible to set the stage name for the acceptor" do
+  it "can set the stage name for the acceptor" do
     acceptor = acceptor_class.new
     stage_name = "some stage"
     acceptor.stage_name = stage_name
     acceptor.stage_name.should == stage_name
   end
 
-  it "should have a #start method" do
+  it "has a #start method" do
     acceptor_class.instance_methods.map{|im| im.to_s}.should include "start"
   end
 
-  it "should have an #start_filter_chain method" do
+  it "has a #start_filter_chain method" do
     acceptor_class.instance_methods.map{|im| im.to_s}.should include "start_filter_chain"
   end
 
-  it "should be possible to initialize an Acceptor with on options hash" do
+  it "can initialize an Acceptor with on options hash" do
     acceptor = acceptor_class.new({})
     acceptor.should_not be_nil
   end
 
-  it "should look up a worker class when the #start_filter_chain method is called" do
+  it "looks up a worker class when the #start_filter_chain method is called" do
     acceptor = acceptor_class.new
     stage_name = "some stage"
     acceptor.stage_name = stage_name
@@ -37,18 +37,18 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.start_filter_chain({})
   end
 
-  it "should have a transformer_queue" do
+  it "has a transformer_queue" do
     acceptor = acceptor_class.new
     acceptor.transformer_queue.should_not be_nil
   end
 
-  it "should initially have an empty transformer_queue" do
+  it "initially has an empty transformer_queue" do
     acceptor = acceptor_class.new
     acceptor.transformer_queue.should_not be_nil
     acceptor.transformer_queue.should be_empty
   end
 
-  it "should be possible to add a transformer to the transformer_queue" do
+  it "can add a transformer to the transformer_queue" do
     transformer = :transformer
 
     acceptor = acceptor_class.new
@@ -59,7 +59,7 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.transformer_queue.first.should == :transformer
   end
 
-  it "should be possible to add a transformer multiple times" do
+  it "can add a transformer multiple times" do
     transformer = :transformer
 
     acceptor = acceptor_class.new
@@ -70,20 +70,20 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.transformer_queue.size.should == 2
   end
 
-  it "should be possible to set a cancellator" do
+  it "can set a cancellator" do
     cancellator = :cancel
     acceptor = acceptor_class.new
     acceptor.cancellator = cancellator
     acceptor.cancellator.should == cancellator
   end
 
-  it "should be possible to set a cancellator in the constructor using a hash" do
+  it "can set a cancellator in the constructor using a hash" do
     cancellator = :cancel
     acceptor = acceptor_class.new(:cancellator => cancellator)
     acceptor.cancellator.should == cancellator
   end
 
-  it "should call the #perform_async on the worker class when #start_filter_chain is called" do
+  it "calls the #perform_async on the worker class when #start_filter_chain is called" do
     class MockWorker
       def self.stage_name
         "mock_stage"
@@ -108,7 +108,7 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.start_filter_chain({})
   end
 
-  it "should call #transform on the acceptor transformers" do
+  it "calls #transform on the acceptor transformers" do
     class MockTransformer < Batsir::Transformers::Transformer
       def transform(message)
         @@transformed ||= 0

@@ -1,11 +1,11 @@
 require File.join( File.dirname(__FILE__), "..", "..", "spec_helper" )
 
 describe Batsir::Transformers::JSONOutputTransformer do
-  it "should be a Batsir::Transformers::Transformer" do
+  it "is a Batsir::Transformers::Transformer" do
     subject.should be_a Batsir::Transformers::Transformer
   end
 
-  it "should transform a hash to a valid json hash" do
+  it "transforms a hash to a valid json hash" do
     some_hash = {:foo => :bar}
     some_hash.should be_a Hash
 

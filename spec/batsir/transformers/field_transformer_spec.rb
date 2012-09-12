@@ -5,19 +5,19 @@ describe Batsir::Transformers::FieldTransformer do
     Batsir::Transformers::FieldTransformer
   end
 
-  it "should accept an options hash in its initializer" do
+  it "accepts an options hash in its initializer" do
     transformer_instance = transformer_class.new( {} )
     transformer_instance.should_not be_nil
     transformer_instance.should be_a transformer_class
   end
 
-  it "should be possible to set a field mapping using the 'fields' option" do
+  it "can set a field mapping using the 'fields' option" do
     field_mapping = {:foo => :bar}
     transformer = transformer_class.new( :fields => field_mapping )
     transformer.fields.should == field_mapping
   end
 
-  it "should use the fields mapping given in an options hash to transform the message using #transform" do
+  it "uses the fields mapping given in an options hash to transform the message using #transform" do
     field_mapping = {:foo => :bar}
     transformer = transformer_class.new( :fields => field_mapping )
 
@@ -28,7 +28,7 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message[:foo].should == "bar"
   end
 
-  it "should be possible to use symbols and string based keys and values all the same" do
+  it "can use symbols and string based keys and values all the same" do
     field_mapping = {:foo => "bar", "john" => :doe}
     transformer = transformer_class.new( :fields => field_mapping )
 
@@ -38,7 +38,7 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message[:john].should == :john
   end
 
-  it "should remove options not in the fields option when a fields option is given" do
+  it "removes options not in the fields option when a fields option is given" do
     field_mapping = {:foo => :bar}
     transformer = transformer_class.new( :fields => field_mapping )
 
@@ -49,7 +49,7 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message.should_not have_key :john
   end
 
-  it "should not remove fields when no mapping is given" do
+  it "does not remove fields when no mapping is given" do
     transformer = transformer_class.new
 
     message = {:bar => "bar", :john => :doe}
@@ -58,7 +58,7 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message.should have_key :john
   end
 
-  it "should correctly handle more complex field mapping" do
+  it "correctly handles more complex field mapping" do
     field_mapping = {:id => :old_id}
     transformer = transformer_class.new( :fields => field_mapping )
 
@@ -69,5 +69,4 @@ describe Batsir::Transformers::FieldTransformer do
     transformed_message.should_not have_key :old_id
     transformed_message.should_not have_key :john
   end
-
 end
