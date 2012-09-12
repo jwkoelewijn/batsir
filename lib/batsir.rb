@@ -23,14 +23,9 @@ require 'batsir/transformers/json_output_transformer'
 require 'batsir/logo'
 
 module Batsir
-  def self.config
-    @config ||= Batsir::Config.new(config_defaults)
-  end
 
-  def self.config_defaults
-    {
-      :redis_url => "redis://localhost:6379/0"
-    }
+  def self.config(options = {})
+    Batsir::Config.setup(options)
   end
 
   def self.create(&block)
@@ -45,7 +40,7 @@ module Batsir
     return unless @chain
 
     sidekiq_cli = Sidekiq::CLI.instance
-    Sidekiq.options[:queues] << 'default'
+    Sidekiq.options[:queues] << Batsir::Config.sidekiq_queue
 
     initialize_sidekiq
 
@@ -59,10 +54,10 @@ module Batsir
 
   def self.initialize_sidekiq
     Sidekiq.configure_server do |config|
-      config.redis = {:url => Batsir.config.redis_url}
+      config.redis = {:url => Batsir::Config.redis_url}
     end
     Sidekiq.configure_client do |config|
-      config.redis = {:url => Batsir.config.redis_url}
+      config.redis = {:url => Batsir::Config.redis_url}
     end
   end
 
