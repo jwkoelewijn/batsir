@@ -1,7 +1,7 @@
 require File.join( File.dirname(__FILE__), "..", "..", "spec_helper")
 
 describe Batsir::DSL::ChainMapping do
-  it "should create a chain" do
+  it "creates a chain" do
     block = ::Proc.new do
       aggregator_chain do
       end
@@ -11,7 +11,7 @@ describe Batsir::DSL::ChainMapping do
     chain.should_not be_nil
   end
 
-  it "should be possible to add a stage" do
+  it "can add a stage" do
     block = ::Proc.new do
       aggregator_chain do
         stage "simple_stage" do
@@ -26,7 +26,7 @@ describe Batsir::DSL::ChainMapping do
     chain.stages.first.name.should == "simple_stage"
   end
 
-  it "should set the chain of the stage to the current chain" do
+  it "sets the chain of the stage to the current chain" do
     block = ::Proc.new do
       aggregator_chain do
         stage "simple_stage" do
@@ -40,7 +40,7 @@ describe Batsir::DSL::ChainMapping do
     chain.stages.first.chain.should == chain
   end
 
-  it "should be possible to add multiple stages" do
+  it "can add multiple stages" do
     block = ::Proc.new do
       aggregator_chain do
         stage "first_stage" do
@@ -59,7 +59,7 @@ describe Batsir::DSL::ChainMapping do
     chain.stages.last.name.should == "second_stage"
   end
 
-  it "should be possible to create a complete aggregator chain" do
+  it "can create a complete aggregator chain" do
     stage_name            = "Complete Stage"
     operation1            = "Some Operation"
     operation2            = "Another Operation"
@@ -113,5 +113,4 @@ describe Batsir::DSL::ChainMapping do
       stage.notifiers[notification_class2].first.should == {}
     end
   end
-
 end
