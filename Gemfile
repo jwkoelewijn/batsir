@@ -12,6 +12,7 @@ gem "celluloid"
 gem "sidekiq"
 gem "bunny", :git => "https://github.com/ruby-amqp/bunny.git"
 gem "json"
+gem "log4r"
 #gem "hot_bunnies", :git => "https://github.com/ruby-amqp/hot_bunnies.git"
 
 group :development do
