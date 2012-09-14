@@ -19,27 +19,27 @@ module Batsir
     end
 
     def host
-      @host || Batsir::Config.fetch(:amqp_host, 'localhost')
+      @host ||= Batsir::Config.fetch(:amqp_host, 'localhost')
     end
 
     def port
-      @port || Batsir::Config.fetch(:amqp_port, 5672)
+      @port ||= Batsir::Config.fetch(:amqp_port, 5672)
     end
 
     def username
-      @username || Batsir::Config.fetch(:amqp_user, 'guest')
+      @username ||= Batsir::Config.fetch(:amqp_user, 'guest')
     end
 
     def password
-      @password || Batsir::Config.fetch(:amqp_pass, 'guest')
+      @password ||= Batsir::Config.fetch(:amqp_pass, 'guest')
     end
 
     def vhost
-      @vhost || Batsir::Config.fetch(:amqp_vhost, '/')
+      @vhost ||= Batsir::Config.fetch(:amqp_vhost, '/')
     end
 
     def exchange
-      @exchange || Batsir::Config.fetch(:amqp_exchange, 'amq.direct')
+      @exchange ||= Batsir::Config.fetch(:amqp_exchange, 'amq.direct')
     end
   end
 end
