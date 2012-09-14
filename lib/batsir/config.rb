@@ -37,7 +37,6 @@ module Batsir
       #
       # :api: public
       def use
-        @configuration ||= setup
         yield configuration
         nil
       end
