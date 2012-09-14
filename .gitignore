@@ -15,3 +15,4 @@ coverage/
 *.un~
 .rbx/*
 pkg/*
+Gemfile.lock
