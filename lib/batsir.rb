@@ -29,7 +29,7 @@ require 'batsir/errors'
 module Batsir
 
   def self.config(options = {})
-    Batsir::Config.setup(options)
+    Batsir::Config
   end
 
   def self.create(&block)
