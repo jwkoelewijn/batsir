@@ -4,7 +4,7 @@ module Batsir
 
       # Adapted from Merb::Config class
 
-      attr_accessor :configuration
+      attr_accessor :config
 
       def defaults
         @defaults ||= {
@@ -14,6 +14,11 @@ module Batsir
           :redis_url => 'redis://localhost:6379/0',
           :sidekiq_queue => 'batsir'
         }
+      end
+
+      # Returns the current configuration or sets it up
+      def configuration
+        @config ||= setup
       end
 
       # Yields the configuration.
@@ -33,7 +38,7 @@ module Batsir
       # :api: public
       def use
         @configuration ||= setup
-        yield @configuration
+        yield configuration
         nil
       end
 
@@ -47,7 +52,7 @@ module Batsir
       #
       # :api: public
       def key?(key)
-        (@configuration ||= setup).key?(key)
+        configuration.key?(key)
       end
 
       # Retrieve the value of a config entry.
@@ -60,7 +65,7 @@ module Batsir
       #
       # :api: public
       def [](key)
-        (@configuration ||= setup)[key]
+        configuration[key]
       end
 
       # Set the value of a config entry.
@@ -71,7 +76,7 @@ module Batsir
       #
       # :api: public
       def []=(key, val)
-        (@configuration ||= setup)[key] = val
+        configuration[key] = val
       end
 
       # Remove the value of a config entry.
@@ -84,7 +89,7 @@ module Batsir
       #
       # :api: public
       def delete(key)
-        @configuration.delete(key)
+        configuration.delete(key)
       end
 
       # Resets the configuration to its default state
@@ -105,7 +110,7 @@ module Batsir
       #
       # :api: public
       def fetch(key, default)
-        @configuration.fetch(key, default)
+        configuration.fetch(key, default)
       end
 
       # Returns the configuration as a hash.
@@ -115,7 +120,7 @@ module Batsir
       #
       # :api: public
       def to_hash
-        @configuration
+        configuration
       end
 
       # Sets up the configuration by storing the given settings.
@@ -129,8 +134,7 @@ module Batsir
       #
       # :api: private
       def setup(settings = {})
-        config = defaults.merge(settings)
-        @configuration = config
+        @config = defaults.merge(settings)
       end
 
       # Set configuration parameters from a code block, where each method
