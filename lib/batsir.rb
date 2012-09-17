@@ -57,6 +57,7 @@ module Batsir
   end
 
   def self.initialize_sidekiq
+    Sidekiq.logger = Batsir::Logger.log
     Sidekiq.configure_server do |config|
       config.redis = {:url => Batsir::Config.redis_url}
     end

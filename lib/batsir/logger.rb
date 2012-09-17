@@ -2,6 +2,12 @@ require 'log4r'
 
 module Batsir
   module Logger
+    DEBUG  = 1
+    INFO   = 2
+    WARN   = 3
+    ERROR  = 4
+    SEVERE = 5
+
     class << self
 
       DEFAULT_OUTPUT = 'stdout'
@@ -11,10 +17,9 @@ module Batsir
       end
 
       def setup
-        settings = Batsir::Config.log.clone
-        log = Log4r::Logger.new(settings.fetch(:name))
-        log.level      = settings.fetch(:level, Log4r::WARN)
-        log.outputters = settings.fetch(:output, DEFAULT_OUTPUT)
+        log = Log4r::Logger.new(Batsir::Config.fetch(:log_name, "batsir"))
+        log.level      = Batsir::Config.fetch(:log_level, WARN)
+        log.outputters = Batsir::Config.fetch(:log_outputter, DEFAULT_OUTPUT)
         log
       end
 
@@ -25,4 +30,3 @@ module Batsir
     end
   end
 end
-
