@@ -35,7 +35,7 @@ describe Batsir::AMQP do
   end
 
   context 'with respect to setting variables' do
-    it 'can changes their values' do
+    it 'can change their values' do
       localhost = '127.0.0.1'
       @test.host = localhost
       @test.host.should == localhost

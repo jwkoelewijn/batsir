@@ -30,14 +30,14 @@ require 'batsir/errors'
 
 module Batsir
 
-  def self.config(options = {})
+  def self.config
     Batsir::Config
   end
 
   def self.create(&block)
     puts logo
     new_block = ::Proc.new do
-      aggregator_chain &block
+      aggregator_chain(&block)
     end
     @chain = ::Blockenspiel.invoke(new_block, Batsir::DSL::ChainMapping.new)
   end
