@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["J.W. Koelewijn"]
+  s.authors = ["J.W. Koelewijn", "Bram de Vries"]
   s.date = "2012-09-19"
   s.description = "Batsir uses so called stages to define operation queues. These operation queus\n consist of several operations that will be executed one after the other. Each stage\n is defined by its name and the queue on which it will listen. Once a message is received\n on the queue, it is dispatched to a worker in a seperate thread that will pass the message\n to each operation in the operation queue.\n Operation queues can have 4 different operations, 1 common operation type, and 3 special \n purpose operations: retrieval operations (which are always executed before all other operations),\n persistence operations (which are always executed after the common operations, but before the\n notification operations) and notification operations (which will always be executed last)\n This makes it possible to create chains of stages to perform tasks that depend on each\n other, but otherwise have a low coupling"
   s.email = "jwkoelewijn@gmail.com"
