@@ -23,6 +23,8 @@ require 'batsir/transformers/transformer'
 require 'batsir/transformers/field_transformer'
 require 'batsir/transformers/json_input_transformer'
 require 'batsir/transformers/json_output_transformer'
+require 'batsir/strategies/strategy'
+require 'batsir/strategies/retry_strategy'
 require 'batsir/logo'
 require 'batsir/errors'
 
