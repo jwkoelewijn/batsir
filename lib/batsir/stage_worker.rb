@@ -26,8 +26,9 @@ module Batsir
     end
 
     def self.compile_from(stage)
+      klazz_name = "#{stage.name.capitalize.gsub(' ','')}Worker"
       code = <<-EOF
-        class #{stage.name.capitalize.gsub(' ','')}Worker
+        class #{klazz_name}
           def self.stage_name
             "#{stage.name}"
           end
@@ -80,8 +81,8 @@ module Batsir
           include Batsir::StageWorker
         end
 
-        #{stage.name.capitalize.gsub(' ','')}Worker.sidekiq_options(:queue => Batsir::Config.sidekiq_queue)
-        #{stage.name.capitalize.gsub(' ','')}Worker
+        #{klazz_name}.sidekiq_options(:queue => Batsir::Config.sidekiq_queue)
+        #{klazz_name}
       EOF
       code
     end
