@@ -14,9 +14,10 @@ module Batsir
     end
 
     def execute(message)
+      return false if message.nil?
       return false unless @filter_queue
       @filter_queue.filters.each do |filter|
-        message = filter.execute(message)
+        message = filter.filter(message)
         return false if message.nil?
       end
       @filter_queue.notifiers.each do |notifier|

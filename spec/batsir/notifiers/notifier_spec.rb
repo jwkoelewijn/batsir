@@ -5,6 +5,11 @@ describe Batsir::Notifiers::Notifier do
     Batsir::Notifiers::Notifier
   end
 
+  class Notify < Batsir::Notifiers::Notifier
+    def execute(message)
+    end
+  end
+
   it "has a transformer_queue" do
     notifier = notifier_class.new
     notifier.transformer_queue.should_not be_nil
@@ -46,8 +51,16 @@ describe Batsir::Notifiers::Notifier do
     notifier.transformer_queue.first.fields.should == fields
   end
 
+  it "has an #execute method" do
+    notifier_class.instance_methods.map{|m| m.to_s}.should include "execute"
+  end
+
+  it 'raises an error when the #execute method is not implemented' do
+    lambda{notifier_class.new.notify({})}.should raise_error NotImplementedError
+  end
+
   it "calls #transform when #notify is called" do
-    notifier = notifier_class.new
+    notifier = Notify.new
     notifier.should_receive(:transform).with({})
     notifier.notify({})
   end
@@ -56,7 +69,7 @@ describe Batsir::Notifiers::Notifier do
     class MockTransformer < Batsir::Transformers::Transformer
     end
 
-    notifier = notifier_class.new
+    notifier = Notify.new
     transformer = MockTransformer.new
     notifier.add_transformer transformer
     notifier.transformer_queue.size.should == 1
@@ -66,7 +79,7 @@ describe Batsir::Notifiers::Notifier do
   end
 
   it "calls #execute when #notify is called" do
-    notifier = notifier_class.new
+    notifier = Notify.new
     notifier.should_receive(:execute)
     notifier.notify({})
   end

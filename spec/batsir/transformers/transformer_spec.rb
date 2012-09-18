@@ -15,8 +15,22 @@ describe Batsir::Transformers::Transformer do
     transformer_class.instance_methods.map{|m| m.to_s}.should include "transform"
   end
 
-  it "returns the message by default" do
+  it "has an #execute method" do
+    transformer_class.instance_methods.map{|m| m.to_s}.should include "execute"
+  end
+
+  it 'raises an error when the #execute method is not implemented' do
     message = {:foo => :bar}
-    transformer_class.new.transform(message).should == message
+    lambda{transformer_class.new.transform(message)}.should raise_error NotImplementedError
+  end
+
+  it "can transform the message" do
+    class Autobot < Batsir::Transformers::Transformer
+      def execute(message)
+        message = "transform"
+      end
+    end
+    message = {:foo => :bar}
+    Autobot.new.transform(message).should == "transform"
   end
 end

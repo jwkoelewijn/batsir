@@ -36,9 +36,22 @@ module Batsir
       def start_filter_chain(message)
         klazz = Batsir::Registry.get(stage_name)
         transformer_queue.each do |transformer|
-          message = transformer.transform(message)
+          begin
+            message = transformer.transform(message)
+          rescue Batsir::Errors::TransformError => e
+            message = process_message_error(message, e)
+          end
         end
         klazz.perform_async(message) if klazz
+      end
+
+      #
+      # This method is called after an error is thrown.
+      # Can be overridden to implement error handling.
+      # Returns a message
+      #
+      def process_message_error(message, error)
+        message
       end
     end
   end

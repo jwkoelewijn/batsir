@@ -14,7 +14,7 @@ module Batsir
         end
       end
 
-      def transform(message)
+      def execute(message)
         fields = self.fields
         if fields.any? && message.respond_to?(:keys)
           symbolized_message_keys = {}
@@ -34,7 +34,6 @@ module Batsir
         end
         message
       end
-
     end
   end
 end

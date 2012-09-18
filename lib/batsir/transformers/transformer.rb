@@ -8,7 +8,11 @@ module Batsir
       end
 
       def transform(message)
-        message
+        execute(message)
+      end
+
+      def execute(message)
+        raise NotImplementedError.new
       end
     end
   end

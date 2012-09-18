@@ -24,15 +24,15 @@ module Batsir
         execute(transform(message))
       end
 
-      def execute(message)
-
-      end
-
       def transform(message)
         transformer_queue.each do |transformer|
           message = transformer.transform(message)
         end
         message
+      end
+
+      def execute(message)
+        raise NotImplementedError.new
       end
     end
   end

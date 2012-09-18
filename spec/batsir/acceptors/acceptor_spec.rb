@@ -123,7 +123,6 @@ describe Batsir::Acceptors::Acceptor do
 
     acceptor = acceptor_class.new
     stage_name = "some stage"
-
     acceptor.stage_name = stage_name
     acceptor.add_transformer MockTransformer.new
 
@@ -132,5 +131,32 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.start_filter_chain({})
 
     MockTransformer.transformed.should == 1
+  end
+
+  it "handles errors thrown by transformers" do
+    class ErrorAcceptor < Batsir::Acceptors::Acceptor
+      attr_accessor :message
+      def process_message_error(message, error)
+        message = "error"
+        @message = message
+      end
+    end
+
+    class MockTransformer < Batsir::Transformers::Transformer
+      def transform(message)
+        raise Batsir::Errors::TransformError.new
+      end
+    end
+
+    acceptor = ErrorAcceptor.new
+    stage_name = "some stage"
+    acceptor.stage_name = stage_name
+    acceptor.add_transformer MockTransformer.new
+
+    acceptor.message.should be_nil
+
+    acceptor.start_filter_chain({})
+
+    acceptor.message.should == "error"
   end
 end
