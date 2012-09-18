@@ -10,15 +10,15 @@ describe Batsir::Logger do
   end
 
   it 'allows changing its settings' do
-    @logger.log.level.should == Log4r::WARN
+    @logger.log.level.should_not == Log4r::DEBUG
     @logger.log.level = Log4r::DEBUG
     @logger.log.level.should == Log4r::DEBUG
   end
 
   it 'can be reset' do
-    @logger.log.level.should == Log4r::DEBUG
+    current_log = @logger.log.level
     Batsir::Logger.reset
-    @logger.log.level.should == Log4r::WARN
+    @logger.log.level.should_not == current_log
   end
 
   it 'is able to use various log levels' do
