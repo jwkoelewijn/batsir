@@ -79,6 +79,9 @@ module Batsir
           include Sidekiq::Worker
           include Batsir::StageWorker
         end
+
+        #{stage.name.capitalize.gsub(' ','')}Worker.sidekiq_options(:queue => Batsir::Config.sidekiq_queue)
+        #{stage.name.capitalize.gsub(' ','')}Worker
       EOF
       code
     end
