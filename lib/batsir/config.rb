@@ -13,10 +13,6 @@ module Batsir
           :amqp_user => 'guest',
           :amqp_pass => 'guest',
           :amqp_vhost => '/',
-          :db_host => 'localhost',
-          :db_name => 'batsir',
-          :db_user => 'postgres',
-          :db_pass => 'postgres',
           :log_name => 'batsir',
           :redis_url => 'redis://localhost:6379/0',
           :sidekiq_queue => 'batsir'
