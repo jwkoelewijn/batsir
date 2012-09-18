@@ -5,6 +5,10 @@ describe Batsir::Notifiers::AMQPNotifier do
     Batsir::Notifiers::AMQPNotifier
   }
 
+  def new_notifier(options = {})
+    notifier_class.new(options)
+  end
+
   context "with respect to setting options" do
     it "is a Batsir::Notifiers::Notifier" do
       notifier_class.ancestors.should include Batsir::Notifiers::Notifier
@@ -58,8 +62,12 @@ describe Batsir::Notifiers::AMQPNotifier do
   end
 
   context "with respect to notifying" do
-    def new_notifier(options = {})
-      notifier_class.new(options)
+    it 'has an #execute method' do
+      notifier_class.instance_methods.map{|m| m.to_s}.should include "execute"
+    end
+
+    it 'has a #handle_error method' do
+      notifier_class.instance_methods.map{|m| m.to_s}.should include "handle_error"
     end
 
     it "connects to the configured host" do
@@ -111,6 +119,13 @@ describe Batsir::Notifiers::AMQPNotifier do
       instance.exchange.name.should == 'some_exchange'
       instance.exchange.message.should == {}
       instance.exchange.key.should == :queue
+    end
+  end
+
+  context "with respect to error handling" do
+    it 'uses a strategy object to resolve notification errors' do
+      notifier = new_notifier(:exchange => 'some_exchange', :queue => :queue)
+      notifier.error_strategy.should be_a Batsir::Strategies::RetryStrategy
     end
   end
 end
