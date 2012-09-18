@@ -649,7 +649,7 @@ describe Batsir::Stage do
       MockAcceptor.start_count.should == 0
 
       stage.start
-      sleep(0.01)
+      sleep(0.05)
 
       MockAcceptor.start_count.should == 2
     end
