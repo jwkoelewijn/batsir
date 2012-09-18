@@ -90,9 +90,8 @@ describe Batsir::Config do
 end
 
 describe Batsir::Config, "with respect to resetting the configuration" do
-
   it "resets properly" do
     Batsir::Config.reset
-    Batsir::Config.to_hash.should_not be_nil
+    Batsir::Config.to_hash.should == Batsir::Config.defaults
   end
 end
