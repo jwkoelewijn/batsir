@@ -5,7 +5,6 @@ describe Batsir::Log do
     class TestClass
       include Batsir::Log
     end
-    @test = TestClass.new
-    @test.log.should be_a Log4r::Logger
+    TestClass.instance_methods.map{|im| im.to_s}.should include 'log'
   end
 end

@@ -17,14 +17,19 @@ module Batsir
       end
 
       def setup
-        log = Log4r::Logger.new(Batsir::Config.fetch(:log_name, "batsir"))
-        log.level      = Batsir::Config.fetch(:log_level, WARN)
-        log.outputters = Batsir::Config.fetch(:log_outputter, DEFAULT_OUTPUT)
-        log
+        logger = Log4r::Logger.new(Batsir::Config.fetch(:log_name, "batsir"))
+        logger.level      = Batsir::Config.fetch(:log_level, WARN)
+        logger.outputters = Batsir::Config.fetch(:log_outputter, DEFAULT_OUTPUT)
+        logger
       end
 
       def reset
         @logger = nil
+      end
+
+      # makes this respond like a Log4r::Logger
+      def method_missing(sym, *args, &block)
+        log.send sym, *args, &block
       end
 
     end

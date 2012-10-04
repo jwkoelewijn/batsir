@@ -10,36 +10,36 @@ describe Batsir::Logger do
   end
 
   it 'allows changing its settings' do
-    @logger.log.level.should_not == Log4r::DEBUG
-    @logger.log.level = Log4r::DEBUG
-    @logger.log.level.should == Log4r::DEBUG
+    @logger.level.should_not == Log4r::DEBUG
+    @logger.level = Log4r::DEBUG
+    @logger.level.should == Log4r::DEBUG
   end
 
   it 'can be reset' do
-    current_log = @logger.log.level
+    current_log = @logger.level
     Batsir::Logger.reset
-    @logger.log.level.should_not == current_log
+    @logger.level.should_not == current_log
   end
 
   it 'is able to use various log levels' do
-    @logger.log.level = Log4r::DEBUG
-    debug = @logger.log.debug("debug test message")
+    @logger.level = Log4r::DEBUG
+    debug = @logger.debug("debug test message")
     debug.should be_an Array
     debug.select{|e| e.is_a?(Log4r::StdoutOutputter)}.should_not be_empty
 
-    info = @logger.log.info("info test message")
+    info = @logger.info("info test message")
     info.should be_an Array
     info.select{|e| e.is_a?(Log4r::StdoutOutputter)}.should_not be_empty
 
-    warn = @logger.log.warn("warning test message")
+    warn = @logger.warn("warning test message")
     warn.should be_an Array
     warn.select{|e| e.is_a?(Log4r::StdoutOutputter)}.should_not be_empty
 
-    err = @logger.log.error("error test message")
+    err = @logger.error("error test message")
     err.should be_an Array
     err.select{|e| e.is_a?(Log4r::StdoutOutputter)}.should_not be_empty
 
-    fatal = @logger.log.fatal("fatal test message")
+    fatal = @logger.fatal("fatal test message")
     fatal.should be_an Array
     fatal.select{|e| e.is_a?(Log4r::StdoutOutputter)}.should_not be_empty
   end
