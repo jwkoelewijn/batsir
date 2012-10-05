@@ -1,4 +1,5 @@
 require File.join( File.dirname(__FILE__), "..", "..",  "spec_helper" )
+require File.join( File.dirname(__FILE__), 'shared_examples')
 
 describe Batsir::Notifiers::AMQPNotifier do
   let(:notifier_class){
@@ -8,6 +9,8 @@ describe Batsir::Notifiers::AMQPNotifier do
   def new_notifier(options = {})
     notifier_class.new(options)
   end
+
+  it_should_behave_like "notifier", Batsir::Notifiers::AMQPNotifier
 
   context "with respect to setting options" do
     it "is a Batsir::Notifiers::Notifier" do
