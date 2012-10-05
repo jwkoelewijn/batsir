@@ -43,6 +43,7 @@ module Batsir
       def outbound(&block)
         ::Blockenspiel.invoke(block, Batsir::DSL::OutboundMapping.new(@stage))
       end
+
     end
 
     class InboundMapping < ::Blockenspiel::Base
@@ -78,6 +79,14 @@ module Batsir
         ::Blockenspiel.invoke(block, Batsir::DSL::OutboundTransformerMapping.new(@stage))
       end
 
+      def conditional(&block)
+        new_block = ::Proc.new do
+          conditional &block
+        end
+        conditional = ::Blockenspiel.invoke(new_block, Batsir::DSL::ConditionalNotifierMapping.new)
+        @stage.add_notifier(conditional)
+      end
+
       def notifier(notifier_class, options = {})
         @stage.add_notifier(notifier_class, options)
       end
@@ -90,6 +99,22 @@ module Batsir
 
       def transformer(transformer, options = {})
         @stage.add_notifier_transformer(transformer, options)
+      end
+    end
+
+    class ConditionalNotifierMapping < ::Blockenspiel::Base
+      def initialize
+        @notifier = nil
+      end
+
+      def conditional(&block)
+        @notifier = Batsir::Notifiers::ConditionalNotifier.new
+        ::Blockenspiel.invoke(block, self)
+        @notifier
+      end
+
+      def notify_if(condition, notifier, options = {})
+        @notifier.add(condition, notifier, options)
       end
     end
   end
