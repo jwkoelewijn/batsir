@@ -1,4 +1,5 @@
 require File.join( File.dirname(__FILE__), "..", "..",  "spec_helper" )
+require File.join( File.dirname(__FILE__), 'shared_examples')
 
 describe Batsir::Notifiers::Notifier do
 
