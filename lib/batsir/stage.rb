@@ -10,6 +10,7 @@ module Batsir
     attr_accessor :cancellators
     attr_reader   :filter_declarations
     attr_reader   :notifiers
+    attr_reader   :conditional_notifiers
     attr_reader   :acceptors
     attr_reader   :running_acceptors
     attr_reader   :notifier_transformers
@@ -25,6 +26,7 @@ module Batsir
       @acceptors              = {}
       @filter_declarations    = []
       @notifiers              = {}
+      @conditional_notifiers  = []
       @notifier_transformers  = []
       @built                  = false
     end
@@ -48,6 +50,10 @@ module Batsir
 
     def filters
       @filter_declarations.map{ |filter_declaration| filter_declaration.filter }
+    end
+
+    def add_conditional_notifier(notifier_declaration)
+      @conditional_notifiers << notifier_declaration
     end
 
     def add_notifier(notifier, options = {})

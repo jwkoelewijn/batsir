@@ -10,7 +10,7 @@ module Batsir
         @notifiers = []
       end
 
-      def add( condition, notifier_class, options = {})
+      def add_notifier( condition, notifier_class, options = {})
         self.notifiers << NotifierCondition.new(condition, notifier_class, options)
       end
 

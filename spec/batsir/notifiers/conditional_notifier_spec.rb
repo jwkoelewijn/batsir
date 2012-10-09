@@ -11,12 +11,12 @@ describe Batsir::Notifiers::ConditionalNotifier do
 
   it "can add notifiers" do
     subject.notifiers.size.should == 0
-    subject.add( true_block, notifier)
+    subject.add_notifier( true_block, notifier)
     subject.notifiers.size.should == 1
   end
 
   it "stores notifier conditions" do
-    subject.add(true_block, notifier)
+    subject.add_notifier(true_block, notifier)
 
     notifier_condition = subject.notifiers.first
     notifier_condition.should be_a Batsir::Notifiers::ConditionalNotifier::NotifierCondition
@@ -25,7 +25,7 @@ describe Batsir::Notifiers::ConditionalNotifier do
   end
 
   it "stores optional options for the notifier" do
-    subject.add( true_block, notifier, :some => :extra, :options => :foryou)
+    subject.add_notifier( true_block, notifier, :some => :extra, :options => :foryou)
 
     notifier_condition = subject.notifiers.first
     notifier_condition.options.size.should == 2
@@ -43,7 +43,7 @@ describe Batsir::Notifiers::ConditionalNotifier do
       notifier_class.any_instance.should_receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
-      conditional.add( true_block, notifier_class )
+      conditional.add_notifier( true_block, notifier_class )
       conditional.execute("some message")
     end
 
@@ -55,7 +55,7 @@ describe Batsir::Notifiers::ConditionalNotifier do
       notifier_class.any_instance.should_not_receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
-      conditional.add( false_block, notifier_class )
+      conditional.add_notifier( false_block, notifier_class )
       conditional.execute("some message")
     end
   end

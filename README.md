@@ -52,6 +52,49 @@ than be sent as an AMQP message on the 'queue_2' queue.
 The inbound AMQPAcceptor of the second stage will then receive the message and its filters will be
 invoked (the PrintFilter in this example).
 
+# Conditional Notifiers
+
+It is possible to create conditional notifiers. These accept a list of regular Notifiers which will
+send a message only if the provided condition evaluates to true. The condition is given as a String,
+which is evaluated in the context of a Proc at runtime. This Proc is always supplied with a 'message'
+parameter, which is available when the condition is evaluated.
+
+## Example of Conditional Notifier
+
+```ruby
+Batsir.create_and_start do
+  stage "stage 1" do
+    inbound do
+      acceptor AMQPAcceptor, :queue => 'some_queue', :host => 'localhost'
+    end
+    filter SumFilter
+    filter AverageFilter
+    outbound do
+      conditional do
+        notify_if "message.to_i > 2", AMQPNotifier, :queue => 'gt_2'
+        notify_if "message.to_i < 2", AMQPNotifier, :queue => 'lt_3'
+      end
+    end
+  end
+
+  stage "stage 2" do
+    inbound do
+      acceptor AMQPAcceptor, :queue => 'gt_2'
+    end
+    filter PrintFilter
+  end
+
+  stage "stage 3" do
+    inbound do
+      acceptor AMQPAcceptor, :queue => 'lt_3'
+    end
+  end
+end
+```
+
+In this example the message is sent to queue 'gt_2' if the integer value of the message is greater than 2,
+and to queue 'lt_2' when the integer value of the message is less than 2.
+
 # Sidekiq & Celluloid
 Batsir acts as both a Sidekiq server and client at the same time. When Batsir#create_and_start is invoked,
 Batsir will create Sidekiq workers on the fly, with instantiated filters on the workers. These workers will

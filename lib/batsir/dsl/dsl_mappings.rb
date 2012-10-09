@@ -84,7 +84,7 @@ module Batsir
           conditional &block
         end
         conditional = ::Blockenspiel.invoke(new_block, Batsir::DSL::ConditionalNotifierMapping.new)
-        @stage.add_notifier(conditional)
+        @stage.add_conditional_notifier(conditional)
       end
 
       def notifier(notifier_class, options = {})
@@ -108,13 +108,13 @@ module Batsir
       end
 
       def conditional(&block)
-        @notifier = Batsir::Notifiers::ConditionalNotifier.new
+        @notifier = Batsir::DSL::ConditionalNotifierDeclaration.new
         ::Blockenspiel.invoke(block, self)
         @notifier
       end
 
       def notify_if(condition, notifier, options = {})
-        @notifier.add(condition, notifier, options)
+        @notifier.add_conditional(condition, notifier, options)
       end
     end
   end

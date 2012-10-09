@@ -312,8 +312,8 @@ describe Batsir::Stage do
         stage.acceptor_transformers.last.transformer.should == transformer
       end
     end
-
   end
+
 
   context "with respect to notifiers" do
     it "initially has an empty notifiers queue" do
@@ -460,6 +460,27 @@ describe Batsir::Stage do
         stage.notifier_transformers.first.transformer.should == transformer
         stage.notifier_transformers.last.transformer.should == transformer
       end
+    end
+  end
+
+  context "with respect to conditional notifiers" do
+    it "initially has an empty conditional notifiers queue" do
+      stage = Batsir::Stage.new
+      stage.conditional_notifiers.should_not be_nil
+      stage.conditional_notifiers.should be_empty
+    end
+
+    it "cannot set the conditional notifiers directly" do
+      stage = Batsir::Stage.new
+      lambda { stage.conditional_notifiers = {} }.should raise_error(NoMethodError)
+    end
+
+    it "can add new conditional notifiers" do
+      stage = Batsir::Stage.new
+
+      stage.add_conditional_notifier(:notifier)
+      stage.conditional_notifiers.should_not be_nil
+      stage.conditional_notifiers.should_not be_empty
     end
   end
 
