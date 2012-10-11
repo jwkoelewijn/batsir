@@ -25,7 +25,7 @@ module Batsir
         end
       end
 
-      def handle_error(message, e)
+      def handle_error(message, error)
         @error_strategy.execute(message, error)
       end
     end
