@@ -20,4 +20,8 @@ describe Batsir::Transformers::JSONInputTransformer do
     result["foo"].should == "bar"
   end
 
+  it "should throw a TransformError when the input is malformed" do
+    test = Batsir::Transformers::JSONInputTransformer.new
+    expect{ test.transform("1") }.to raise_error Batsir::Errors::TransformError
+  end
 end
