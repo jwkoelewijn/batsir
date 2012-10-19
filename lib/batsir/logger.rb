@@ -20,7 +20,6 @@ module Batsir
         logger = Log4r::Logger.new(Batsir::Config.fetch(:log_name, "batsir"))
         logger.level      = Batsir::Config.fetch(:log_level, WARN)
         logger.outputters = Batsir::Config.fetch(:log_outputter, DEFAULT_OUTPUT)
-        logger.outputters.each{|out| out.formatter = Log4r::PatternFormatter.new(:pattern => Batsir::Config.log_format_pattern)}
         logger
       end
 

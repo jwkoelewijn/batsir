@@ -14,7 +14,6 @@ module Batsir
           :amqp_pass => 'guest',
           :amqp_vhost => '/',
           :log_name => 'batsir',
-          :log_format_pattern => "[%l] %d :: %m",
           :redis_url => 'redis://localhost:6379/0',
           :sidekiq_queue => 'batsir'
         }
