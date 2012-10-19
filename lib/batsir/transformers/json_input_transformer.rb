@@ -1,11 +1,13 @@
 module Batsir
   module Transformers
     class JSONInputTransformer < Transformer
+      include Batsir::Log
       def execute(message)
         begin
           JSON.parse(message, :symbolize_names => false)
         rescue JSON::JSONError => e
-          raise Batsir::Errors::JSONInputTransformError.new(e.message)
+          log.error "JSONInputTransformError: #{e.message}"
+          nil
         end
       end
     end
