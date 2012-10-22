@@ -15,6 +15,7 @@ module Batsir
           :amqp_vhost => '/',
           :log_name => 'batsir',
           :redis_url => 'redis://localhost:6379/0',
+          :redis_namespace => 'batsir',
           :sidekiq_queue => 'batsir'
         }
       end
