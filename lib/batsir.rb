@@ -64,15 +64,22 @@ module Batsir
   def self.initialize_sidekiq
     Sidekiq.logger = Batsir::Logger.log
     Sidekiq.configure_server do |config|
-      config.redis = {:url => Batsir::Config.redis_url, :namespace => Batsir::Config.redis_namespace}
+      config.redis = {:url => Batsir.redis_url}
     end
     Sidekiq.configure_client do |config|
-      config.redis = {:url => Batsir::Config.redis_url, :namespace => Batsir::Config.redis_namespace}
+      config.redis = {:url => Batsir.redis_url}
     end
   end
 
   def self.create_and_start(&block)
     create(&block)
     start
+  end
+
+  def self.redis_url
+    host = Batsir::Config.redis_host
+    port = Batsir::Config.redis_port
+    dbase = Batsir::Config.redis_database
+    "redis://#{host}:#{port}/#{dbase}"
   end
 end
