@@ -44,14 +44,14 @@ describe Batsir::Strategies::RetryStrategy do
 
   it 'attempts to execute the given number of times' do
     @context = MockRetryContext.new(3,3)
-    @context.strategy.log.level = Batsir::Logger::SEVERE
+    @context.strategy.log.level = Batsir::Logger::FATAL
     @context.execute("test").should == "test complete"
     @context.strategy.attempts.size.should == 0
   end
 
   it 'throws an error when all retry attempts have been used' do
     @context = MockRetryContext.new(3,2)
-    @context.strategy.log.level = Batsir::Logger::SEVERE
+    @context.strategy.log.level = Batsir::Logger::FATAL
     lambda{@context.execute("test")}.should raise_error Batsir::Errors::RetryStrategyFailed
   end
 

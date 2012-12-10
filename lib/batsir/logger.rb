@@ -6,7 +6,7 @@ module Batsir
     INFO   = 2
     WARN   = 3
     ERROR  = 4
-    SEVERE = 5
+    FATAL  = 5
 
     class << self
 
