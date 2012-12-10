@@ -7,6 +7,7 @@ source "http://rubygems.org"
 # Include everything needed to run rake, tests, features, etc.
 gem "bundler", "> 1.0.0"
 gem "jeweler"
+gem "rdoc"
 gem "blockenspiel", "~> 0.4.3"
 gem "celluloid"
 gem "sidekiq", "~> 2.5.4"
