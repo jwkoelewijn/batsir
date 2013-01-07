@@ -23,14 +23,14 @@ Jeweler::Tasks.new do |gem|
  is defined by its name and the queue on which it will listen. Once a message is received
  on the queue, it is dispatched to a worker in a seperate thread that will pass the message
  to each operation in the operation queue.
- Operation queues can have 4 different operations, 1 common operation type, and 3 special 
+ Operation queues can have 4 different operations, 1 common operation type, and 3 special
  purpose operations: retrieval operations (which are always executed before all other operations),
  persistence operations (which are always executed after the common operations, but before the
  notification operations) and notification operations (which will always be executed last)
  This makes it possible to create chains of stages to perform tasks that depend on each
  other, but otherwise have a low coupling}
   gem.email = "jwkoelewijn@gmail.com"
-  gem.authors = ["J.W. Koelewijn"]
+  gem.authors = ["J.W. Koelewijn", "Bram de Vries"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
