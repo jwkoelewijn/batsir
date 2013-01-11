@@ -39,6 +39,15 @@ module Batsir
       #
       def start_filter_chain(message)
         klazz = Batsir::Registry.get(stage_name)
+        message = transform(message)
+        klazz.perform_async(message) if klazz
+      end
+
+      #
+      # Call each of the transformers in the transformer_queue
+      # on the message, in order
+      #
+      def transform(message)
         transformer_queue.each do |transformer|
           begin
             message = transformer.transform(message)
@@ -46,7 +55,7 @@ module Batsir
             message = process_message_error(message, e)
           end
         end
-        klazz.perform_async(message) if klazz
+        message
       end
 
       #
