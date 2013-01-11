@@ -1,15 +1,14 @@
 require File.join( File.dirname(__FILE__), "..", "..",  "spec_helper" )
+require File.join( File.dirname(__FILE__), 'shared_examples')
 
 describe Batsir::Acceptors::AMQPAcceptor do
+  it_behaves_like "an acceptor", Batsir::Acceptors::AMQPAcceptor
+
   let(:acceptor_class){
     Batsir::Acceptors::AMQPAcceptor
   }
 
   context "with respect to setting options" do
-    it "is a Batsir::Acceptors::Acceptor" do
-      acceptor_class.ancestors.should include Batsir::Acceptors::Acceptor
-    end
-
     it "can set the queue on which to listen" do
       acceptor = acceptor_class.new(:queue => :queue)
       acceptor.queue.should == :queue
@@ -126,7 +125,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor = new_acceptor(:queue => :some_queue, :cancellator => cancellator)
       acceptor.start
       instance = Bunny.instance
-      puts instance.queues[:some_queue].arguments.first[:cancellator].should == cancellator
+      instance.queues[:some_queue].arguments.first[:cancellator].should == cancellator
     end
 
     it "calls the #start_filter_chain method when a message is received" do
