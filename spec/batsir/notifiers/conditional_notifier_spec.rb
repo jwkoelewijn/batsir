@@ -3,7 +3,7 @@ require File.join( File.dirname(__FILE__), 'shared_examples')
 
 describe Batsir::Notifiers::ConditionalNotifier do
 
-  it_should_behave_like "notifier", Batsir::Notifiers::ConditionalNotifier
+  it_should_behave_like "a notifier", Batsir::Notifiers::ConditionalNotifier
 
   true_block = ::Proc.new { |message| true }
 

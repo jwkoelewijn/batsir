@@ -10,7 +10,7 @@ describe Batsir::Notifiers::AMQPNotifier do
     notifier_class.new(options)
   end
 
-  it_should_behave_like "notifier", Batsir::Notifiers::AMQPNotifier
+  it_should_behave_like "a notifier", Batsir::Notifiers::AMQPNotifier
 
   context "with respect to setting options" do
     it "is a Batsir::Notifiers::Notifier" do
