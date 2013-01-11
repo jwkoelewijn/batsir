@@ -22,6 +22,7 @@ module Batsir
             notifier.new(options).notify(message)
           end
         end
+        message
       end
     end
   end
