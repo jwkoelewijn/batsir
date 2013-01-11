@@ -76,19 +76,23 @@ shared_examples_for "a notifier" do |notifier_class|
 
   context 'message unmodified' do
     it 'has no transformers' do
+      message = {'test_id' => 123}
       begin
-        subject.notify({'test_id' => 123}).should == {'test_id' => 123}
+        subject.notify(message).should == {'test_id' => 123}
       rescue NotImplementedError => e
       end
+      message.should == {'test_id' => 123}
     end
 
     it 'has a FieldTransformer' do
       fields = {:foo => 'bar'}
       subject = notifier_class.new(:fields => fields)
+      message = {'test_id' => 123}
       begin
-        subject.notify({'test_id' => 123}).should == {'test_id' => 123}
+        subject.notify(message).should == {'test_id' => 123}
       rescue NotImplementedError => e
       end
+      message.should == {'test_id' => 123}
     end
   end
 end
