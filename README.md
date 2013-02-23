@@ -1,7 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
 
 
-![Batsir Logo](/jwkoelewijn/batsir/raw/master/batsir.png)
+![Batsir Logo](/raw/master/batsir.png)
 
 # Batsir
 Batsir is an execution platform for stage based filter queue execution.
@@ -47,7 +47,7 @@ This example creates 2 stages, 'stage 1' and 'stage 2'. The first stage creates 
 that will connect to a AMQP Broker on localhost and will listen for messages on the 'some_queue' queue.
 When a message is received, the message will be offered to the SumFilter first. The result of the
 SumFilter is then sent to the #execute method of the AverageFilter. The result of this filter will
-than be sent as an AMQP message on the 'queue_2' queue.
+then be sent as an AMQP message on the 'queue_2' queue.
 
 The inbound AMQPAcceptor of the second stage will then receive the message and its filters will be
 invoked (the PrintFilter in this example).
