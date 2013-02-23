@@ -1,7 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
 
 
-![Batsir Logo](/blob/master/batsir.png)
+![Batsir Logo](/batsir.png)
 
 # Batsir
 Batsir is an execution platform for stage based filter queue execution.
