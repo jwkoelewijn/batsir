@@ -14,9 +14,9 @@ module Batsir
 
       def execute(message)
         begin
-          Bunny.run(bunny_options) do |bunny|
-            exc = bunny.exchange(exchange)
-            exc.publish(message, :key => queue)
+          Batsir::Registry.get("bunny_pool").with do |bunny|
+            x = bunny.exchange(exchange)
+            x.publish(message, :routing_key => queue)
           end
         rescue Bunny::ProtocolError => e
           handle_error(message, e)

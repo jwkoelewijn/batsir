@@ -8,7 +8,21 @@ describe Batsir::Acceptors::AMQPAcceptor do
     Batsir::Acceptors::AMQPAcceptor
   }
 
-  context "with respect to setting options" do
+  context "instantiating" do
+    it "sets a bunny pool" do
+      acceptor = acceptor_class.new
+      acceptor.bunny_pool.should be_kind_of ConnectionPool
+    end
+
+    it "uses the same ConnectionPool instance for each acceptor" do
+      acceptor1 = acceptor_class.new
+      acceptor2 = acceptor_class.new
+      acceptor1.should_not eql acceptor2
+      acceptor1.bunny_pool.should eql acceptor2.bunny_pool
+    end
+  end
+
+  context "setting options" do
     it "can set the queue on which to listen" do
       acceptor = acceptor_class.new(:queue => :queue)
       acceptor.queue.should == :queue
@@ -56,76 +70,54 @@ describe Batsir::Acceptors::AMQPAcceptor do
     end
   end
 
-  context "with respect to starting the acceptor" do
+  context "starting the acceptor" do
     def new_acceptor(options = {})
-      acceptor_class.new(options)
+      acceptor_class.new({:queue => :test_queue}.merge options)
+    end
+
+    it "starts listening on the configured queue" do
+      acceptor = new_acceptor()
+      acceptor.start
+      acceptor.consumer.queue.name.should == 'test_queue'
     end
 
     it "connects to the configured host" do
-      acceptor = new_acceptor(:host => 'somehost')
+      acceptor = new_acceptor(:host => 'localhost')
       acceptor.start
-      instance = Bunny.instance
-      instance.options[:host].should == 'somehost'
+      acceptor.consumer.queue.channel.connection.host.should == 'localhost'
     end
 
     it "connects to the configured port" do
-      acceptor = new_acceptor(:port => 1234)
+      acceptor = new_acceptor(:port => 5672)
       acceptor.start
-      instance = Bunny.instance
-      instance.options[:port].should == 1234
+      acceptor.consumer.queue.channel.connection.port.should == 5672
     end
 
     it "connects with the configured username" do
-      acceptor = new_acceptor(:username => 'user')
+      acceptor = new_acceptor(:username => 'guest', :password => 'guest')
       acceptor.start
-      instance = Bunny.instance
-      instance.options[:user].should == 'user'
-    end
-
-    it "connects with the configured password" do
-      acceptor = new_acceptor(:password => 'pass')
-      acceptor.start
-      instance = Bunny.instance
-      instance.options[:pass].should == 'pass'
+      acceptor.consumer.queue.channel.connection.user.should == 'guest'
+      acceptor.consumer.queue.channel.connection.pass.should == 'guest'
     end
 
     it "connects to the configured vhost" do
-      acceptor = new_acceptor(:vhost => '/vhost')
+      acceptor = new_acceptor(:vhost => '/')
       acceptor.start
-      instance = Bunny.instance
-      instance.options[:vhost].should == '/vhost'
+      acceptor.consumer.queue.channel.connection.vhost.should == '/'
     end
 
     it "declares the configured exchange" do
       acceptor = new_acceptor(:exchange => 'some_exchange')
       acceptor.start
-      instance = Bunny.instance
-      instance.exchange.name.should == 'some_exchange'
+      acceptor.consumer.queue.instance_variable_get(:@bindings).first[:exchange].should == 'some_exchange'
     end
 
     it "binds the configured exchange to the queue" do
       acceptor = new_acceptor(:exchange => 'some_exchange', :queue => :queue)
       acceptor.start
-      instance = Bunny.instance
-      queue = instance.queues[:queue]
-      queue.bound_exchange.name.should == 'some_exchange'
-      queue.bound_key.should == :queue
-    end
-
-    it "starts listening on the configured queue" do
-      acceptor = new_acceptor(:queue => :some_queue)
-      acceptor.start
-      instance = Bunny.instance
-      instance.queues.size.should == 1
-      instance.queues.keys.should include :some_queue
-    end
-
-    it "initialises the subscription with the acceptor's cancellator" do
-      cancellator = :cancellator
-      acceptor = new_acceptor(:queue => :some_queue, :cancellator => cancellator)
-      acceptor.start
-      instance = Bunny.instance
-      instance.queues[:some_queue].arguments.first[:cancellator].should == cancellator
+      binding = acceptor.consumer.queue.instance_variable_get(:@bindings).first
+      binding[:exchange].should == 'some_exchange'
+      binding[:routing_key].should == :queue
     end
 
     it "calls the #start_filter_chain method when a message is received" do
@@ -152,13 +144,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor._send_(:define_singleton_method, :method_called, method_called_mock_method)
 
       acceptor.start
-
-      instance = Bunny.instance
-      queue = instance.queues[:some_queue]
-      queue.should_not be_nil
-
-      block = queue.block
-      block.call({})
+      acceptor.consumer.call({})
 
       acceptor.method_called.should == 1
     end

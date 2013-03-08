@@ -26,6 +26,10 @@ module Bunny
     def queue(queue)
       @queues[queue] = BunnyQueue.new
     end
+
+    def create_channel
+      self
+    end
   end
 
   class BunnyExchange
@@ -38,7 +42,7 @@ module Bunny
     end
 
     def publish(message, options = {})
-      @key = options[:key]
+      @key = options[:routing_key] || options[:key]
       @message = message
     end
   end
@@ -48,15 +52,22 @@ module Bunny
     attr_accessor :block
     attr_accessor :bound_exchange
     attr_accessor :bound_key
+    attr_accessor :consumer
 
     def bind(exchange, options)
       @bound_exchange = exchange
-      @bound_key = options[:key]
+      @bound_key = options[:routing_key] || options[:key]
     end
 
     def subscribe(*args, &block)
       @arguments = *args
       @block = block
+    end
+
+    def subscribe_with(consumer, opts = {:block => false})
+      @block ||= opts[:block]
+      @consumer = consumer
+      @consumer
     end
   end
 end

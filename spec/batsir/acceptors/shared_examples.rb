@@ -99,19 +99,4 @@ shared_examples_for "an acceptor" do |acceptor_class|
     end
   end
 
-  context 'cancellators' do
-    it "can set a cancellator" do
-      cancellator = :cancel
-      acceptor = acceptor_class.new
-      acceptor.cancellator = cancellator
-      acceptor.cancellator.should == cancellator
-    end
-
-    it "can set a cancellator in the constructor using a hash" do
-      cancellator = :cancel
-      acceptor = acceptor_class.new(:cancellator => cancellator)
-      acceptor.cancellator.should == cancellator
-    end
-  end
-
 end
