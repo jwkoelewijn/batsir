@@ -113,7 +113,7 @@ module Batsir
       # Object:: The value of the configuration parameter or the default.
       #
       # :api: public
-      def fetch(key, default)
+      def fetch(key, default = nil)
         configuration.fetch(key, default)
       end
 
