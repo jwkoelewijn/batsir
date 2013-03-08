@@ -9,7 +9,7 @@ module Batsir
     end
 
     def self.get(name)
-      registry.fetch(name)
+      registry.fetch(name, nil)
     end
   end
 end
