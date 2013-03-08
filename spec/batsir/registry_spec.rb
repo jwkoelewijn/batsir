@@ -6,6 +6,10 @@ describe Batsir::Registry do
     @class = Batsir::Registry
   end
 
+  before :each do
+    @class.reset
+  end
+
   it "outputs the whole registry" do
     @class.registry.should == {}
   end
@@ -21,5 +25,24 @@ describe Batsir::Registry do
   it "is able to retrieve a registered variable" do
     @class.register('test', 'value')
     @class.get('test').should == 'value'
+  end
+
+  it "returns nil when the requested key is not found" do
+    @class.get('foobar').should be_nil
+  end
+
+  context "resetting" do
+    it "is possible" do
+      @class.register('foo', 'bar')
+      @class.registry.should == {'foo' => 'bar'}
+      @class.reset
+      @class.registry.should == {}
+    end
+
+    it "returns its new state" do
+      @class.register('foo', 'bar')
+      result = @class.reset
+      result.should == {}
+    end
   end
 end
