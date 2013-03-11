@@ -72,13 +72,14 @@ describe Batsir::Acceptors::AMQPAcceptor do
 
   context "starting the acceptor" do
     def new_acceptor(options = {})
-      acceptor_class.new({:queue => :test_queue}.merge options)
+      acceptor_class.new({:queue => 'test_queue'}.merge options)
     end
 
     it "starts listening on the configured queue" do
       acceptor = new_acceptor()
-      acceptor.start
-      acceptor.consumer.queue.name.should == 'test_queue'
+      acceptor.bunny_pool do |bunny|
+        acceptor.consumer.queue.name.should == 'test_queue'
+      end
     end
 
     it "connects to the configured host" do
