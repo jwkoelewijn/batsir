@@ -41,5 +41,19 @@ module Batsir
     def exchange
       @exchange ||= Batsir::Config.fetch(:amqp_exchange, 'amq.direct')
     end
+
+    def bunny_pool_key
+      "bunny_pool_for_#{host}_#{port}_#{vhost}"
+    end
+
+    def bunny_pool
+      @bunny_pool = Batsir::Registry.get(bunny_pool_key)
+      if !@bunny_pool
+        bunny_pool_size = Batsir::Config.connection_pool_size
+        pool = ConnectionPool.new(:size => bunny_pool_size) { Bunny.new(bunny_options).start }
+        @bunny_pool = Batsir::Registry.register(bunny_pool_key, pool)
+      end
+      @bunny_pool
+    end
   end
 end

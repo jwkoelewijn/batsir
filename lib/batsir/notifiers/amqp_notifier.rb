@@ -14,7 +14,7 @@ module Batsir
 
       def execute(message)
         begin
-          Batsir::Registry.get("bunny_pool").with do |bunny|
+          bunny_pool.with do |bunny|
             x = bunny.exchange(exchange)
             x.publish(message, :routing_key => queue)
           end

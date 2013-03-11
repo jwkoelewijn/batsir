@@ -77,6 +77,7 @@ shared_examples_for "a notifier" do |notifier_class|
   context 'message unmodified' do
     it 'has no transformers' do
       message = {'test_id' => 123}
+      subject.add_transformer(Batsir::Transformers::JSONOutputTransformer.new)
       begin
         subject.notify(message).should == {'test_id' => 123}
       rescue NotImplementedError => e
@@ -85,9 +86,10 @@ shared_examples_for "a notifier" do |notifier_class|
     end
 
     it 'has a FieldTransformer' do
-      fields = {:foo => 'bar'}
-      subject = notifier_class.new(:fields => fields)
+      fields = {:foo => 'bar', 'test_id' => 'test'}
       message = {'test_id' => 123}
+      subject = notifier_class.new(:fields => fields)
+      subject.add_transformer(Batsir::Transformers::JSONOutputTransformer.new)
       begin
         subject.notify(message).should == {'test_id' => 123}
       rescue NotImplementedError => e
