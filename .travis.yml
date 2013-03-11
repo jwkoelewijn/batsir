@@ -8,9 +8,3 @@ rvm:
   - 1.9.3
   - jruby-19mode
   - rbx-19mode
-
-# Lock the rubygems version to the 1.8 branch,
-# since the 2.0.2 upgrade deletes JRuby libraries => build failure
-before_install:
-  - gem update --system 1.8.25
-  - gem --version
