@@ -5,7 +5,7 @@ module Batsir
     end
 
     def self.registry
-      @registry ||= reset
+      @registry || reset
     end
 
     def self.get(name)
