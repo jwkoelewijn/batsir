@@ -645,23 +645,6 @@ describe Batsir::Stage do
       stage.running_acceptors.size.should == 1
     end
 
-    it "adds a cancellator to each acceptor" do
-      stage = create_stage
-      stage.add_acceptor MockAcceptor
-
-      stage.start
-      stage.running_acceptors.first.cancellator.should_not be_nil
-    end
-
-    it "adds cancellators to the stage list of cancellators" do
-      stage = create_stage
-      stage.add_acceptor MockAcceptor
-      stage.add_acceptor MockAcceptor, :foo => :bar
-
-      stage.start
-      stage.cancellators.size.should == 2
-    end
-
     it "starts all acceptors" do
       stage = create_stage
       stage.add_acceptor MockAcceptor
