@@ -65,6 +65,10 @@ describe Batsir::Notifiers::AMQPNotifier do
   end
 
   context "with respect to notifying" do
+    before :each do
+      Batsir::Registry.reset
+    end
+
     it 'has an #execute method' do
       notifier_class.instance_methods.map{|m| m.to_s}.should include "execute"
     end
@@ -91,7 +95,7 @@ describe Batsir::Notifiers::AMQPNotifier do
       notifier = new_notifier(:username => 'user')
       notifier.execute({})
       instance = Bunny.instance
-      instance.options[:user].should == 'user'
+      instance.user.should == 'user'
     end
 
     it "connects with the configured password" do
