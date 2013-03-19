@@ -17,7 +17,8 @@ module Batsir
           :redis_port => 6379,
           :redis_database => 0,
           :sidekiq_queue => 'batsir',
-          :log_name => 'batsir'
+          :log_name => 'batsir',
+          :connection_pool_size => 10
         }
       end
 
@@ -113,7 +114,7 @@ module Batsir
       # Object:: The value of the configuration parameter or the default.
       #
       # :api: public
-      def fetch(key, default)
+      def fetch(key, default = nil)
         configuration.fetch(key, default)
       end
 

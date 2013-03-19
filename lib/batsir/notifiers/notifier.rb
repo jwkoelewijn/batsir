@@ -21,7 +21,8 @@ module Batsir
       end
 
       def notify(message)
-        execute(transform(message))
+        execute(transform(message.clone))
+        message
       end
 
       def transform(message)

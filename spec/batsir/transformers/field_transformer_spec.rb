@@ -18,14 +18,15 @@ describe Batsir::Transformers::FieldTransformer do
   end
 
   it "uses the fields mapping given in an options hash to transform the message using #transform" do
-    field_mapping = {:foo => :bar}
+    field_mapping = {:foo => 'bar'}
     transformer = transformer_class.new( :fields => field_mapping )
 
-    message = {:bar => "bar"}
+    message = {'bar' => 123}
     transformed_message = transformer.transform(message)
-    transformed_message.should have_key :foo
-    transformed_message.should_not have_key :bar
-    transformed_message[:foo].should == "bar"
+    transformed_message.should have_key 'foo'
+    transformed_message.should_not have_key :foo
+    transformed_message.should_not have_key 'bar'
+    transformed_message['foo'].should == 123
   end
 
   it "can use symbols and string based keys and values all the same" do
@@ -34,22 +35,22 @@ describe Batsir::Transformers::FieldTransformer do
 
     message = {:bar => "foo", "doe" => :john}
     transformed_message = transformer.transform(message)
-    transformed_message[:foo].should == "foo"
-    transformed_message[:john].should == :john
+    transformed_message['foo'].should == 'foo'
+    transformed_message['john'].should == :john
   end
 
   it "removes options not in the fields option when a fields option is given" do
     field_mapping = {:foo => :bar}
     transformer = transformer_class.new( :fields => field_mapping )
 
-    message = {:bar => "bar", :john => :doe}
+    message = {'bar' => "bar", 'john' => :doe}
     transformed_message = transformer.transform(message)
-    transformed_message.should have_key :foo
-    transformed_message.should_not have_key :bar
-    transformed_message.should_not have_key :john
+    transformed_message.should have_key 'foo'
+    transformed_message.should_not have_key 'bar'
+    transformed_message.should_not have_key 'john'
   end
 
-  it "does not remove fields when no mapping is given" do
+  it "does not remove fields when no mapping is given, but enforces the no_symbol_keys principle" do
     transformer = transformer_class.new
 
     message = {:bar => "bar", :john => :doe}
@@ -65,8 +66,8 @@ describe Batsir::Transformers::FieldTransformer do
     message = {:id => 2, :old_id => 1, :john => :doe}
     transformed_message = transformer.transform(message)
 
-    transformed_message.should have_key :id
-    transformed_message.should_not have_key :old_id
-    transformed_message.should_not have_key :john
+    transformed_message.should have_key 'id'
+    transformed_message.should_not have_key 'old_id'
+    transformed_message.should_not have_key 'john'
   end
 end

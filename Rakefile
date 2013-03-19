@@ -9,12 +9,19 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
 
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
+
+require 'rake'
 require 'jeweler'
+require 'batsir/version'
+
+version = Batsir::VERSION
+
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "batsir"
+  gem.version = version
   gem.homepage = "http://github.com/jwkoelewijn/batsir"
   gem.license = "MIT"
   gem.summary = %Q{Batsir is an execution platform for stage based operation queue execution}
@@ -46,8 +53,6 @@ task :default => :spec
 
 require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "batsir #{version}"
   rdoc.rdoc_files.include('README*')

@@ -25,7 +25,7 @@ module Batsir
           fields_to_remove = symbolized_message_keys.keys - fields.keys - fields.values
 
           fields.each do |new, old|
-            message[new] = message.delete(symbolized_message_keys[old])
+            message[new.to_s] = message.delete(symbolized_message_keys[old])
           end
 
           fields_to_remove.each do |field|
