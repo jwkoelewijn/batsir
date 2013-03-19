@@ -22,7 +22,7 @@ module Batsir
 
       def notify(message)
         execute(transform(message.clone))
-        return message
+        message
       end
 
       def transform(message)
