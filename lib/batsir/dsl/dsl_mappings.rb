@@ -32,8 +32,8 @@ module Batsir
         @stage
       end
 
-      def filter(operation)
-        @stage.add_filter(operation)
+      def filter(filter_class, options = {})
+        @stage.add_filter(filter_class, options)
       end
 
       def inbound(&block)
