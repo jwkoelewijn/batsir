@@ -1,3 +1,7 @@
+0.3.2
+- Filters can now be passed initialisation options
+
+
 0.3.1
 -----------
 - Renamed config variable 'connection_pool_size' to a more apt 'amqp_pool_size'
