@@ -42,6 +42,10 @@ module Batsir
       @exchange ||= Batsir::Config.fetch(:amqp_exchange, 'amq.direct')
     end
 
+    def bunny_pool_size
+      @bunny_pool_size ||= Batsir::Config.ampq_pool_size
+    end
+
     def bunny_pool_key
       "bunny_pool_for_#{host}_#{port}_#{vhost}"
     end
@@ -49,7 +53,6 @@ module Batsir
     def bunny_pool
       @bunny_pool = Batsir::Registry.get(bunny_pool_key)
       if !@bunny_pool
-        bunny_pool_size = Batsir::Config.connection_pool_size
         pool = ConnectionPool.new(:size => bunny_pool_size) { Bunny.new(bunny_options).start }
         @bunny_pool = Batsir::Registry.register(bunny_pool_key, pool)
       end

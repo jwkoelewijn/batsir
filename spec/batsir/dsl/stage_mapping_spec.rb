@@ -28,6 +28,24 @@ describe Batsir::DSL::StageMapping do
     stage.filters.should include filter
   end
 
+  it "can add a filter with options to the stage" do
+    filter  = "Operation"
+    options = { :option => "options" }
+
+    block = ::Proc.new do
+      stage "simple_stage" do
+        filter filter, options
+      end
+    end
+
+    stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
+    stage.should_not be_nil
+    stage.filters.should_not be_nil
+    stage.filters.should_not be_empty
+    declaration = stage.filter_declarations.find{|decl| decl.filter == filter }
+    declaration.options.should == options
+  end
+
   it "can add multiple filters to the stage" do
     filter1 = "Operation 1"
     filter2 = "Operation 2"

@@ -13,12 +13,12 @@ module Batsir
           :amqp_user => 'guest',
           :amqp_pass => 'guest',
           :amqp_vhost => '/',
+          :ampq_pool_size => 5,
           :redis_host => 'localhost',
           :redis_port => 6379,
           :redis_database => 0,
           :sidekiq_queue => 'batsir',
-          :log_name => 'batsir',
-          :connection_pool_size => 10
+          :log_name => 'batsir'
         }
       end
 
