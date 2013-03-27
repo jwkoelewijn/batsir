@@ -7,6 +7,7 @@ module Batsir
     attr_accessor :password
     attr_accessor :vhost
     attr_accessor :exchange
+    attr_accessor :heartbeat
 
     def bunny_options
       {
@@ -14,7 +15,8 @@ module Batsir
         :port  => port,
         :user  => username,
         :pass  => password,
-        :vhost => vhost
+        :vhost => vhost,
+        :heartbeat => heartbeat
       }
     end
 
@@ -40,6 +42,10 @@ module Batsir
 
     def exchange
       @exchange ||= Batsir::Config.fetch(:amqp_exchange, 'amq.direct')
+    end
+
+    def heartbeat
+      @heartbeat ||= Batsir::Config.fetch(:amqp_heartbeat, 0) # default to AMQP 0.8 heartbeat setting
     end
 
     def bunny_pool_size
