@@ -1,4 +1,10 @@
+0.3.3
+-----------
+- Bunny :heartbeat option is now explicitly set. It defaults to 0; the original AMQP 0.8 setting.
+
+
 0.3.2
+-----------
 - Filters can now be passed initialisation options
 
 
