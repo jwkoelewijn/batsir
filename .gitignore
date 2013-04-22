@@ -16,3 +16,5 @@ coverage/
 .rbx/*
 pkg/*
 Gemfile.lock
+.ruby-version
+.ruby-gemset
