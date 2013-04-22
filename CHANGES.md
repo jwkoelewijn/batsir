@@ -1,3 +1,8 @@
+0.3.4
+-----------
+- Fixed issue when using bunny 0.9.0.pre9. Bunny::Session#start now returns ifself instead of its channel.
+
+
 0.3.3
 -----------
 - Bunny :heartbeat option is now explicitly set. It defaults to 0; the original AMQP 0.8 setting.
