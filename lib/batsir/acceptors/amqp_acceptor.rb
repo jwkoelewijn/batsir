@@ -7,15 +7,17 @@ module Batsir
       include Batsir::Log
 
       attr_reader :consumer
+      attr_writer :consumer_source
 
       def initialize(options={})
         super
         @bunny = Bunny.new(bunny_options).start
+        @channel = @bunny.channel
         @q = @bunny.queue( queue )
         @x = @bunny.exchange( exchange )
         @q.bind( @x, :routing_key => queue)
 
-        @consumer = Batsir::AMQPConsumer.new(self, @bunny, @q)
+        @consumer = consumer_source.call(self, @channel, @q)
         @consumer.on_delivery() do |delivery_info, metadata, payload|
           handle_delivery(payload)
         end
@@ -33,6 +35,13 @@ module Batsir
         log.error error.message
         nil
       end
+
+    private
+
+      def consumer_source
+        @consumer_source ||= Batsir::AMQPConsumer.public_method(:new)
+      end
+
     end
   end
 end
