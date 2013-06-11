@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
+![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)
 
 
 ![Batsir Logo](/batsir.png)
