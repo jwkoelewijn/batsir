@@ -17,6 +17,7 @@ module Batsir
           :redis_host => 'localhost',
           :redis_port => 6379,
           :redis_database => 0,
+          :redis_namespace => 'batsir',
           :sidekiq_queue => 'batsir',
           :log_name => 'batsir'
         }
