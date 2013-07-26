@@ -19,7 +19,7 @@ module Batsir
           if notifier_condition.condition.call(message)
             notifier = notifier_condition.notifier
             options  = notifier_condition.options
-            notifier.new(options).notify(message)
+            notifier.notify(message)
           end
         end
         message
