@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 gem "bundler", "> 1.0.0"
 gem "jeweler"
