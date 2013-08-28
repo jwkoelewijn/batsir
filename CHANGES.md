@@ -1,3 +1,8 @@
+0.3.5
+-----------
+- NOTICE: This version removes sidekiq/celluloid gem contraints. Be sure to set these accordingly in your own project's Gemfile!
+
+
 0.3.4
 -----------
 - Fixed issue when using bunny 0.9.0.pre9. Bunny::Session#start now returns ifself instead of its channel.
