@@ -66,10 +66,10 @@ module Batsir
   def self.initialize_sidekiq
     Sidekiq.logger = Batsir::Logger.log
     Sidekiq.configure_server do |config|
-      config.redis = {:url => Batsir.redis_url}
+      config.redis = {:url => redis_url, :namespace => redis_namespace}
     end
     Sidekiq.configure_client do |config|
-      config.redis = {:url => Batsir.redis_url}
+      config.redis = {:url => redis_url, :namespace => redis_namespace}
     end
   end
 
@@ -83,5 +83,9 @@ module Batsir
     port = Batsir::Config.redis_port
     dbase = Batsir::Config.redis_database
     "redis://#{host}:#{port}/#{dbase}"
+  end
+
+  def self.redis_namespace
+    Batsir::Config.redis_namespace
   end
 end
