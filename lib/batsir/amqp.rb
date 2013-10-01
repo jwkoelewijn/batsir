@@ -5,6 +5,8 @@ module Batsir
     attr_accessor :port
     attr_accessor :username
     attr_accessor :password
+    attr_accessor :durable
+    attr_accessor :persistent
     attr_accessor :vhost
     attr_accessor :exchange
     attr_accessor :heartbeat
