@@ -7,7 +7,6 @@ module Batsir
 
     attr_accessor :name
     attr_accessor :chain
-    attr_accessor :cancellators
     attr_reader   :filter_declarations
     attr_reader   :notifiers
     attr_reader   :conditional_notifiers
@@ -20,7 +19,6 @@ module Batsir
       options.each do |attr, value|
         self.send("#{attr.to_s}=", value)
       end
-      @cancellators           = []
       @acceptor_transformers  = []
       @running_acceptors      = []
       @acceptors              = {}
@@ -70,9 +68,6 @@ module Batsir
     end
 
     def finalize
-      @cancellators.each do |cancellator|
-        cancellator.write "STOP"
-      end
     end
 
     def start

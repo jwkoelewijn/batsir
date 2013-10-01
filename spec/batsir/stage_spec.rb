@@ -219,12 +219,6 @@ describe Batsir::Stage do
       stage.acceptors[:acceptor].first.should == {}
     end
 
-    it "initially has an empty list of cancellators" do
-      stage = Batsir::Stage.new
-      stage.cancellators.should_not be_nil
-      stage.cancellators.should be_empty
-    end
-
     context "with respect to acceptor transformers" do
       it "has an empty acceptor transformers queue by default" do
         stage = Batsir::Stage.new
