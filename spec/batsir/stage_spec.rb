@@ -488,6 +488,8 @@ describe Batsir::Stage do
     before :all do
       @stage_name = "Stage 1"
 
+      Celluloid.boot
+
       stage = Batsir::Stage.new(:name => @stage_name)
 
       stage.add_notifier_transformer(Batsir::Transformers::Transformer)
