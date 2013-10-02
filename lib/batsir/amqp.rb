@@ -6,7 +6,6 @@ module Batsir
     attr_accessor :username
     attr_accessor :password
     attr_accessor :durable
-    attr_accessor :persistent
     attr_accessor :vhost
     attr_accessor :exchange
     attr_accessor :heartbeat
@@ -18,6 +17,7 @@ module Batsir
         :user  => username,
         :pass  => password,
         :vhost => vhost,
+        :durable => durable,
         :heartbeat => heartbeat
       }
     end
@@ -52,6 +52,10 @@ module Batsir
 
     def bunny_pool_size
       @bunny_pool_size ||= Batsir::Config.ampq_pool_size
+    end
+
+    def durable
+      @durable ||= Batsir::Config.fetch(:amqp_durable, true)
     end
 
     def bunny_pool_key
