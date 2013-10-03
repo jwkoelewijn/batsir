@@ -1,3 +1,7 @@
+- Latest Sidekiq, Celluloid and Bunny versions
+- Bunny :durable option is added, which is true by default. With this it is possible to create
+  durable queues, i.e. queues that do not get deleted when the last consumer disconnects
+
 0.3.3
 -----------
 - Bunny :heartbeat option is now explicitly set. It defaults to 0; the original AMQP 0.8 setting.
