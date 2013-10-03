@@ -17,7 +17,6 @@ module Batsir
         :user  => username,
         :pass  => password,
         :vhost => vhost,
-        :durable => durable,
         :heartbeat => heartbeat
       }
     end

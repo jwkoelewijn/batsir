@@ -13,7 +13,7 @@ module Batsir
         super
         @bunny = Bunny.new(bunny_options).start
         @channel = @bunny.channel
-        @q = @bunny.queue( queue )
+        @q = @bunny.queue( queue, :durable => durable )
         @x = @bunny.exchange( exchange )
         @q.bind( @x, :routing_key => queue)
 

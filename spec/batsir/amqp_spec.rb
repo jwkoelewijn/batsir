@@ -33,6 +33,10 @@ describe Batsir::AMQP do
       @test.exchange.should == 'amq.direct'
     end
 
+    it 'is durable' do
+      @test.durable.should == true
+    end
+
     it 'is undead' do
       @test.heartbeat.should == 0
     end
