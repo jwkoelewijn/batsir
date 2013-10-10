@@ -1,3 +1,9 @@
+0.3.6
+-----------
+- Fixes bug in conditional notifier
+- Constrained Celluloid version to 0.14.x, until we can support 0.15.x and above
+
+
 0.3.5
 -----------
 - NOTICE: This version removes sidekiq/celluloid gem contraints. Be sure to set these accordingly in your own project's Gemfile!
