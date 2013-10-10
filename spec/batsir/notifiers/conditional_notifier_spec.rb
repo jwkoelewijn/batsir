@@ -43,7 +43,7 @@ describe Batsir::Notifiers::ConditionalNotifier do
       notifier_class.any_instance.should_receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
-      conditional.add_notifier( true_block, notifier_class )
+      conditional.add_notifier( true_block, notifier_class.new({}) )
       conditional.execute("some message")
     end
 
@@ -55,7 +55,7 @@ describe Batsir::Notifiers::ConditionalNotifier do
       notifier_class.any_instance.should_not_receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
-      conditional.add_notifier( false_block, notifier_class )
+      conditional.add_notifier( false_block, notifier_class.new({}) )
       conditional.execute("some message")
     end
   end
