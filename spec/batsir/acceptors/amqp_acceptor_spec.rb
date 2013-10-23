@@ -58,6 +58,11 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor.exchange.should == 'amq.direct'
     end
 
+    it "can set the queue to be durable" do
+      acceptor = acceptor_class.new(:durable => true)
+      acceptor.durable.should == true
+    end
+
     it "defaults to amqp://guest:guest@localhost:5672/ with direct exchange on vhost ''" do
       acceptor = acceptor_class.new(:queue => :somequeue)
       acceptor.queue.should    == :somequeue

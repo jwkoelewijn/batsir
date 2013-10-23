@@ -41,7 +41,7 @@ module Bunny
       @exchange
     end
 
-    def queue(queue)
+    def queue(queue, options = {})
       @queues[queue] = BunnyQueue.new
     end
 

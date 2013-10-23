@@ -5,6 +5,7 @@ module Batsir
     attr_accessor :port
     attr_accessor :username
     attr_accessor :password
+    attr_accessor :durable
     attr_accessor :vhost
     attr_accessor :exchange
     attr_accessor :heartbeat
@@ -50,6 +51,10 @@ module Batsir
 
     def bunny_pool_size
       @bunny_pool_size ||= Batsir::Config.ampq_pool_size
+    end
+
+    def durable
+      @durable ||= Batsir::Config.fetch(:amqp_durable, true)
     end
 
     def bunny_pool_key

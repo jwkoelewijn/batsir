@@ -44,6 +44,7 @@ describe Batsir::DSL::ConditionalNotifierMapping do
 
   context "compiling" do
     before :all do
+      Celluloid.boot
 
       block = lambda do
         stage "stage name" do
