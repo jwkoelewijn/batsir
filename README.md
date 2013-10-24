@@ -1,5 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
-
+[![Code Climate](https://codeclimate.com/github/jwkoelewijn/batsir.png)](https://codeclimate.com/github/jwkoelewijn/batsir)
+[![Gem Version](https://badge.fury.io/rb/batsir.png)](http://badge.fury.io/rb/batsir)
 
 ![Batsir Logo](/jwkoelewijn/batsir/raw/master/batsir.png)
 
@@ -43,7 +44,7 @@ Batsir.create_and_start do
 end
 ```
 
-This example creates 2 stages, 'stage 1' and 'stage 2'. The first stage creates and AMQPAcceptor, 
+This example creates 2 stages, 'stage 1' and 'stage 2'. The first stage creates and AMQPAcceptor,
 that will connect to a AMQP Broker on localhost and will listen for messages on the 'some_queue' queue.
 When a message is received, the message will be offered to the SumFilter first. The result of the
 SumFilter is then sent to the #execute method of the AverageFilter. The result of this filter will
@@ -101,12 +102,12 @@ Batsir will create Sidekiq workers on the fly, with instantiated filters on the 
 be deployed in the Sidekiq server, so that they will be available for processing. The workers also register
 themselves in a registry, where they can be requested using the stage name.
 
-The inbound acceptors will listen as a Celluloid Actor on the client side of Sidekiq. When a message is 
+The inbound acceptors will listen as a Celluloid Actor on the client side of Sidekiq. When a message is
 received, it will look up the corresponding StageWorker in the registry and it will invoke the
 StageWorker asynchronously using Sidekiq.
 
 ## Contributing to batsir
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
