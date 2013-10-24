@@ -1,8 +1,8 @@
-0.3.x
+0.3.7
 -----------
-- Latest Sidekiq, Celluloid and Bunny versions
-- Bunny :durable option is added, which is true by default. With this it is possible to create
-  durable queues, i.e. queues that do not get deleted when the last consumer disconnects
+- AMQP queues are now durable by default.
+  This prevents queued messages getting lost when batsir is restarted (and the last consumer disconnects). It can be configured by setting 'Batsir::Config.amqp_durable'.
+- Now requires bunny 0.10.7
 
 
 0.3.6
