@@ -14,7 +14,6 @@ module Batsir
           :amqp_pass => 'guest',
           :amqp_vhost => '/',
           :amqp_durable => true,
-          :amqp_persistent => true,
           :ampq_pool_size => 5,
           :redis_host => 'localhost',
           :redis_port => 6379,
