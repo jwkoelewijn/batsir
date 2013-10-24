@@ -1,6 +1,6 @@
-[![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
-[![Code Climate](https://codeclimate.com/github/jwkoelewijn/batsir.png)](https://codeclimate.com/github/jwkoelewijn/batsir)
 [![Gem Version](https://badge.fury.io/rb/batsir.png)](http://badge.fury.io/rb/batsir)
+[![Code Climate](https://codeclimate.com/github/jwkoelewijn/batsir.png)](https://codeclimate.com/github/jwkoelewijn/batsir)
+[![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
 
 ![Batsir Logo](/jwkoelewijn/batsir/raw/master/batsir.png)
 
