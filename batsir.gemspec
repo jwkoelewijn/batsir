@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "batsir"
-  s.version = "0.3.7"
+  s.version = "0.3.7.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["J.W. Koelewijn", "Bram de Vries"]
@@ -103,7 +103,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<blockenspiel>, [">= 0.4.3"])
       s.add_runtime_dependency(%q<celluloid>, ["~> 0.14.1"])
       s.add_runtime_dependency(%q<sidekiq>, [">= 2.5.4"])
-      s.add_runtime_dependency(%q<bunny>, [">= 0"])
+      s.add_runtime_dependency(%q<bunny>, ["~> 0.10.7"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_runtime_dependency(%q<log4r>, [">= 0"])
     else
@@ -113,7 +113,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<blockenspiel>, [">= 0.4.3"])
       s.add_dependency(%q<celluloid>, ["~> 0.14.1"])
       s.add_dependency(%q<sidekiq>, [">= 2.5.4"])
-      s.add_dependency(%q<bunny>, [">= 0"])
+      s.add_dependency(%q<bunny>, ["~> 0.10.7"])
       s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<log4r>, [">= 0"])
     end
@@ -124,7 +124,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<blockenspiel>, [">= 0.4.3"])
     s.add_dependency(%q<celluloid>, ["~> 0.14.1"])
     s.add_dependency(%q<sidekiq>, [">= 2.5.4"])
-    s.add_dependency(%q<bunny>, [">= 0"])
+    s.add_dependency(%q<bunny>, ["~> 0.10.7"])
     s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<log4r>, [">= 0"])
   end
