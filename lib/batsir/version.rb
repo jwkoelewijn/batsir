@@ -1,3 +1,10 @@
 module Batsir
-  VERSION = "0.3.5"
+  module Version
+    MAJOR = 0
+    MINOR = 3
+    PATCH = 7
+    BUILD = nil
+  end
+
+  VERSION = [Version::MAJOR, Version::MINOR, Version::PATCH, Version::BUILD].compact.join('.')
 end
