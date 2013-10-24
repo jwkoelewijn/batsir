@@ -2,7 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/jwkoelewijn/batsir.png)](https://codeclimate.com/github/jwkoelewijn/batsir)
 [![Build Status](https://secure.travis-ci.org/jwkoelewijn/batsir.png?branch=master)](http://travis-ci.org/jwkoelewijn/batsir)
 
-![Batsir Logo](/jwkoelewijn/batsir/raw/master/batsir.png)
+![Batsir Logo](/jwkoelewijn/batsir/blob/master/batsir.png)
 
 # Batsir
 Batsir is an execution platform for stage based filter queue execution.
