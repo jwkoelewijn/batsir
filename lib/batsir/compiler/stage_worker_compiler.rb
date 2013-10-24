@@ -9,8 +9,30 @@ module Batsir
 
       def compile
         klazz_name = "#{stage.name.capitalize.gsub(' ','')}Worker"
+        worker_class_code(klazz_name)
+      end
+
+      def worker_class_code(klazz_name)
         code = <<-EOF
           class #{klazz_name}
+        EOF
+
+        add_some_methods(code)
+
+        add_filter_queue(code)
+
+        code << <<-EOF
+            include Sidekiq::Worker
+            include Batsir::StageWorker
+          end
+
+          #{klazz_name}.sidekiq_options(:queue => Batsir::Config.sidekiq_queue)
+          #{klazz_name}
+        EOF
+      end
+
+      def add_some_methods(code)
+        code << <<-EOF
             def self.stage_name
               "#{stage.name}"
             end
@@ -22,21 +44,41 @@ module Batsir
             def self.filter_queue
               @filter_queue
             end
+        EOF
+      end
 
+      def add_filter_queue(code)
+        code << <<-EOF
             def self.initialize_filter_queue
               @filter_queue = Batsir::FilterQueue.new
         EOF
 
+        add_filter_declarations(code)
+
+        add_conditional_notifiers(code)
+
+        add_notifiers(code)
+
+        code << <<-EOF
+            end
+        EOF
+      end
+
+      def add_filter_declarations(code)
         stage.filter_declarations.each do |filter_declaration|
           code << <<-EOF
               @filter_queue.add #{filter_declaration.filter.to_s}.new(#{filter_declaration.options.to_s})
           EOF
         end
+      end
 
+      def add_conditional_notifiers(code)
         stage.conditional_notifiers.each do |conditional_notifier_declaration|
           conditional_notifier_declaration.compile(code, self)
         end
+      end
 
+      def add_notifiers(code)
         stage.notifiers.each do |notifier, options_set|
           options_set.each do |options|
             code << <<-EOF
@@ -48,18 +90,6 @@ module Batsir
             self.add_notifier("notifier", code)
           end
         end
-
-        code << <<-EOF
-            end
-
-            include Sidekiq::Worker
-            include Batsir::StageWorker
-          end
-
-          #{klazz_name}.sidekiq_options(:queue => Batsir::Config.sidekiq_queue)
-          #{klazz_name}
-        EOF
-        code
       end
 
       def add_transformers_to_notifier(notifier_name, code)
