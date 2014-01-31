@@ -13,18 +13,18 @@ module Batsir
         @notifier_declarations << NotifierConditionDeclaration.new(condition, notifier_class, options)
       end
 
-      def compile(output, stage_worker)
-        output << <<-EOF
-              conditional_notifier = Batsir::Notifiers::ConditionalNotifier.new
+      def compile(code, stage_worker)
+        code << <<-EOF
+              notifier = Batsir::Notifiers::ConditionalNotifier.new
         EOF
         notifier_declarations.each do |notifier_declaration|
-          output << <<-EOF
+          code << <<-EOF
               condition = ->(message){#{notifier_declaration.condition}}
-              conditional_notifier.add_notifier condition, #{notifier_declaration.notifier}.new(#{notifier_declaration.options.to_s})
+              notifier.add_notifier condition, #{notifier_declaration.notifier}.new(#{notifier_declaration.options.to_s})
           EOF
         end
-        stage_worker.add_transformers_to_notifier("conditional_notifier", output)
-        stage_worker.add_notifier( "conditional_notifier", output)
+        stage_worker.add_transformers_to_notifier(code)
+        stage_worker.add_notifier(code)
       end
     end
   end
