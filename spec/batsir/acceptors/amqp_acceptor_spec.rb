@@ -11,67 +11,67 @@ describe Batsir::Acceptors::AMQPAcceptor do
   context "instantiating" do
     it "sets a bunny pool" do
       acceptor = acceptor_class.new
-      acceptor.bunny_pool.should be_kind_of ConnectionPool
+      expect(acceptor.bunny_pool).to be_kind_of ConnectionPool
     end
 
     it "uses the same ConnectionPool instance for each acceptor" do
       acceptor1 = acceptor_class.new
       acceptor2 = acceptor_class.new
-      acceptor1.should_not eql acceptor2
-      acceptor1.bunny_pool.should eql acceptor2.bunny_pool
+      expect(acceptor1).not_to eql acceptor2
+      expect(acceptor1.bunny_pool).to eql acceptor2.bunny_pool
     end
   end
 
   context "setting options" do
     it "can set the queue on which to listen" do
       acceptor = acceptor_class.new(:queue => :queue)
-      acceptor.queue.should == :queue
+      expect(acceptor.queue).to eq(:queue)
     end
 
     it "can set the host of the amqp broker" do
       acceptor = acceptor_class.new(:host => 'localhost')
-      acceptor.host.should == 'localhost'
+      expect(acceptor.host).to eq('localhost')
     end
 
     it "can set the port of the amqp broker" do
       acceptor = acceptor_class.new(:port => 1234)
-      acceptor.port.should == 1234
+      expect(acceptor.port).to eq(1234)
     end
 
     it "can set the username with which to connect to the broker" do
       acceptor = acceptor_class.new(:username => 'some_user')
-      acceptor.username.should == 'some_user'
+      expect(acceptor.username).to eq('some_user')
     end
 
     it "can set the password with which to connect to the broker" do
       acceptor = acceptor_class.new(:password => 'password')
-      acceptor.password.should == 'password'
+      expect(acceptor.password).to eq('password')
     end
 
     it "can set the vhost to use on the broker" do
       acceptor = acceptor_class.new(:vhost => '/vhost')
-      acceptor.vhost.should == '/vhost'
+      expect(acceptor.vhost).to eq('/vhost')
     end
 
     it "can set the exchange to use on the broker" do
       acceptor = acceptor_class.new(:exchange => 'amq.direct')
-      acceptor.exchange.should == 'amq.direct'
+      expect(acceptor.exchange).to eq('amq.direct')
     end
 
     it "can set the queue to be durable" do
       acceptor = acceptor_class.new(:durable => true)
-      acceptor.durable.should == true
+      expect(acceptor.durable).to eq(true)
     end
 
     it "defaults to amqp://guest:guest@localhost:5672/ with direct exchange on vhost ''" do
       acceptor = acceptor_class.new(:queue => :somequeue)
-      acceptor.queue.should    == :somequeue
-      acceptor.host.should     == 'localhost'
-      acceptor.port.should     == 5672
-      acceptor.username.should == 'guest'
-      acceptor.password.should == 'guest'
-      acceptor.vhost.should    == '/'
-      acceptor.exchange.should == 'amq.direct'
+      expect(acceptor.queue).to    eq(:somequeue)
+      expect(acceptor.host).to     eq('localhost')
+      expect(acceptor.port).to     eq(5672)
+      expect(acceptor.username).to eq('guest')
+      expect(acceptor.password).to eq('guest')
+      expect(acceptor.vhost).to    eq('/')
+      expect(acceptor.exchange).to eq('amq.direct')
     end
   end
 
@@ -83,47 +83,47 @@ describe Batsir::Acceptors::AMQPAcceptor do
     it "starts listening on the configured queue" do
       acceptor = new_acceptor()
       acceptor.bunny_pool do |bunny|
-        acceptor.consumer.queue.name.should == 'test_queue'
+        expect(acceptor.consumer.queue.name).to eq('test_queue')
       end
     end
 
     it "connects to the configured host" do
       acceptor = new_acceptor(:host => 'localhost')
       acceptor.start
-      acceptor.consumer.queue.channel.connection.host.should == 'localhost'
+      expect(acceptor.consumer.queue.channel.connection.host).to eq('localhost')
     end
 
     it "connects to the configured port" do
       acceptor = new_acceptor(:port => 5672)
       acceptor.start
-      acceptor.consumer.queue.channel.connection.port.should == 5672
+      expect(acceptor.consumer.queue.channel.connection.port).to eq(5672)
     end
 
     it "connects with the configured username" do
       acceptor = new_acceptor(:username => 'guest', :password => 'guest')
       acceptor.start
-      acceptor.consumer.queue.channel.connection.user.should == 'guest'
-      acceptor.consumer.queue.channel.connection.pass.should == 'guest'
+      expect(acceptor.consumer.queue.channel.connection.user).to eq('guest')
+      expect(acceptor.consumer.queue.channel.connection.pass).to eq('guest')
     end
 
     it "connects to the configured vhost" do
       acceptor = new_acceptor(:vhost => '/')
       acceptor.start
-      acceptor.consumer.queue.channel.connection.vhost.should == '/'
+      expect(acceptor.consumer.queue.channel.connection.vhost).to eq('/')
     end
 
     it "declares the configured exchange" do
       acceptor = new_acceptor(:exchange => 'some_exchange')
       acceptor.start
-      acceptor.consumer.queue.instance_variable_get(:@bindings).first[:exchange].should == 'some_exchange'
+      expect(acceptor.consumer.queue.instance_variable_get(:@bindings).first[:exchange]).to eq('some_exchange')
     end
 
     it "binds the configured exchange to the queue" do
       acceptor = new_acceptor(:exchange => 'some_exchange', :queue => :queue)
       acceptor.start
       binding = acceptor.consumer.queue.instance_variable_get(:@bindings).first
-      binding[:exchange].should == 'some_exchange'
-      binding[:routing_key].should == :queue
+      expect(binding[:exchange]).to eq('some_exchange')
+      expect(binding[:routing_key]).to eq(:queue)
     end
 
     it "calls the #start_filter_chain method when a message is received" do
@@ -152,7 +152,7 @@ describe Batsir::Acceptors::AMQPAcceptor do
       acceptor.start
       acceptor.consumer.call({})
 
-      acceptor.method_called.should == 1
+      expect(acceptor.method_called).to eq(1)
     end
   end
 end

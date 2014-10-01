@@ -10,7 +10,7 @@ describe Batsir::Acceptors::Acceptor do
   }
 
   it "is a Celluloid actor" do
-    acceptor_class.ancestors.should include Celluloid
+    expect(acceptor_class.ancestors).to include Celluloid
   end
 
   it "calls the #perform_async on the worker class when #start_filter_chain is called" do
@@ -34,7 +34,7 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.stage_name = stage_name
 
     Batsir::Registry.register(stage_name, MockWorker)
-    MockWorker.should_receive(:perform_async)
+    expect(MockWorker).to receive(:perform_async)
     acceptor.start_filter_chain({})
   end
 
@@ -56,10 +56,10 @@ describe Batsir::Acceptors::Acceptor do
     acceptor.stage_name = stage_name
     acceptor.add_transformer MockTransformer.new
 
-    MockTransformer.transformed.should == 0
+    expect(MockTransformer.transformed).to eq(0)
 
     acceptor.start_filter_chain({})
 
-    MockTransformer.transformed.should == 1
+    expect(MockTransformer.transformed).to eq(1)
   end
 end

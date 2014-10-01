@@ -8,8 +8,8 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.name.should == "simple_stage"
+    expect(stage).not_to be_nil
+    expect(stage.name).to eq("simple_stage")
   end
 
   it "can add a filter to the stage" do
@@ -22,10 +22,10 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.filters.should_not be_nil
-    stage.filters.should_not be_empty
-    stage.filters.should include filter
+    expect(stage).not_to be_nil
+    expect(stage.filters).not_to be_nil
+    expect(stage.filters).not_to be_empty
+    expect(stage.filters).to include filter
   end
 
   it "can add a filter with options to the stage" do
@@ -39,11 +39,11 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.filters.should_not be_nil
-    stage.filters.should_not be_empty
+    expect(stage).not_to be_nil
+    expect(stage.filters).not_to be_nil
+    expect(stage.filters).not_to be_empty
     declaration = stage.filter_declarations.find{|decl| decl.filter == filter }
-    declaration.options.should == options
+    expect(declaration.options).to eq(options)
   end
 
   it "can add multiple filters to the stage" do
@@ -58,11 +58,11 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.filters.should_not be_nil
-    stage.filters.should_not be_empty
-    stage.filters.should include filter1
-    stage.filters.should include filter2
+    expect(stage).not_to be_nil
+    expect(stage.filters).not_to be_nil
+    expect(stage.filters).not_to be_empty
+    expect(stage.filters).to include filter1
+    expect(stage.filters).to include filter2
   end
 
   it "can add an inbound section to a stage" do
@@ -75,9 +75,9 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should be_empty
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).to be_empty
   end
 
   it "can add a transformers section to the inbound section of a stage" do
@@ -92,10 +92,10 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should be_empty
-    stage.acceptor_transformers.should be_empty
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).to be_empty
+    expect(stage.acceptor_transformers).to be_empty
   end
 
   it "can add a transformer to the transformers section of the inbound section of a stage" do
@@ -112,12 +112,12 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should be_empty
-    stage.acceptor_transformers.should_not be_empty
-    stage.acceptor_transformers.size.should == 1
-    stage.acceptor_transformers.first.transformer.should == transformer
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).to be_empty
+    expect(stage.acceptor_transformers).not_to be_empty
+    expect(stage.acceptor_transformers.size).to eq(1)
+    expect(stage.acceptor_transformers.first.transformer).to eq(transformer)
   end
 
   it "can add a transformer with options to the transformers section of the inbound section of a stage" do
@@ -135,13 +135,13 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should be_empty
-    stage.acceptor_transformers.should_not be_empty
-    stage.acceptor_transformers.size.should == 1
-    stage.acceptor_transformers.first.transformer.should == transformer
-    stage.acceptor_transformers.first.options.should == options
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).to be_empty
+    expect(stage.acceptor_transformers).not_to be_empty
+    expect(stage.acceptor_transformers.size).to eq(1)
+    expect(stage.acceptor_transformers.first.transformer).to eq(transformer)
+    expect(stage.acceptor_transformers.first.options).to eq(options)
   end
 
   it "can add multiple transformers to the transformers section of the inbound section of a stage" do
@@ -161,15 +161,15 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should be_empty
-    stage.acceptor_transformers.should_not be_empty
-    stage.acceptor_transformers.size.should == 2
-    stage.acceptor_transformers.first.transformer.should == transformer1
-    stage.acceptor_transformers.first.options.should == options
-    stage.acceptor_transformers.last.transformer.should == transformer2
-    stage.acceptor_transformers.last.options.should == {}
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).to be_empty
+    expect(stage.acceptor_transformers).not_to be_empty
+    expect(stage.acceptor_transformers.size).to eq(2)
+    expect(stage.acceptor_transformers.first.transformer).to eq(transformer1)
+    expect(stage.acceptor_transformers.first.options).to eq(options)
+    expect(stage.acceptor_transformers.last.transformer).to eq(transformer2)
+    expect(stage.acceptor_transformers.last.options).to eq({})
   end
 
   it "can add an acceptor to a stage" do
@@ -184,11 +184,11 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should_not be_empty
-    stage.acceptors.keys.should include acceptor_class
-    stage.acceptors[acceptor_class].first.should == {}
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).not_to be_empty
+    expect(stage.acceptors.keys).to include acceptor_class
+    expect(stage.acceptors[acceptor_class].first).to eq({})
   end
 
   it "can add an inbound section with an acceptor with options to the stage" do
@@ -204,11 +204,11 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should_not be_empty
-    stage.acceptors.keys.should include acceptor_class
-    stage.acceptors[acceptor_class].first.should == options
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).not_to be_empty
+    expect(stage.acceptors.keys).to include acceptor_class
+    expect(stage.acceptors[acceptor_class].first).to eq(options)
   end
 
   it "can add multiple acceptors to a stage" do
@@ -226,13 +226,13 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should_not be_empty
-    stage.acceptors.keys.should include acceptor_class1
-    stage.acceptors[acceptor_class1].first.should == options
-    stage.acceptors.keys.should include acceptor_class2
-    stage.acceptors[acceptor_class2].first.should == {}
+    expect(stage).not_to be_nil
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).not_to be_empty
+    expect(stage.acceptors.keys).to include acceptor_class1
+    expect(stage.acceptors[acceptor_class1].first).to eq(options)
+    expect(stage.acceptors.keys).to include acceptor_class2
+    expect(stage.acceptors[acceptor_class2].first).to eq({})
   end
 
   it "can add an outbound section without any notifiers" do
@@ -245,9 +245,9 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should be_empty
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).to be_empty
   end
 
   it "can add a transformers section to the outbound section of a stage" do
@@ -262,10 +262,10 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should be_empty
-    stage.notifier_transformers.should be_empty
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).to be_empty
+    expect(stage.notifier_transformers).to be_empty
   end
 
   it "can add a transformer to the transformers section of the outbound section of a stage" do
@@ -282,12 +282,12 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should be_empty
-    stage.notifier_transformers.should_not be_empty
-    stage.notifier_transformers.size.should == 1
-    stage.notifier_transformers.first.transformer.should == transformer
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).to be_empty
+    expect(stage.notifier_transformers).not_to be_empty
+    expect(stage.notifier_transformers.size).to eq(1)
+    expect(stage.notifier_transformers.first.transformer).to eq(transformer)
   end
 
   it "can add a transformer with options to the transformers section of the outbound section of a stage" do
@@ -305,13 +305,13 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should be_empty
-    stage.notifier_transformers.should_not be_empty
-    stage.notifier_transformers.size.should == 1
-    stage.notifier_transformers.first.transformer.should == transformer
-    stage.notifier_transformers.first.options.should == options
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).to be_empty
+    expect(stage.notifier_transformers).not_to be_empty
+    expect(stage.notifier_transformers.size).to eq(1)
+    expect(stage.notifier_transformers.first.transformer).to eq(transformer)
+    expect(stage.notifier_transformers.first.options).to eq(options)
   end
 
   it "can add multiple transformers to the transformers section of the outbound section of a stage" do
@@ -331,15 +331,15 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should be_empty
-    stage.notifier_transformers.should_not be_empty
-    stage.notifier_transformers.size.should == 2
-    stage.notifier_transformers.first.transformer.should == transformer1
-    stage.notifier_transformers.first.options.should == options
-    stage.notifier_transformers.last.transformer.should == transformer2
-    stage.notifier_transformers.last.options.should == {}
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).to be_empty
+    expect(stage.notifier_transformers).not_to be_empty
+    expect(stage.notifier_transformers.size).to eq(2)
+    expect(stage.notifier_transformers.first.transformer).to eq(transformer1)
+    expect(stage.notifier_transformers.first.options).to eq(options)
+    expect(stage.notifier_transformers.last.transformer).to eq(transformer2)
+    expect(stage.notifier_transformers.last.options).to eq({})
   end
 
   it "can add an outbound section to the stage" do
@@ -354,10 +354,10 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_empty
-    stage.notifiers.should have_key notification_class
-    stage.notifiers[notification_class].first.should == {}
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_empty
+    expect(stage.notifiers).to have_key notification_class
+    expect(stage.notifiers[notification_class].first).to eq({})
   end
 
   it "can add an outbound section with a notifier with options to the stage" do
@@ -373,10 +373,10 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_empty
-    stage.notifiers.should have_key notification_class
-    stage.notifiers[notification_class].first.should == options
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_empty
+    expect(stage.notifiers).to have_key notification_class
+    expect(stage.notifiers[notification_class].first).to eq(options)
   end
 
   it "can add multiple notifiers to the stage" do
@@ -394,13 +394,13 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.notifiers.should_not be_empty
-    stage.notifiers.should have_key notification_class1
-    stage.notifiers[notification_class1].first.should == options
+    expect(stage).not_to be_nil
+    expect(stage.notifiers).not_to be_empty
+    expect(stage.notifiers).to have_key notification_class1
+    expect(stage.notifiers[notification_class1].first).to eq(options)
 
-    stage.notifiers.should have_key notification_class2
-    stage.notifiers[notification_class2].first.should == {}
+    expect(stage.notifiers).to have_key notification_class2
+    expect(stage.notifiers[notification_class2].first).to eq({})
   end
 
   it "can create a complete stage" do
@@ -430,24 +430,24 @@ describe Batsir::DSL::StageMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    stage.should_not be_nil
-    stage.name.should == stage_name
-    stage.acceptors.should_not be_nil
-    stage.acceptors.should_not be_empty
-    stage.acceptors.keys.should include acceptor_class1
-    stage.acceptors[acceptor_class1].first.should == options
-    stage.acceptors.keys.should include acceptor_class2
-    stage.acceptors[acceptor_class2].first.should == {}
-    stage.filters.should_not be_nil
-    stage.filters.should_not be_empty
-    stage.filters.should include filter1
-    stage.filters.should include filter2
-    stage.notifiers.should_not be_nil
-    stage.notifiers.should_not be_empty
-    stage.notifiers.should have_key notification_class1
-    stage.notifiers[notification_class1].first.should == options
+    expect(stage).not_to be_nil
+    expect(stage.name).to eq(stage_name)
+    expect(stage.acceptors).not_to be_nil
+    expect(stage.acceptors).not_to be_empty
+    expect(stage.acceptors.keys).to include acceptor_class1
+    expect(stage.acceptors[acceptor_class1].first).to eq(options)
+    expect(stage.acceptors.keys).to include acceptor_class2
+    expect(stage.acceptors[acceptor_class2].first).to eq({})
+    expect(stage.filters).not_to be_nil
+    expect(stage.filters).not_to be_empty
+    expect(stage.filters).to include filter1
+    expect(stage.filters).to include filter2
+    expect(stage.notifiers).not_to be_nil
+    expect(stage.notifiers).not_to be_empty
+    expect(stage.notifiers).to have_key notification_class1
+    expect(stage.notifiers[notification_class1].first).to eq(options)
 
-    stage.notifiers.should have_key notification_class2
-    stage.notifiers[notification_class2].first.should == {}
+    expect(stage.notifiers).to have_key notification_class2
+    expect(stage.notifiers[notification_class2].first).to eq({})
   end
 end

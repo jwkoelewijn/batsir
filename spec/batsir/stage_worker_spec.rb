@@ -2,7 +2,7 @@ require File.join( File.dirname(__FILE__), "..", "spec_helper" )
 
 describe Batsir::StageWorker do
   it "can set a filter queue" do
-    Batsir::StageWorker.instance_methods.map{|m| m.to_s}.should include "filter_queue="
+    expect(Batsir::StageWorker.instance_methods.map{|m| m.to_s}).to include "filter_queue="
   end
 
   context "with respect to including the StageWorker module" do
@@ -31,15 +31,15 @@ describe Batsir::StageWorker do
     end
 
     it "registers workers once they include the stage worker" do
-      Batsir::Registry.get("TestWorker").should == TestWorker
+      expect(Batsir::Registry.get("TestWorker")).to eq(TestWorker)
     end
 
     it "calls the queue initialization method" do
-      TestWorker.initialization_count.should == 1
+      expect(TestWorker.initialization_count).to eq(1)
     end
 
     it "calls the stage name class method to register itself under" do
-      TestWorker.stage_name_called.should be_true
+      expect(TestWorker.stage_name_called).to be_truthy
     end
   end
 
@@ -86,7 +86,7 @@ describe Batsir::StageWorker do
 
     it "does not execute when no operation queue is set" do
       stage_worker = TestWorker.new
-      stage_worker.execute({}).should be_false
+      expect(stage_worker.execute({})).to be_falsey
     end
 
     it "executes all operations in the operation queue when an #execute message is received" do
@@ -99,13 +99,13 @@ describe Batsir::StageWorker do
 
       queue = stage_worker.filter_queue
       queue.each do |filter|
-        filter.execute_count.should == 0
+        expect(filter.execute_count).to eq(0)
       end
 
-      stage_worker.execute({}).should be_true
+      expect(stage_worker.execute({})).to be_truthy
 
       queue.each do |filter|
-        filter.execute_count.should == 1
+        expect(filter.execute_count).to eq(1)
       end
     end
 
@@ -117,12 +117,12 @@ describe Batsir::StageWorker do
       stage_worker.filter_queue = filter_queue
 
       notifier = filter_queue.notifiers.first
-      notifier.should_not be_nil
-      notifier.notify_count.should == 0
+      expect(notifier).not_to be_nil
+      expect(notifier.notify_count).to eq(0)
 
-      stage_worker.execute({}).should be_true
+      expect(stage_worker.execute({})).to be_truthy
 
-      notifier.notify_count.should == 1
+      expect(notifier.notify_count).to eq(1)
     end
   end
 end

@@ -4,7 +4,7 @@ describe Batsir::FilterQueue do
   it "can add a filter to a queue" do
     queue = Batsir::FilterQueue.new
     queue.add("Filter")
-    queue.should include "Filter"
+    expect(queue).to include "Filter"
   end
 
   it "does not return nil as last operation when no acceptors or notifiers are added" do
@@ -14,14 +14,14 @@ describe Batsir::FilterQueue do
     queue.each do |op|
       ops << op
     end
-    ops.last.should_not be_nil
+    expect(ops.last).not_to be_nil
   end
 
   it "can add a notifier" do
     queue = Batsir::FilterQueue.new
     notifier = "Notifier"
     queue.add_notifier(notifier)
-    queue.should include notifier
+    expect(queue).to include notifier
   end
 
   it "can add multiple notifiers" do
@@ -31,7 +31,7 @@ describe Batsir::FilterQueue do
       ops << "Notifier #{index}"
       queue.add_notifier("Notifier #{index}")
     end
-    ops.each {|op| queue.should include op}
+    ops.each {|op| expect(queue).to include op}
   end
 
   it "returns notifiers as the last operations" do
@@ -45,24 +45,24 @@ describe Batsir::FilterQueue do
     queue.each do |op|
       ops << op
     end
-    ops.last.should == notifier
+    expect(ops.last).to eq(notifier)
   end
 
   it "responds true to #empty? when no operations are added" do
     queue = Batsir::FilterQueue.new
-    queue.should be_empty
+    expect(queue).to be_empty
   end
 
   it "is not empty when a notification operation is added" do
     queue = Batsir::FilterQueue.new
     operation = "Notifier"
     queue.add_notifier(operation)
-    queue.should_not be_empty
+    expect(queue).not_to be_empty
   end
 
   it "is not empty when a regular operation is added" do
     queue = Batsir::FilterQueue.new
     queue.add("SomeFilter")
-    queue.should_not be_empty
+    expect(queue).not_to be_empty
   end
 end

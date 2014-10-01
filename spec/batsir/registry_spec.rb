@@ -11,38 +11,38 @@ describe Batsir::Registry do
   end
 
   it "outputs the whole registry" do
-    @class.registry.should == {}
+    expect(@class.registry).to eq({})
   end
 
   it "registers a value" do
     @class.register(:foo, :bar)
-    @class.registry.keys.size.should == 1
-    @class.registry.keys.should include :foo
-    @class.registry.values.size.should == 1
-    @class.registry.values.should include :bar
+    expect(@class.registry.keys.size).to eq(1)
+    expect(@class.registry.keys).to include :foo
+    expect(@class.registry.values.size).to eq(1)
+    expect(@class.registry.values).to include :bar
   end
 
   it "is able to retrieve a registered variable" do
     @class.register('test', 'value')
-    @class.get('test').should == 'value'
+    expect(@class.get('test')).to eq('value')
   end
 
   it "returns nil when the requested key is not found" do
-    @class.get('foobar').should be_nil
+    expect(@class.get('foobar')).to be_nil
   end
 
   context "resetting" do
     it "is possible" do
       @class.register('foo', 'bar')
-      @class.registry.should == {'foo' => 'bar'}
+      expect(@class.registry).to eq({'foo' => 'bar'})
       @class.reset
-      @class.registry.should == {}
+      expect(@class.registry).to eq({})
     end
 
     it "returns its new state" do
       @class.register('foo', 'bar')
       result = @class.reset
-      result.should == {}
+      expect(result).to eq({})
     end
   end
 end

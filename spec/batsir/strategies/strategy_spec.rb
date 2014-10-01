@@ -13,16 +13,16 @@ describe Batsir::Strategies::Strategy do
   class DefunctMockContext; end
 
   it 'has an #execute method' do
-    strategy_class.instance_methods.map{|im| im.to_s}.should include "execute"
+    expect(strategy_class.instance_methods.map{|im| im.to_s}).to include "execute"
   end
 
   it 'has an accessable context' do
     c = MockContext.new
-    strategy_class.new(c).context.should == c
+    expect(strategy_class.new(c).context).to eq(c)
   end
 
   it 'detects an incorrect context object being passed' do
     c = DefunctMockContext.new
-    lambda{strategy_class.new(c)}.should raise_error Batsir::Errors::ExecuteMethodNotImplementedError
+    expect{strategy_class.new(c)}.to raise_error Batsir::Errors::ExecuteMethodNotImplementedError
   end
 end

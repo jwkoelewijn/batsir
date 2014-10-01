@@ -5,6 +5,6 @@ describe Batsir::Log do
     class TestClass
       include Batsir::Log
     end
-    TestClass.instance_methods.map{|im| im.to_s}.should include 'log'
+    expect(TestClass.instance_methods.map{|im| im.to_s}).to include 'log'
   end
 end

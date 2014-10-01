@@ -10,27 +10,27 @@ describe Batsir::Notifiers::ConditionalNotifier do
   let(:notifier){ Batsir::Notifiers::Notifier }
 
   it "can add notifiers" do
-    subject.notifiers.size.should == 0
+    expect(subject.notifiers.size).to eq(0)
     subject.add_notifier( true_block, notifier)
-    subject.notifiers.size.should == 1
+    expect(subject.notifiers.size).to eq(1)
   end
 
   it "stores notifier conditions" do
     subject.add_notifier(true_block, notifier)
 
     notifier_condition = subject.notifiers.first
-    notifier_condition.should be_a Batsir::Notifiers::ConditionalNotifier::NotifierCondition
-    notifier_condition.condition.should == true_block
-    notifier_condition.notifier.should == notifier
+    expect(notifier_condition).to be_a Batsir::Notifiers::ConditionalNotifier::NotifierCondition
+    expect(notifier_condition.condition).to eq(true_block)
+    expect(notifier_condition.notifier).to eq(notifier)
   end
 
   it "stores optional options for the notifier" do
     subject.add_notifier( true_block, notifier, :some => :extra, :options => :foryou)
 
     notifier_condition = subject.notifiers.first
-    notifier_condition.options.size.should == 2
-    notifier_condition.options.should have_key :some
-    notifier_condition.options.should have_key :options
+    expect(notifier_condition.options.size).to eq(2)
+    expect(notifier_condition.options).to have_key :some
+    expect(notifier_condition.options).to have_key :options
   end
 
   context "sending messages" do
@@ -39,8 +39,8 @@ describe Batsir::Notifiers::ConditionalNotifier do
     it "executes notifiers if condition is true" do
 
       notifier_class = FakeNotifier
-      notifier_class.any_instance.stub(:execute)
-      notifier_class.any_instance.should_receive(:execute)
+      allow_any_instance_of(notifier_class).to receive(:execute)
+      expect_any_instance_of(notifier_class).to receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
       conditional.add_notifier( true_block, notifier_class )
@@ -51,8 +51,8 @@ describe Batsir::Notifiers::ConditionalNotifier do
       false_block = lambda {|message| false}
 
       notifier_class = FakeNotifier
-      notifier_class.any_instance.stub(:execute)
-      notifier_class.any_instance.should_not_receive(:execute)
+      allow_any_instance_of(notifier_class).to receive(:execute)
+      expect_any_instance_of(notifier_class).not_to receive(:execute)
 
       conditional = Batsir::Notifiers::ConditionalNotifier.new
       conditional.add_notifier( false_block, notifier_class )

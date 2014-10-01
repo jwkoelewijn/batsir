@@ -20,49 +20,49 @@ describe Batsir::Stage do
   end
 
   it "is a Celluloid Actor" do
-    Batsir::Stage.ancestors.should include Celluloid
+    expect(Batsir::Stage.ancestors).to include Celluloid
   end
 
   it "can name the stage" do
     stage = Batsir::Stage.new
     name = "StageName"
     stage.name = name
-    stage.name.should == name
+    expect(stage.name).to eq(name)
   end
 
   it "can set the name in the constructor" do
     name = "StageName"
     stage = Batsir::Stage.new(:name => name)
-    stage.name.should == name
+    expect(stage.name).to eq(name)
   end
 
   it "can set the aggregator chain to which the stage belongs" do
     chain = "Chain"
     stage = Batsir::Stage.new(:chain => chain)
-    stage.chain.should == chain
+    expect(stage.chain).to eq(chain)
   end
 
   context "with respect to filters" do
     it "cannot set the filters directly" do
       stage = Batsir::Stage.new
-      lambda { stage.filters = {} }.should raise_error(NoMethodError)
+      expect { stage.filters = {} }.to raise_error(NoMethodError)
     end
 
     it "stores filters using filter declarations" do
       filter = "Filter"
       stage = Batsir::Stage.new
       stage.add_filter(filter)
-      stage.filter_declarations.should_not be_nil
-      stage.filter_declarations.size.should == 1
+      expect(stage.filter_declarations).not_to be_nil
+      expect(stage.filter_declarations.size).to eq(1)
       declaration = stage.filter_declarations.first
-      declaration.filter.should == filter
-      declaration.options.should == {}
+      expect(declaration.filter).to eq(filter)
+      expect(declaration.options).to eq({})
     end
 
     it "returns an empty array when the #filters method is called without any declared filters" do
       stage = Batsir::Stage.new
-      stage.filters.should_not be_nil
-      stage.filters.should == []
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters).to eq([])
     end
 
     it "returns all filters when the #filters method is called" do
@@ -74,19 +74,19 @@ describe Batsir::Stage do
       stage.add_filter(filter2)
       stage.add_filter(filter3)
 
-      stage.filters.should_not be_nil
-      stage.filters.size.should == 3
-      stage.filters[0].should == filter1
-      stage.filters[1].should == filter2
-      stage.filters[2].should == filter3
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters.size).to eq(3)
+      expect(stage.filters[0]).to eq(filter1)
+      expect(stage.filters[1]).to eq(filter2)
+      expect(stage.filters[2]).to eq(filter3)
     end
 
     it "adds a filter to its filters" do
       filter = "Filter"
       stage = Batsir::Stage.new
       stage.add_filter(filter)
-      stage.filters.should_not be_nil
-      stage.filters.should include filter
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters).to include filter
     end
 
     it "can have multiple filters of the same class but with different options" do
@@ -94,8 +94,8 @@ describe Batsir::Stage do
       stage.add_filter(:filter)
       stage.add_filter(:filter, :foo => :bar)
 
-      stage.filters.should include :filter
-      stage.filters.size.should == 2
+      expect(stage.filters).to include :filter
+      expect(stage.filters.size).to eq(2)
     end
 
     it "can add filters with on options hash" do
@@ -105,10 +105,10 @@ describe Batsir::Stage do
       stage = Batsir::Stage.new
       stage.add_filter(filter, options)
 
-      stage.filters.should_not be_nil
-      stage.filters.should_not be_empty
-      stage.filters.should include filter
-      stage.filter_declarations.first.options.should == options
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters).not_to be_empty
+      expect(stage.filters).to include filter
+      expect(stage.filter_declarations.first.options).to eq(options)
     end
 
     it "can add multiple filters with option hashes" do
@@ -121,10 +121,10 @@ describe Batsir::Stage do
       stage.add_filter(filter1, options1)
       stage.add_filter(filter2, options2)
 
-      stage.filters.should include filter1
-      stage.filters.should include filter2
-      stage.filter_declarations[0].options.should == options1
-      stage.filter_declarations[1].options.should == options2
+      expect(stage.filters).to include filter1
+      expect(stage.filters).to include filter2
+      expect(stage.filter_declarations[0].options).to eq(options1)
+      expect(stage.filter_declarations[1].options).to eq(options2)
     end
 
     it "adds empty options hashes to filters when no option hash is given" do
@@ -133,10 +133,10 @@ describe Batsir::Stage do
       stage = Batsir::Stage.new
       stage.add_filter(filter)
 
-      stage.filters.should_not be_nil
-      stage.filters.should_not be_empty
-      stage.filters.should include filter
-      stage.filter_declarations.first.options.should == {}
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters).not_to be_empty
+      expect(stage.filters).to include filter
+      expect(stage.filter_declarations.first.options).to eq({})
     end
 
     it "can add a filter more than once" do
@@ -144,9 +144,9 @@ describe Batsir::Stage do
       stage = Batsir::Stage.new
       stage.add_filter(filter)
       stage.add_filter(filter)
-      stage.filters.should_not be_nil
-      stage.filters.should_not be_empty
-      stage.filters.size.should == 2
+      expect(stage.filters).not_to be_nil
+      expect(stage.filters).not_to be_empty
+      expect(stage.filters.size).to eq(2)
     end
 
     it "can add filter with different options and respect the order" do
@@ -157,34 +157,34 @@ describe Batsir::Stage do
       stage.add_filter(filter)
       stage.add_filter(other_filter)
       stage.add_filter(filter, :foo => :bar)
-      stage.filters.size.should == 3
+      expect(stage.filters.size).to eq(3)
     end
   end
 
   context "with respect to acceptors" do
     it "initially has an empty list of acceptors" do
       stage = Batsir::Stage.new
-      stage.acceptors.should_not be_nil
-      stage.acceptors.should be_empty
+      expect(stage.acceptors).not_to be_nil
+      expect(stage.acceptors).to be_empty
     end
 
     it "cannot set the acceptors directly" do
       stage = Batsir::Stage.new
-      lambda { stage.acceptors = {} }.should raise_error(NoMethodError)
+      expect { stage.acceptors = {} }.to raise_error(NoMethodError)
     end
 
     it "can add new acceptors" do
       stage = Batsir::Stage.new
       stage.add_acceptor(:acceptor)
-      stage.acceptors.should_not be_nil
-      stage.acceptors.should_not be_empty
-      stage.acceptors.keys.should include :acceptor
+      expect(stage.acceptors).not_to be_nil
+      expect(stage.acceptors).not_to be_empty
+      expect(stage.acceptors.keys).to include :acceptor
     end
 
     it "stores a set of different options for each acceptor" do
       stage = Batsir::Stage.new
       stage.add_acceptor(:acceptor)
-      stage.acceptors[:acceptor].should be_a Set
+      expect(stage.acceptors[:acceptor]).to be_a Set
     end
 
     it "can have multiple acceptors of the same class but with different options" do
@@ -192,10 +192,10 @@ describe Batsir::Stage do
       stage.add_acceptor(:acceptor_class)
       stage.add_acceptor(:acceptor_class, :foo => :bar)
 
-      stage.acceptors.should_not be_nil
-      stage.acceptors.should_not be_empty
-      stage.acceptors.keys.should include :acceptor_class
-      stage.acceptors[:acceptor_class].size.should == 2
+      expect(stage.acceptors).not_to be_nil
+      expect(stage.acceptors).not_to be_empty
+      expect(stage.acceptors.keys).to include :acceptor_class
+      expect(stage.acceptors[:acceptor_class].size).to eq(2)
     end
 
     it "can add an acceptor with an options hash" do
@@ -203,34 +203,34 @@ describe Batsir::Stage do
       options = {:foo => :bar}
       stage.add_acceptor(:acceptor, options)
 
-      stage.acceptors.should_not be_nil
-      stage.acceptors.should_not be_empty
-      stage.acceptors.keys.should include :acceptor
-      stage.acceptors[:acceptor].first.should == options
+      expect(stage.acceptors).not_to be_nil
+      expect(stage.acceptors).not_to be_empty
+      expect(stage.acceptors.keys).to include :acceptor
+      expect(stage.acceptors[:acceptor].first).to eq(options)
     end
 
     it "adds an empty options hash for added acceptors without options" do
       stage = Batsir::Stage.new
       stage.add_acceptor(:acceptor)
 
-      stage.acceptors.should_not be_nil
-      stage.acceptors.should_not be_empty
-      stage.acceptors.keys.should include :acceptor
-      stage.acceptors[:acceptor].first.should == {}
+      expect(stage.acceptors).not_to be_nil
+      expect(stage.acceptors).not_to be_empty
+      expect(stage.acceptors.keys).to include :acceptor
+      expect(stage.acceptors[:acceptor].first).to eq({})
     end
 
     it "initially has an empty list of cancellators" do
       stage = Batsir::Stage.new
-      stage.cancellators.should_not be_nil
-      stage.cancellators.should be_empty
+      expect(stage.cancellators).not_to be_nil
+      expect(stage.cancellators).to be_empty
     end
 
     context "with respect to acceptor transformers" do
       it "has an empty acceptor transformers queue by default" do
         stage = Batsir::Stage.new
 
-        stage.acceptor_transformers.should_not be_nil
-        stage.acceptor_transformers.should be_empty
+        expect(stage.acceptor_transformers).not_to be_nil
+        expect(stage.acceptor_transformers).to be_empty
       end
 
       it "can add a transformer to the acceptors" do
@@ -239,9 +239,9 @@ describe Batsir::Stage do
         transformer = :transformer
 
         stage.add_acceptor_transformer(transformer)
-        stage.acceptor_transformers.should_not be_empty
+        expect(stage.acceptor_transformers).not_to be_empty
 
-        stage.acceptor_transformers.first.transformer.should == transformer
+        expect(stage.acceptor_transformers.first.transformer).to eq(transformer)
       end
 
       it "adds an empty options hash by default" do
@@ -249,9 +249,9 @@ describe Batsir::Stage do
 
         transformer = :transformer
         stage.add_acceptor_transformer(transformer)
-        stage.acceptor_transformers.should_not be_empty
+        expect(stage.acceptor_transformers).not_to be_empty
 
-        stage.acceptor_transformers.first.options.should == {}
+        expect(stage.acceptor_transformers.first.options).to eq({})
       end
 
       it "can add options to a transformer" do
@@ -261,10 +261,10 @@ describe Batsir::Stage do
         options = {:foo => :bar}
 
         stage.add_acceptor_transformer(transformer, options)
-        stage.acceptor_transformers.should_not be_empty
+        expect(stage.acceptor_transformers).not_to be_empty
 
-        stage.acceptor_transformers.first.transformer.should == transformer
-        stage.acceptor_transformers.first.options.should == options
+        expect(stage.acceptor_transformers.first.transformer).to eq(transformer)
+        expect(stage.acceptor_transformers.first.options).to eq(options)
       end
 
       it "can add multiple transformers" do
@@ -275,12 +275,12 @@ describe Batsir::Stage do
 
         stage.add_acceptor_transformer(transformer1)
         stage.add_acceptor_transformer(transformer2)
-        stage.acceptor_transformers.should_not be_empty
-        stage.acceptor_transformers.size.should == 2
+        expect(stage.acceptor_transformers).not_to be_empty
+        expect(stage.acceptor_transformers.size).to eq(2)
 
         transformers = stage.acceptor_transformers.map{|td| td.transformer}
-        transformers.should include transformer1
-        transformers.should include transformer2
+        expect(transformers).to include transformer1
+        expect(transformers).to include transformer2
       end
 
       it "keeps the transformers in the order of declaration" do
@@ -291,11 +291,11 @@ describe Batsir::Stage do
 
         stage.add_acceptor_transformer(transformer1)
         stage.add_acceptor_transformer(transformer2)
-        stage.acceptor_transformers.should_not be_empty
-        stage.acceptor_transformers.size.should == 2
+        expect(stage.acceptor_transformers).not_to be_empty
+        expect(stage.acceptor_transformers.size).to eq(2)
 
-        stage.acceptor_transformers.first.transformer.should == transformer1
-        stage.acceptor_transformers.last.transformer.should == transformer2
+        expect(stage.acceptor_transformers.first.transformer).to eq(transformer1)
+        expect(stage.acceptor_transformers.last.transformer).to eq(transformer2)
       end
 
       it "can add a transformer more than once" do
@@ -305,11 +305,11 @@ describe Batsir::Stage do
 
         stage.add_acceptor_transformer(transformer)
         stage.add_acceptor_transformer(transformer)
-        stage.acceptor_transformers.should_not be_empty
-        stage.acceptor_transformers.size.should == 2
+        expect(stage.acceptor_transformers).not_to be_empty
+        expect(stage.acceptor_transformers.size).to eq(2)
 
-        stage.acceptor_transformers.first.transformer.should == transformer
-        stage.acceptor_transformers.last.transformer.should == transformer
+        expect(stage.acceptor_transformers.first.transformer).to eq(transformer)
+        expect(stage.acceptor_transformers.last.transformer).to eq(transformer)
       end
     end
   end
@@ -318,28 +318,28 @@ describe Batsir::Stage do
   context "with respect to notifiers" do
     it "initially has an empty notifiers queue" do
       stage = Batsir::Stage.new
-      stage.notifiers.should_not be_nil
-      stage.notifiers.should be_empty
+      expect(stage.notifiers).not_to be_nil
+      expect(stage.notifiers).to be_empty
     end
 
     it "cannot set the notifiers directly" do
       stage = Batsir::Stage.new
-      lambda { stage.notifiers = {} }.should raise_error(NoMethodError)
+      expect { stage.notifiers = {} }.to raise_error(NoMethodError)
     end
 
     it "can add new notifiers" do
       stage = Batsir::Stage.new
 
       stage.add_notifier(:notifier)
-      stage.notifiers.should_not be_nil
-      stage.notifiers.should_not be_empty
-      stage.notifiers.keys.should include :notifier
+      expect(stage.notifiers).not_to be_nil
+      expect(stage.notifiers).not_to be_empty
+      expect(stage.notifiers.keys).to include :notifier
     end
 
     it "stores a set of different options for each notifier" do
       stage = Batsir::Stage.new
       stage.add_notifier(:notifier)
-      stage.notifiers[:notifier].should be_a Set
+      expect(stage.notifiers[:notifier]).to be_a Set
     end
 
     it "can have multiple notifiers of the same class but with different options" do
@@ -347,9 +347,9 @@ describe Batsir::Stage do
       stage.add_notifier(:notifier_class)
       stage.add_notifier(:notifier_class, :foo => :bar)
 
-      stage.notifiers.should_not be_nil
-      stage.notifiers.keys.should include :notifier_class
-      stage.notifiers[:notifier_class].size.should == 2
+      expect(stage.notifiers).not_to be_nil
+      expect(stage.notifiers.keys).to include :notifier_class
+      expect(stage.notifiers[:notifier_class].size).to eq(2)
     end
 
     it "can set a notifier with an options hash" do
@@ -358,28 +358,28 @@ describe Batsir::Stage do
       options = {:foo => :bar}
 
       stage.add_notifier(:notifier, options)
-      stage.notifiers.should_not be_nil
-      stage.notifiers.should_not be_empty
-      stage.notifiers.keys.should include :notifier
-      stage.notifiers[:notifier].first.should == options
+      expect(stage.notifiers).not_to be_nil
+      expect(stage.notifiers).not_to be_empty
+      expect(stage.notifiers.keys).to include :notifier
+      expect(stage.notifiers[:notifier].first).to eq(options)
     end
 
     it "adds an empty options hash for added notifiers without options" do
       stage = Batsir::Stage.new
 
       stage.add_notifier(:notifier)
-      stage.notifiers.should_not be_nil
-      stage.notifiers.should_not be_empty
-      stage.notifiers.keys.should include :notifier
-      stage.notifiers[:notifier].first.should == {}
+      expect(stage.notifiers).not_to be_nil
+      expect(stage.notifiers).not_to be_empty
+      expect(stage.notifiers.keys).to include :notifier
+      expect(stage.notifiers[:notifier].first).to eq({})
     end
 
     context "with respect to notifier transformers" do
       it "has an empty notifier transformers queue by default" do
         stage = Batsir::Stage.new
 
-        stage.notifier_transformers.should_not be_nil
-        stage.notifier_transformers.should be_empty
+        expect(stage.notifier_transformers).not_to be_nil
+        expect(stage.notifier_transformers).to be_empty
       end
 
       it "can add a transformer to the notifiers" do
@@ -388,9 +388,9 @@ describe Batsir::Stage do
         transformer = :transformer
 
         stage.add_notifier_transformer(transformer)
-        stage.notifier_transformers.should_not be_empty
+        expect(stage.notifier_transformers).not_to be_empty
 
-        stage.notifier_transformers.first.transformer.should == transformer
+        expect(stage.notifier_transformers.first.transformer).to eq(transformer)
       end
 
       it "adds an empty options hash by default" do
@@ -398,9 +398,9 @@ describe Batsir::Stage do
 
         transformer = :transformer
         stage.add_notifier_transformer(transformer)
-        stage.notifier_transformers.should_not be_empty
+        expect(stage.notifier_transformers).not_to be_empty
 
-        stage.notifier_transformers.first.options.should == {}
+        expect(stage.notifier_transformers.first.options).to eq({})
       end
 
       it "can add options to a transformer" do
@@ -410,10 +410,10 @@ describe Batsir::Stage do
         options = {:foo => :bar}
 
         stage.add_notifier_transformer(transformer, options)
-        stage.notifier_transformers.should_not be_empty
+        expect(stage.notifier_transformers).not_to be_empty
 
-        stage.notifier_transformers.first.transformer.should == transformer
-        stage.notifier_transformers.first.options.should == options
+        expect(stage.notifier_transformers.first.transformer).to eq(transformer)
+        expect(stage.notifier_transformers.first.options).to eq(options)
       end
 
       it "can add multiple transformers" do
@@ -424,12 +424,12 @@ describe Batsir::Stage do
 
         stage.add_notifier_transformer(transformer1)
         stage.add_notifier_transformer(transformer2)
-        stage.notifier_transformers.should_not be_empty
-        stage.notifier_transformers.size.should == 2
+        expect(stage.notifier_transformers).not_to be_empty
+        expect(stage.notifier_transformers.size).to eq(2)
 
         transformers = stage.notifier_transformers.map{|td| td.transformer}
-        transformers.should include transformer1
-        transformers.should include transformer2
+        expect(transformers).to include transformer1
+        expect(transformers).to include transformer2
       end
 
       it "keeps the transformers in the order of declaration" do
@@ -440,11 +440,11 @@ describe Batsir::Stage do
 
         stage.add_notifier_transformer(transformer1)
         stage.add_notifier_transformer(transformer2)
-        stage.notifier_transformers.should_not be_empty
-        stage.notifier_transformers.size.should == 2
+        expect(stage.notifier_transformers).not_to be_empty
+        expect(stage.notifier_transformers.size).to eq(2)
 
-        stage.notifier_transformers.first.transformer.should == transformer1
-        stage.notifier_transformers.last.transformer.should == transformer2
+        expect(stage.notifier_transformers.first.transformer).to eq(transformer1)
+        expect(stage.notifier_transformers.last.transformer).to eq(transformer2)
       end
 
       it "can add a transformer more than once" do
@@ -454,11 +454,11 @@ describe Batsir::Stage do
 
         stage.add_notifier_transformer(transformer)
         stage.add_notifier_transformer(transformer)
-        stage.notifier_transformers.should_not be_empty
-        stage.notifier_transformers.size.should == 2
+        expect(stage.notifier_transformers).not_to be_empty
+        expect(stage.notifier_transformers.size).to eq(2)
 
-        stage.notifier_transformers.first.transformer.should == transformer
-        stage.notifier_transformers.last.transformer.should == transformer
+        expect(stage.notifier_transformers.first.transformer).to eq(transformer)
+        expect(stage.notifier_transformers.last.transformer).to eq(transformer)
       end
     end
   end
@@ -466,21 +466,21 @@ describe Batsir::Stage do
   context "with respect to conditional notifiers" do
     it "initially has an empty conditional notifiers queue" do
       stage = Batsir::Stage.new
-      stage.conditional_notifiers.should_not be_nil
-      stage.conditional_notifiers.should be_empty
+      expect(stage.conditional_notifiers).not_to be_nil
+      expect(stage.conditional_notifiers).to be_empty
     end
 
     it "cannot set the conditional notifiers directly" do
       stage = Batsir::Stage.new
-      lambda { stage.conditional_notifiers = {} }.should raise_error(NoMethodError)
+      expect { stage.conditional_notifiers = {} }.to raise_error(NoMethodError)
     end
 
     it "can add new conditional notifiers" do
       stage = Batsir::Stage.new
 
       stage.add_conditional_notifier(:notifier)
-      stage.conditional_notifiers.should_not be_nil
-      stage.conditional_notifiers.should_not be_empty
+      expect(stage.conditional_notifiers).not_to be_nil
+      expect(stage.conditional_notifiers).not_to be_empty
     end
   end
 
@@ -501,34 +501,34 @@ describe Batsir::Stage do
     end
 
     it "creates a class named after the stage name" do
-      @created_class.to_s.should == "Stage1Worker"
+      expect(@created_class.to_s).to eq("Stage1Worker")
     end
 
     it "creates a Batsir::StageWorker class" do
-      @created_class.ancestors.should include Batsir::StageWorker
+      expect(@created_class.ancestors).to include Batsir::StageWorker
     end
 
     it "creates a class that includes Sidekiq::Worker" do
-      @created_class.ancestors.should include Sidekiq::Worker
+      expect(@created_class.ancestors).to include Sidekiq::Worker
     end
 
     it "creates a worker class named after the stage name" do
-      @created_class.stage_name.should == @stage_name
+      expect(@created_class.stage_name).to eq(@stage_name)
     end
 
     it "adds the notifier during compilation" do
       instance = @created_class.new
-      instance.filter_queue.notifiers.should_not be_nil
-      instance.filter_queue.notifiers.should_not be_empty
-      instance.filter_queue.notifiers.size.should == 1
-      instance.filter_queue.notifiers.first.should be_a Batsir::Notifiers::Notifier
+      expect(instance.filter_queue.notifiers).not_to be_nil
+      expect(instance.filter_queue.notifiers).not_to be_empty
+      expect(instance.filter_queue.notifiers.size).to eq(1)
+      expect(instance.filter_queue.notifiers.first).to be_a Batsir::Notifiers::Notifier
     end
 
     it "adds a transformer to the notifier during compilation" do
       instance = @created_class.new
 
-      instance.filter_queue.notifiers.first.transformer_queue.should_not be_empty
-      instance.filter_queue.notifiers.first.transformer_queue.first.should be_a Batsir::Transformers::Transformer
+      expect(instance.filter_queue.notifiers.first.transformer_queue).not_to be_empty
+      expect(instance.filter_queue.notifiers.first.transformer_queue.first).to be_a Batsir::Transformers::Transformer
     end
 
     it "adds a JSONOutputTransformer by default when no transformers are defined" do
@@ -539,33 +539,33 @@ describe Batsir::Stage do
       created_class = eval( stage.compile )
       instance = created_class.new
 
-      instance.filter_queue.notifiers.should_not be_nil
-      instance.filter_queue.notifiers.should_not be_empty
-      instance.filter_queue.notifiers.first.transformer_queue.should_not be_empty
-      instance.filter_queue.notifiers.first.transformer_queue.first.should be_a Batsir::Transformers::JSONOutputTransformer
+      expect(instance.filter_queue.notifiers).not_to be_nil
+      expect(instance.filter_queue.notifiers).not_to be_empty
+      expect(instance.filter_queue.notifiers.first.transformer_queue).not_to be_empty
+      expect(instance.filter_queue.notifiers.first.transformer_queue.first).to be_a Batsir::Transformers::JSONOutputTransformer
     end
 
     it "initialises a class local filter queue" do
-      @created_class.filter_queue.should_not be_nil
-      @created_class.filter_queue.should_not be_empty
+      expect(@created_class.filter_queue).not_to be_nil
+      expect(@created_class.filter_queue).not_to be_empty
     end
 
     it "has intitialized the filters" do
-      @created_class.filter_queue.map{|filter| filter.class.to_s}.should include "Batsir::Filter"
+      expect(@created_class.filter_queue.map{|filter| filter.class.to_s}).to include "Batsir::Filter"
     end
 
     it "can add a filter multiple times" do
-      @created_class.filter_queue.select{ |filter| filter.class == Batsir::Filter }.size.should == 2
+      expect(@created_class.filter_queue.select{ |filter| filter.class == Batsir::Filter }.size).to eq(2)
     end
 
     it "uses the class local filter queue once an instance is initialized" do
       instance = @created_class.new
-      instance.filter_queue.should == @created_class.filter_queue
+      expect(instance.filter_queue).to eq(@created_class.filter_queue)
     end
 
     it "initialises all filters in the filter queue" do
       @created_class.filter_queue.each do |filter|
-        filter.should_not be_a Class
+        expect(filter).not_to be_a Class
       end
     end
   end
@@ -628,15 +628,15 @@ describe Batsir::Stage do
       stage.add_acceptor MockAcceptor, :foo => :bar
 
       stage.start
-      MockAcceptor.stage_name.should == stage.name
+      expect(MockAcceptor.stage_name).to eq(stage.name)
     end
 
     it "initially has an empty list of running acceptors" do
       stage = create_stage
       stage.add_acceptor MockAcceptor
 
-      stage.running_acceptors.should_not be_nil
-      stage.running_acceptors.should be_empty
+      expect(stage.running_acceptors).not_to be_nil
+      expect(stage.running_acceptors).to be_empty
     end
 
     it "keeps track of running acceptors" do
@@ -644,7 +644,7 @@ describe Batsir::Stage do
       stage.add_acceptor MockAcceptor
 
       stage.start
-      stage.running_acceptors.size.should == 1
+      expect(stage.running_acceptors.size).to eq(1)
     end
 
     it "starts all acceptors" do
@@ -652,12 +652,12 @@ describe Batsir::Stage do
       stage.add_acceptor MockAcceptor
       stage.add_acceptor MockAcceptor, :foo => :bar
 
-      MockAcceptor.start_count.should == 0
+      expect(MockAcceptor.start_count).to eq(0)
 
       stage.start
       sleep(0.05)
 
-      MockAcceptor.start_count.should == 2
+      expect(MockAcceptor.start_count).to eq(2)
     end
 
     it "adds a Batsir::Transformers::JSONInputTransformer to acceptors when no transformers are defined" do
@@ -666,8 +666,8 @@ describe Batsir::Stage do
 
       stage.start
 
-      MockAcceptor.added_transformers.size.should == 1
-      MockAcceptor.added_transformers.first.should be_a Batsir::Transformers::JSONInputTransformer
+      expect(MockAcceptor.added_transformers.size).to eq(1)
+      expect(MockAcceptor.added_transformers.first).to be_a Batsir::Transformers::JSONInputTransformer
     end
 
     it "adds defined transformers to the acceptors" do
@@ -677,8 +677,8 @@ describe Batsir::Stage do
 
       stage.start
 
-      MockAcceptor.added_transformers.size.should == 1
-      MockAcceptor.added_transformers.first.should be_a Batsir::Transformers::Transformer
+      expect(MockAcceptor.added_transformers.size).to eq(1)
+      expect(MockAcceptor.added_transformers.first).to be_a Batsir::Transformers::Transformer
     end
   end
 end
