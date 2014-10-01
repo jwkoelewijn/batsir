@@ -9,9 +9,9 @@ describe Batsir::DSL::ConditionalNotifierMapping do
     end
 
     conditional = ::Blockenspiel.invoke(block, Batsir::DSL::ConditionalNotifierMapping.new)
-    conditional.notifier_declarations.should_not be_empty
+    expect(conditional.notifier_declarations).not_to be_empty
     conditional_notifier = conditional.notifier_declarations.first
-    conditional_notifier.notifier.should == Batsir::Notifiers::Notifier
+    expect(conditional_notifier.notifier).to eq(Batsir::Notifiers::Notifier)
   end
 
   it "passes options to notifiers" do
@@ -22,9 +22,9 @@ describe Batsir::DSL::ConditionalNotifierMapping do
     end
 
     conditional = ::Blockenspiel.invoke(block, Batsir::DSL::ConditionalNotifierMapping.new)
-    conditional.notifier_declarations.should_not be_empty
+    expect(conditional.notifier_declarations).not_to be_empty
     conditional_notifier = conditional.notifier_declarations.first
-    conditional_notifier.options.should have_key :some
+    expect(conditional_notifier.options).to have_key :some
   end
 
   it "can be used inside a stage" do
@@ -39,7 +39,7 @@ describe Batsir::DSL::ConditionalNotifierMapping do
     end
 
     stage = ::Blockenspiel.invoke(block, Batsir::DSL::StageMapping.new)
-    notifier = stage.conditional_notifiers.should_not be_empty
+    notifier = expect(stage.conditional_notifiers).not_to be_empty
   end
 
   context "compiling" do
@@ -65,15 +65,15 @@ describe Batsir::DSL::ConditionalNotifierMapping do
     it "stores the conditional notifier" do
       @instance.filter_queue.notifiers.size == 1
       conditional = @instance.filter_queue.notifiers.first
-      conditional.should be_kind_of Batsir::Notifiers::ConditionalNotifier
-      conditional.notifiers.size.should == 2
-      conditional.notifiers.first.condition.should be_a Proc
+      expect(conditional).to be_kind_of Batsir::Notifiers::ConditionalNotifier
+      expect(conditional.notifiers.size).to eq(2)
+      expect(conditional.notifiers.first.condition).to be_a Proc
     end
 
     it "adds the default transformer" do
       notifier = @instance.filter_queue.notifiers.first
-      notifier.transformer_queue.size.should == 1
-      notifier.transformer_queue.first.should be_kind_of Batsir::Transformers::Transformer
+      expect(notifier.transformer_queue.size).to eq(1)
+      expect(notifier.transformer_queue.first).to be_kind_of Batsir::Transformers::Transformer
     end
   end
 end

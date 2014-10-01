@@ -35,24 +35,24 @@ describe Batsir::Strategies::RetryStrategy do
   end
 
   it 'stores the number of allowed retries' do
-    @context.strategy.retries.should == 2
+    expect(@context.strategy.retries).to eq(2)
   end
 
   it 'stores the retry attempts per message' do
-    @context.strategy.attempts.should == {}
+    expect(@context.strategy.attempts).to eq({})
   end
 
   it 'attempts to execute the given number of times' do
     @context = MockRetryContext.new(3,3)
     @context.strategy.log.level = Batsir::Logger::FATAL
-    @context.execute("test").should == "test complete"
-    @context.strategy.attempts.size.should == 0
+    expect(@context.execute("test")).to eq("test complete")
+    expect(@context.strategy.attempts.size).to eq(0)
   end
 
   it 'throws an error when all retry attempts have been used' do
     @context = MockRetryContext.new(3,2)
     @context.strategy.log.level = Batsir::Logger::FATAL
-    lambda{@context.execute("test")}.should raise_error Batsir::Errors::RetryStrategyFailed
+    expect{@context.execute("test")}.to raise_error Batsir::Errors::RetryStrategyFailed
   end
 
 end

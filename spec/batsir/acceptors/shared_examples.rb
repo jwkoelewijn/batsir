@@ -5,45 +5,45 @@ shared_examples_for "an acceptor" do |acceptor_class|
 
   context 'properties' do
     it "is a Batsir::Acceptors::Acceptor" do
-      subject.should be_kind_of Batsir::Acceptors::Acceptor
+      expect(subject).to be_kind_of Batsir::Acceptors::Acceptor
     end
 
     it "has a #start method" do
-      subject.class.instance_methods.map{|im| im.to_s}.should include "start"
+      expect(subject.class.instance_methods.map{|im| im.to_s}).to include "start"
     end
 
     it "has a #start_filter_chain method" do
-      subject.class.instance_methods.map{|im| im.to_s}.should include "start_filter_chain"
+      expect(subject.class.instance_methods.map{|im| im.to_s}).to include "start_filter_chain"
     end
 
     it "has a transformer_queue" do
-      subject.transformer_queue.should_not be_nil
+      expect(subject.transformer_queue).not_to be_nil
     end
   end
 
   context 'instances' do
     it "can initialize an Acceptor with on options hash" do
       acceptor = acceptor_class.new({})
-      acceptor.should_not be_nil
+      expect(acceptor).not_to be_nil
     end
 
     it "initially has an empty transformer_queue" do
-      subject.transformer_queue.should_not be_nil
-      subject.transformer_queue.should be_empty
+      expect(subject.transformer_queue).not_to be_nil
+      expect(subject.transformer_queue).to be_empty
     end
 
     it "can set the stage name for the acceptor" do
       acceptor = acceptor_class.new
       stage_name = "some stage"
       acceptor.stage_name = stage_name
-      acceptor.stage_name.should == stage_name
+      expect(acceptor.stage_name).to eq(stage_name)
     end
 
     it "looks up a worker class when the #start_filter_chain method is called" do
       acceptor = acceptor_class.new
       stage_name = "some stage"
       acceptor.stage_name = stage_name
-      Batsir::Registry.should_receive(:get).with(stage_name)
+      expect(Batsir::Registry).to receive(:get).with(stage_name)
       acceptor.start_filter_chain({})
     end
   end
@@ -55,9 +55,9 @@ shared_examples_for "an acceptor" do |acceptor_class|
       acceptor = acceptor_class.new
       acceptor.add_transformer transformer
 
-      acceptor.transformer_queue.should_not be_empty
-      acceptor.transformer_queue.size.should == 1
-      acceptor.transformer_queue.first.should == :transformer
+      expect(acceptor.transformer_queue).not_to be_empty
+      expect(acceptor.transformer_queue.size).to eq(1)
+      expect(acceptor.transformer_queue.first).to eq(:transformer)
     end
 
     it "can add a transformer multiple times" do
@@ -67,8 +67,8 @@ shared_examples_for "an acceptor" do |acceptor_class|
       acceptor.add_transformer transformer
       acceptor.add_transformer transformer
 
-      acceptor.transformer_queue.should_not be_empty
-      acceptor.transformer_queue.size.should == 2
+      expect(acceptor.transformer_queue).not_to be_empty
+      expect(acceptor.transformer_queue.size).to eq(2)
     end
 
     it "handles errors thrown by transformers" do
@@ -91,11 +91,11 @@ shared_examples_for "an acceptor" do |acceptor_class|
       acceptor.stage_name = stage_name
       acceptor.add_transformer MockTransformer.new
 
-      acceptor.message.should be_nil
+      expect(acceptor.message).to be_nil
 
       acceptor.start_filter_chain({})
 
-      acceptor.message.should == "error"
+      expect(acceptor.message).to eq("error")
     end
   end
 

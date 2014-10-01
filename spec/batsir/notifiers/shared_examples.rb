@@ -5,12 +5,12 @@ shared_examples_for "a notifier" do |notifier_class|
 
   context 'transformers' do
     it "has a transformer_queue" do
-      subject.transformer_queue.should_not be_nil
+      expect(subject.transformer_queue).not_to be_nil
     end
 
     it "initially has an empty transformer_queue" do
-      subject.transformer_queue.should_not be_nil
-      subject.transformer_queue.should be_empty
+      expect(subject.transformer_queue).not_to be_nil
+      expect(subject.transformer_queue).to be_empty
     end
 
     it "can add a transformer to the transformer_queue" do
@@ -18,9 +18,9 @@ shared_examples_for "a notifier" do |notifier_class|
 
       subject.add_transformer transformer
 
-      subject.transformer_queue.should_not be_empty
-      subject.transformer_queue.size.should == 1
-      subject.transformer_queue.first.should == :transformer
+      expect(subject.transformer_queue).not_to be_empty
+      expect(subject.transformer_queue.size).to eq(1)
+      expect(subject.transformer_queue.first).to eq(:transformer)
     end
 
     it "can add a transformer multiple times" do
@@ -29,28 +29,28 @@ shared_examples_for "a notifier" do |notifier_class|
       subject.add_transformer transformer
       subject.add_transformer transformer
 
-      subject.transformer_queue.should_not be_empty
-      subject.transformer_queue.size.should == 2
+      expect(subject.transformer_queue).not_to be_empty
+      expect(subject.transformer_queue.size).to eq(2)
     end
 
     it "creates a FieldTransformer when the 'fields' option is given during initialization" do
       fields = {:foo => :bar}
       subject = notifier_class.new(:fields => fields)
-      subject.transformer_queue.should_not be_empty
-      subject.transformer_queue.first.class.should == Batsir::Transformers::FieldTransformer
-      subject.transformer_queue.first.fields.should == fields
+      expect(subject.transformer_queue).not_to be_empty
+      expect(subject.transformer_queue.first.class).to eq(Batsir::Transformers::FieldTransformer)
+      expect(subject.transformer_queue.first.fields).to eq(fields)
     end
   end
 
   context 'methods calls' do
     it "has an #execute method" do
-      notifier_class.instance_methods.map{|m| m.to_s}.should include "execute"
+      expect(notifier_class.instance_methods.map{|m| m.to_s}).to include "execute"
     end
 
 
     it "calls #transform when #notify is called" do
-      subject.stub(:execute)
-      subject.should_receive(:transform).with({})
+      allow(subject).to receive(:execute)
+      expect(subject).to receive(:transform).with({})
       subject.notify({})
     end
 
@@ -58,18 +58,18 @@ shared_examples_for "a notifier" do |notifier_class|
       class MockTransformer < Batsir::Transformers::Transformer
       end
 
-      subject.stub(:execute)
+      allow(subject).to receive(:execute)
       transformer = MockTransformer.new
       subject.add_transformer transformer
-      subject.transformer_queue.size.should == 1
+      expect(subject.transformer_queue.size).to eq(1)
 
-      transformer.should_receive(:transform).with({})
+      expect(transformer).to receive(:transform).with({})
       subject.notify({})
     end
 
     it "calls #execute when #notify is called" do
-      subject.stub(:execute)
-      subject.should_receive(:execute)
+      allow(subject).to receive(:execute)
+      expect(subject).to receive(:execute)
       subject.notify({})
     end
   end
@@ -79,10 +79,10 @@ shared_examples_for "a notifier" do |notifier_class|
       message = {'test_id' => 123}
       subject.add_transformer(Batsir::Transformers::JSONOutputTransformer.new)
       begin
-        subject.notify(message).should == {'test_id' => 123}
+        expect(subject.notify(message)).to eq({'test_id' => 123})
       rescue NotImplementedError => e
       end
-      message.should == {'test_id' => 123}
+      expect(message).to eq({'test_id' => 123})
     end
 
     it 'has a FieldTransformer' do
@@ -91,10 +91,10 @@ shared_examples_for "a notifier" do |notifier_class|
       subject = notifier_class.new(:fields => fields)
       subject.add_transformer(Batsir::Transformers::JSONOutputTransformer.new)
       begin
-        subject.notify(message).should == {'test_id' => 123}
+        expect(subject.notify(message)).to eq({'test_id' => 123})
       rescue NotImplementedError => e
       end
-      message.should == {'test_id' => 123}
+      expect(message).to eq({'test_id' => 123})
     end
   end
 end

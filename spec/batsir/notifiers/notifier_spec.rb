@@ -6,6 +6,6 @@ describe Batsir::Notifiers::Notifier do
   it_should_behave_like "a notifier", Batsir::Notifiers::Notifier
 
   it 'raises an error when the #execute method is not implemented' do
-    lambda{ subject.notify({})}.should raise_error NotImplementedError
+    expect{ subject.notify({})}.to raise_error NotImplementedError
   end
 end

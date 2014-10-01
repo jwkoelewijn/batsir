@@ -10,35 +10,35 @@ describe Batsir::AMQP do
 
   context 'with respect to default variables' do
     it 'has a host' do
-      @test.host.should == 'localhost'
+      expect(@test.host).to eq('localhost')
     end
 
     it 'has a port' do
-      @test.port.should == 5672
+      expect(@test.port).to eq(5672)
     end
 
     it 'has a username' do
-      @test.username.should == 'guest'
+      expect(@test.username).to eq('guest')
     end
 
     it 'has a password' do
-      @test.password.should == 'guest'
+      expect(@test.password).to eq('guest')
     end
 
     it 'has a vhost' do
-      @test.vhost.should == '/'
+      expect(@test.vhost).to eq('/')
     end
 
     it 'has a exchange' do
-      @test.exchange.should == 'amq.direct'
+      expect(@test.exchange).to eq('amq.direct')
     end
 
     it 'is durable' do
-      @test.durable.should == true
+      expect(@test.durable).to eq(true)
     end
 
     it 'is undead' do
-      @test.heartbeat.should == 0
+      expect(@test.heartbeat).to eq(0)
     end
   end
 
@@ -46,13 +46,13 @@ describe Batsir::AMQP do
     it 'can change host' do
       localhost = '127.0.0.1'
       @test.host = localhost
-      @test.host.should == localhost
+      expect(@test.host).to eq(localhost)
     end
 
     it 'can change heartbeat' do
       hb = 512
       @test.heartbeat = hb
-      @test.heartbeat.should == hb
+      expect(@test.heartbeat).to eq(hb)
     end
   end
 end
