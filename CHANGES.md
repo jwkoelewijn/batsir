@@ -1,3 +1,10 @@
+0.4.0
+-----------
+- Removes support for MRI 1.9.3
+- Worker class compilation has been refactored
+- Limits Celluloid < 0.16.0
+  Higher versions may prevent Sidekiq from cleanly shutting down.
+
 0.3.7
 -----------
 - AMQP queues are now durable by default.
