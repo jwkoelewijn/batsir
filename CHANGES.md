@@ -4,6 +4,7 @@
 - Worker class compilation has been refactored
 - Limits Celluloid < 0.16.0
   Higher versions may prevent Sidekiq from cleanly shutting down.
+- Removes bunny and sidekiq constraints
 
 0.3.7
 -----------
