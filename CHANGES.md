@@ -6,6 +6,7 @@
   Higher versions may prevent Sidekiq from cleanly shutting down.
 - Removes bunny and sidekiq constraints
 
+
 0.3.7
 -----------
 - AMQP queues are now durable by default.
