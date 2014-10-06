@@ -1,20 +1,18 @@
-log/*
-*.log
-*.cache
-Makefile
-*.o
-*.so
-*.a
-*.bundle
-*.dSYM/
-coverage/
-.DS_Store
-*.bak
-*.swp
-.rvmrc
-*.un~
-.rbx/*
+#
+# Batsir gitignore
+#
+
+# Gem-related
+.bundle
 pkg/*
 Gemfile.lock
-.ruby-version
-.ruby-gemset
+
+# Documentation
+rdoc/*
+
+# RVM
+.rvmrc
+.ruby-*
+
+# Mac-specific
+.DS_Store
