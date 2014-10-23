@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'blockenspiel',  '>= 0.4.3'
   s.add_dependency 'celluloid',     '< 0.16.0'
   s.add_dependency 'sidekiq'
-  s.add_dependency 'bunny'
+  s.add_dependency 'bunny',         '>= 1.0.0'
   s.add_dependency 'json'
   s.add_dependency 'log4r'
 

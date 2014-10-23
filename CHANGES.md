@@ -1,3 +1,8 @@
+0.4.1
+-----------
+- Now requires bunny >= 1.0.0.
+- Changed bunny queue usage to reflect changes in bunny gem.
+
 0.4.0
 -----------
 - Removes support for MRI 1.9.3
