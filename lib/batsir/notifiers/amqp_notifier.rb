@@ -12,10 +12,11 @@ module Batsir
         @error_strategy = error_strategy.new(self)
         @bunny = Bunny.new(bunny_options).start
         @channel = @bunny.create_channel
+        @queue = @channel.queue(queue, durable: durable)
       end
 
       def execute(message)
-        @channel.publish(message, :routing_key => queue)
+        @queue.publish(message, :routing_key => queue)
       end
 
       def handle_error(message, error)
