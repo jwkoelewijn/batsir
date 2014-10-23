@@ -12,10 +12,8 @@ module Batsir
       def initialize(options={})
         super
         @bunny = Bunny.new(bunny_options).start
-        @channel = @bunny.channel
-        @q = @bunny.queue( queue, :durable => durable )
-        @x = @bunny.exchange( exchange )
-        @q.bind( @x, :routing_key => queue)
+        @channel = @bunny.create_channel
+        @q = @channel.queue( queue, :durable => durable )
 
         @consumer = consumer_source.call(self, @channel, @q)
         @consumer.on_delivery() do |delivery_info, metadata, payload|
