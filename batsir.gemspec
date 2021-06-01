@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'log4r'
 
   s.add_development_dependency 'bundler', '~> 2.2.10'
-  s.add_development_dependency 'rake',    '~> 10.0'
+  s.add_development_dependency 'rake',    '~> 12.3.3'
   s.add_development_dependency 'rspec'
 end
